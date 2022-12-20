@@ -4,6 +4,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Home from './views/Home.vue'
 import About from './views/About.vue'
 import Overview from './views/Overview.vue'
+import Logout from './views/Logout.vue'
 import Register from './views/Register.vue'
 import Login from './views/Login.vue'
 import store from './store'
@@ -38,6 +39,14 @@ const router = createRouter({
             path: '/overview',
             name: 'Overview',
             component: Overview,
+            meta: {
+                requireAuthentication: true
+            }
+        },
+        {
+            path: '/logout',
+            name: 'Logout',
+            component: Logout,
             meta: {
                 requireAuthentication: true
             }

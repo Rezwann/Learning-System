@@ -1,7 +1,7 @@
 <template>
     <nav class="container-fluid navbar navbar-expand-lg navbar-light bg-indigo-800">
-      <a class="navbar-brand mx-4 text-white container-fluid">Rezwan: LMS</a>
-      <div class="navbar-nav ml-auto mx-2">
+      <h4 class="mx-4 text-white container-fluid">Rezwan: LMS</h4>
+      <div class="navbar-nav ml-auto mx-4 mb-1 mt-1">
         <button
           class="nav-item nav-link btn btn-light mx-2 "
           @click="$router.push('/')"
@@ -16,25 +16,30 @@
         </button>
         <template v-if="$store.state.isAuthenticated">
           <button
-            class="nav-item nav-link btn  btn-info mx-2"
+            class="nav-item nav-link btn btn-info mx-2"
             @click="$router.push('/overview')"
           >
             Overview
           </button>
-        </template>
-        <template v-else>        
           <button
+            class="nav-item nav-link text-white btn btn-danger mx-2"
+            @click="$router.push('/logout')">Logout
+          </button>
+        </template>
+        <template v-else>
+        <button
             class="nav-item nav-link btn btn-warning mx-2"
             @click="$router.push('/register')"
           >
             Register
           </button>
           <button
-            class="nav-item nav-link btn btn-success mx-2"
+            class="nav-item nav-link text-white btn btn-secondary mx-2"
             @click="$router.push('/login')"
           >
             Login
           </button>
+
         </template>
       </div>
     </nav>
@@ -63,7 +68,7 @@
 
 <style>
 .bg-indigo-800 {
-  background-color: #4e10b1;
+  background-color: #5e00c3;
 ;
 }
 </style>

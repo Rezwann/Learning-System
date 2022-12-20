@@ -12,7 +12,7 @@
           <input type="password" name="password" class="form-control" v-model="password">
         </div>
         <div v-if="errors.length" class="col">
-          <p v-for="error in errors" v-bind:key="error">
+          <p class="alert alert-info mt-3" role="alert" v-for="error in errors" v-bind:key="error">
             {{ error }}
           </p>
         </div>
