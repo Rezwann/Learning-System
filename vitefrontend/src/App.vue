@@ -58,11 +58,11 @@
   <div
   v-else
     class='selected-day alert alert-info container-sm'>
-    <h4>Choose a day with a coloured dot on it</h4>
+    <h4>Choose a day that has a bar near it</h4>
     <hr>
     <ul>
       <li>
-        A coloured dot indicates that a day is significant in celebrating learner inclusiveness, wellbeing, accessibility, disability, or another factor of equal value
+        A coloured bar indicates that a day is significant in celebrating learner inclusiveness, wellbeing, accessibility, disability, or another factor of equal value
       </li>
     </ul>
   </div>
@@ -81,19 +81,12 @@
     data() {
     return {
         selectedDay: null,
-        todos: [
-        {
-          id: 1,
-          description: 'Clean the house.',
-          start: 'Jan 01 2023',
-          end: 'Jan 03 2023',
-        },
-      ],
-    }
+      eventsJSON 
+}
     },
     computed: {
     attributes() {
-  return this.todos.map(t => {
+  return this.eventsJSON.map(t => {
     const dates = [];
     let currentDate = new Date (t.start);
 
@@ -104,9 +97,8 @@
 
     return {
       key: `todo.${t.id}`,
-      dot: {
-        backgroundColor: 'blue',
-      },
+      dot: false,
+      bar:true,
       dates,
       customData: t,
     };
@@ -116,7 +108,7 @@
   methods: {
     dayClicked(day) {
       this.selectedDay = day;
-    },
+    }
   },
     beforeCreate() {
       this.$store.commit('initalizeStore')
