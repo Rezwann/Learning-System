@@ -39,20 +39,85 @@
           >
             Login
           </button>
-
         </template>
       </div>
     </nav>
+
+    <div
+    v-if='selectedDay'
+    class='selected-day alert alert-info container-sm'>
+    <h4>{{ selectedDay.date.toDateString() }}</h4>
+    <ul>
+      <li
+        v-for='attr in selectedDay.attributes'
+        :key='attr.key'>
+        {{ attr.customData.title }}
+      </li>      
+    </ul>
+  </div>
+  <div
+  v-else
+    class='selected-day alert alert-info container-sm'>
+    <h4>Choose a day with a coloured dot on it</h4>
+    <hr>
+    <ul>
+      <li>
+        A coloured dot indicates that a day is significant in celebrating learner inclusiveness, wellbeing, accessibility, disability, or another factor of equal value
+      </li>
+    </ul>
+  </div>
+
+  <v-calendar is-dark :attributes='attributes' @dayclick='dayClicked'></v-calendar>
+
     <router-view></router-view>
-  </template>
+  </template>  
   
-  
-  
-  <script>
-  import axios from 'axios'
+<script>
+  import eventsJSON from './json/events.json';
+  import axios from 'axios';
 
   export default {
     name: 'App',
+    data() {
+    return {
+        selectedDay: null,
+        todos: [
+        {
+          id: 1,
+          description: 'Clean the house.',
+          start: 'Jan 01 2023',
+          end: 'Jan 03 2023',
+        },
+      ],
+    }
+    },
+    computed: {
+    attributes() {
+  return this.todos.map(t => {
+    const dates = [];
+    let currentDate = new Date (t.start);
+
+    while (currentDate <= new Date (t.end)) {
+      dates.push(currentDate);
+      currentDate = new Date(currentDate.getTime() + 24 * 60 * 60 * 1000);
+    }
+
+    return {
+      key: `todo.${t.id}`,
+      dot: {
+        backgroundColor: 'blue',
+      },
+      dates,
+      customData: t,
+    };
+  });
+},
+    },
+  methods: {
+    dayClicked(day) {
+      this.selectedDay = day;
+    },
+  },
     beforeCreate() {
       this.$store.commit('initalizeStore')
       const token = this.$store.state.token
@@ -64,11 +129,19 @@
       }
     }
   }
+
   </script>
 
 <style>
 .bg-indigo-800 {
   background-color: #5e00c3;
-;
+}
+
+#main-calendar {
+  display: flex;
+}
+
+.selected-day {
+  margin-left: 10px;
 }
 </style>

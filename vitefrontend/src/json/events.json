@@ -1,0 +1,707 @@
+[{
+        "id": "1",
+        "_comment_": "Source of all events: Walker, M. (2022) Disability and accessibility-related events calendar | AbilityNet. 2022. Disability and accessibility-related events calendar | https://abilitynet.org.uk/disability-and-accessibility-related-events-calendar#February2023 [Accessed: 21 December 2022].",
+        "title": "World Braille Day",
+        "start": "2023-01-04"
+    },
+    {
+        "id": "2",
+        "title": "Blue Monday",
+        "start": "2023-01-16"
+    },
+    {
+        "id": "3",
+        "title": "Moebius Syndrome Awareness Day",
+        "start": "2023-01-24"
+    },
+    {
+        "id": "4",
+        "title": "Parent Mental Health Day",
+        "start": "2023-01-27"
+    },
+    {
+        "id": "5",
+        "title": "Data Privacy Day",
+        "start": "2023-01-28"
+    },
+    {
+        "id": "6",
+        "title": "World Leprosy Day",
+        "start": "2023-01-29"
+    },
+    {
+        "id": "7",
+        "title": "Raynaud's Awareness Month",
+        "start": "2023-02-01",
+        "end": "2023-02-28"
+    },
+    {
+        "id": "8",
+        "title": "LGBT+ History Month",
+        "start": "2023-02-01",
+        "end": "2023-02-28"
+    },
+    {
+        "id": "9",
+        "title": "National Heart Month",
+        "start": "2023-02-01",
+        "end": "2023-02-28"
+    },
+    {
+        "id": "10",
+        "title": "Time to Talk day",
+        "start": "2023-02-02"
+    },
+    {
+        "id": "11",
+        "title": "Rheumatoid Arthritis Day",
+        "start": "2023-02-02"
+    },
+    {
+        "id": "12",
+        "title": "World Cancer Day",
+        "start": "2023-02-04"
+    },
+    {
+        "id": "13",
+        "title": "Tinnitus Awareness Week",
+        "start": "2023-02-06",
+        "end": "2023-02-12"
+    },
+    {
+        "id": "14",
+        "title": "Safer Internet Day",
+        "start": "2023-02-07"
+    },
+    {
+        "id": "15",
+        "title": "National Apprenticeships Week",
+        "start": "2023-02-07",
+        "end": "2023-02-13"
+    },
+    {
+        "id": "16",
+        "title": "International Day of Women and Girls in Science",
+        "start": "2023-02-11"
+    },
+    {
+        "id": "17",
+        "title": "International Epilepsy Day",
+        "start": "2023-02-13"
+    },
+    {
+        "id": "18",
+        "title": "Random Acts of Kindness Day",
+        "start": "2023-02-17"
+    },
+    {
+        "id": "19",
+        "title": "World Encephalitis Day",
+        "start": "2023-02-22"
+    },
+    {
+        "id": "20",
+        "title": "Cyber Scotland Week",
+        "start": "2023-02-27",
+        "end": "2023-03-05"
+    },
+    {
+        "id": "21",
+        "title": "Rare Disease Day",
+        "start": "2023-02-28"
+    },
+    {
+        "id": "22",
+        "title": "International RSI Day",
+        "start": "2023-02-28"
+    },
+    {
+        "id": "23",
+        "title": "Brain Tumour Awareness Month",
+        "start": "2023-03-01",
+        "end": "2023-03-31"
+    },
+    {
+        "id": "24",
+        "title": "Zero Discrimination Day",
+        "start": "2023-03-01"
+    },
+    {
+        "id": "25",
+        "title": "International Wheelchair Day",
+        "start": "2023-03-01"
+    },
+    {
+        "id": "26",
+        "title": "Self-harm awareness Day",
+        "start": "2023-03-01"
+    },
+    {
+        "id": "27",
+        "title": "World Hearing Day",
+        "start": "2023-03-03"
+    },
+    {
+        "id": "28",
+        "title": "University Mental Health Day",
+        "start": "2023-03-03"
+    },
+    {
+        "id": "29",
+        "title": "National Careers Week",
+        "start": "2023-03-07",
+        "end": "2023-03-12"
+    },
+    {
+        "id": "30",
+        "title": "International Women's Day",
+        "start": "2023-03-08"
+    },
+    {
+        "id": "31",
+        "title": "World Kidney Day",
+        "start": "2023-03-09"
+    },
+    {
+        "id": "32",
+        "title": "World Glaucoma Day",
+        "start": "2023-03-12"
+    },
+    {
+        "id": "33",
+        "title": "World Glaucoma Week",
+        "start": "2023-03-12",
+        "end": "2023-03-18"
+    },
+    {
+        "id": "34",
+        "title": "Neurodiversity Celebration Week",
+        "start": "2023-03-13"
+    },
+    {
+        "id": "35",
+        "title": "Nutrition and Hydration Week",
+        "start": "2023-03-13",
+        "end": "2023-03-19"
+    },
+    {
+        "id": "36",
+        "title": "Brain Awareness Week",
+        "start": "2023-03-13",
+        "end": "2023-03-19"
+    },
+    {
+        "id": "37",
+        "title": "38th Annual CSUN Assistive Technology Conference",
+        "start": "2023-03-13",
+        "end": "2023-03-17"
+    },
+    {
+        "id": "38",
+        "title": "Disabled Access Day",
+        "start": "2023-03-16"
+    },
+    {
+        "id": "39",
+        "title": "World Down Syndrome Day",
+        "start": "2023-03-21"
+    },
+    {
+        "id": "40",
+        "title": "World Tuberculosis Day",
+        "start": "2023-03-24"
+    },
+    {
+        "id": "41",
+        "title": "FND (Functional Neurological Disorder) Awareness Day",
+        "start": "2023-03-25"
+    },
+    {
+        "id": "42",
+        "title": "Purple Day / Epilepsy Awareness Day",
+        "start": "2023-03-26"
+    },
+    {
+        "id": "43",
+        "title": "World Autism Acceptance Week",
+        "start": "2023-03-27",
+        "end": "2023-04-02"
+    },
+    {
+        "id": "44",
+        "title": "World Bipolar Day",
+        "start": "2023-03-30"
+    },
+    {
+        "id": "45",
+        "title": "Stress Awareness Month",
+        "start": "2023-04-01",
+        "end": "2023-04-30"
+    },
+    {
+        "id": "46",
+        "title": "National Pet Month (Celebration of guide dogs)",
+        "start": "2023-04-01",
+        "end": "2023-04-30"
+    },
+    {
+        "id": "47",
+        "title": "Functional Neurological Disorder (FND) Awareness Month",
+        "start": "2023-04-01",
+        "end": "2023-04-30"
+    },
+    {
+        "id": "48",
+        "title": "Parkinson’s Awareness Month",
+        "start": "2023-04-01",
+        "end": "2023-04-30"
+    },
+    {
+        "id": "49",
+        "title": "World Autism Awareness Day",
+        "start": "2023-04-02"
+    },
+    {
+        "id": "50",
+        "title": "World Health Day",
+        "start": "2023-04-07"
+    },
+    {
+        "id": "51",
+        "title": "Parkinson’s Awareness Week",
+        "start": "2023-04-10",
+        "end": "2023-04-16"
+    },
+    {
+        "id": "52",
+        "title": "World Parkinson’s Day",
+        "start": "2023-04-11"
+    },
+    {
+        "id": "53",
+        "title": "World Voice Day (Recognition of mutism and stutter)",
+        "start": "2023-04-16"
+    },
+    {
+        "id": "54",
+        "title": "MS (Multiple Sclerosis) Awareness Week",
+        "start": "2023-04-25",
+        "end": "2023-05-01"
+    },
+    {
+        "id": "55",
+        "title": "International Guide Dog Day",
+        "start": "2023-04-26"
+    },
+    {
+        "id": "56",
+        "title": "World Day for Safety and Health at Work",
+        "start": "2023-04-28"
+    },
+    {
+        "id": "57",
+        "title": "Make May Purple, Stroke Awareness Month",
+        "start": "2023-05-01",
+        "end": "2023-05-31"
+    },
+    {
+        "id": "58",
+        "title": "National Share a Story Month",
+        "start": "2023-05-01",
+        "end": "2023-05-31"
+    },
+    {
+        "id": "59",
+        "title": "Maternal Mental Health Awareness Week",
+        "start": "2023-05-02",
+        "end": "2023-05-08"
+    },
+    {
+        "id": "60",
+        "title": "Deaf Awareness Week",
+        "start": "2023-05-02",
+        "end": "2023-05-08"
+    },
+    {
+        "id": "61",
+        "title": "World Password Day",
+        "start": "2023-05-04"
+    },
+    {
+        "id": "62",
+        "title": "World Ankylosing Spondylitis Day",
+        "start": "2023-05-06"
+    },
+    {
+        "id": "63",
+        "title": "World Red Cross Crescent Day",
+        "start": "2023-05-08"
+    },
+    {
+        "id": "64",
+        "title": "Equality, Diversity and Human Rights Week",
+        "start": "2023-05-08",
+        "end": "2023-05-13"
+    },
+    {
+        "id": "65",
+        "title": "International ME Awareness Day",
+        "start": "2023-05-12"
+    },
+    {
+        "id": "66",
+        "title": "Spinal Cord Injury Awareness Day",
+        "start": "2023-05-13"
+    },
+    {
+        "id": "67",
+        "title": "Mental Health Awareness Week",
+        "start": "2023-05-15",
+        "end": "2023-05-21"
+    },
+    {
+        "id": "68",
+        "title": "Learning at Work Week",
+        "start": "2023-05-15",
+        "end": "2023-05-23"
+    },
+    {
+        "id": "69",
+        "title": "Dementia Action Week",
+        "start": "2023-05-16",
+        "end": "2023-05-22"
+    },
+    {
+        "id": "70",
+        "title": "Global Accessibility Awareness Day",
+        "start": "2023-05-18"
+    },
+    {
+        "id": "71",
+        "title": "Epilepsy Awareness Week",
+        "start": "2023-05-24",
+        "end": "2023-05-29"
+    },
+    {
+        "id": "72",
+        "title": "World MS Day",
+        "start": "2023-05-30"
+    },
+    {
+        "id": "73",
+        "title": "Cataract Awareness Month",
+        "start": "2023-06-01",
+        "end": "2023-06-30"
+    },
+    {
+        "id": "74",
+        "title": "Volunteers Week",
+        "start": "2023-06-01",
+        "end": "2023-06-07"
+    },
+    {
+        "id": "75",
+        "title": "National Carers Week",
+        "start": "2023-06-06",
+        "end": "2023-06-12"
+    },
+    {
+        "id": "76",
+        "title": "Tourette Awareness Day",
+        "start": "2023-06-07"
+    },
+    {
+        "id": "77",
+        "title": "Global Wellness Day",
+        "start": "2023-06-10"
+    },
+    {
+        "id": "78",
+        "title": "Diabetes Awareness Week",
+        "start": "2023-06-12",
+        "end": "2023-06-18"
+    },
+    {
+        "id": "79",
+        "title": "Men’s Health Week",
+        "start": "2023-06-12",
+        "end": "2023-06-18"
+    },
+    {
+        "id": "80",
+        "title": "Loneliness Awareness Week",
+        "start": "2023-06-13",
+        "end": "2023-06-17"
+    },
+    {
+        "id": "81",
+        "title": "Autistic Pride Day",
+        "start": "2023-06-18"
+    },
+    {
+        "id": "82",
+        "title": "Learning Disability Week",
+        "start": "2023-06-19",
+        "end": "2023-06-25"
+    },
+    {
+        "id": "83",
+        "title": "#GladtoCare Awareness Week",
+        "start": "2023-06-19",
+        "end": "2023-06-23"
+    },
+    {
+        "id": "84",
+        "title": "World Humanist Day",
+        "start": "2023-06-12"
+    },
+    {
+        "id": "85",
+        "title": "Deafblind Awareness Week",
+        "start": "2023-06-26",
+        "end": "2023-07-02"
+    },
+    {
+        "id": "86",
+        "title": "World Wellbeing Week",
+        "start": "2023-06-26",
+        "end": "2023-06-30"
+    },
+    {
+        "id": "87",
+        "title": "Disability Pride Month",
+        "start": "2023-07-01",
+        "end": "2023-07-31"
+    },
+    {
+        "id": "88",
+        "title": "Disability Awareness Day",
+        "start": "2023-07-16"
+    },
+    {
+        "id": "89",
+        "title": "Samaritans Awareness Day",
+        "start": "2023-07-24"
+    },
+    {
+        "id": "90",
+        "title": "National Schizophrenia Awareness Day",
+        "start": "2023-07-25"
+    },
+    {
+        "id": "91",
+        "title": "World Wide Web Day",
+        "start": "2023-08-01"
+    },
+    {
+        "id": "92",
+        "title": "International Assistance Dog Week",
+        "start": "2023-08-06",
+        "end": "2023-08-12"
+    },
+    {
+        "id": "93",
+        "title": "International Youth Day",
+        "start": "2023-08-12"
+    },
+    {
+        "id": "94",
+        "title": "International Left handers Day",
+        "start": "2023-08-13"
+    },
+    {
+        "id": "95",
+        "title": "Never give up Day",
+        "start": "2023-08-18"
+    },
+    {
+        "id": "96",
+        "title": "World Alzheimer's Month",
+        "start": "2023-09-01",
+        "end": "2023-09-30"
+    },
+    {
+        "id": "97",
+        "title": "World Sepsis Day",
+        "start": "2023-09-13"
+    },
+    {
+        "id": "98",
+        "title": "National Coding Week",
+        "start": "2023-09-18",
+        "end": "2023-09-24"
+    },
+    {
+        "id": "99",
+        "title": "International Week of Happiness at Work",
+        "start": "2023-09-18",
+        "end": "2023-09-24"
+    },
+    {
+        "id": "100",
+        "title": "Youth Mental Health Day",
+        "start": "2023-09-19"
+    },
+    {
+        "id": "101",
+        "title": "World Alzheimer's Day",
+        "start": "2023-09-21"
+    },
+    {
+        "id": "102",
+        "title": "International day of sign languages",
+        "start": "2023-09-23"
+    },
+    {
+        "id": "103",
+        "title": "National inclusion week",
+        "start": "2023-09-25",
+        "end": "2023-10-01"
+    },
+    {
+        "id": "104",
+        "title": "World Heart Day",
+        "start": "2023-09-29"
+    },
+    {
+        "id": "105",
+        "title": "ADHD Awareness Month",
+        "start": "2023-10-01",
+        "end": "2023-10-31"
+    },
+    {
+        "id": "106",
+        "title": "National Cholesterol Month",
+        "start": "2023-10-01",
+        "end": "2023-10-31"
+    },
+    {
+        "id": "107",
+        "title": "International Day of Older Person",
+        "start": "2023-10-01"
+    },
+    {
+        "id": "108",
+        "title": "National Work Life Week",
+        "start": "2023-10-02",
+        "end": "2023-10-06"
+    },
+    {
+        "id": "109",
+        "title": "Dyslexia Awareness Week",
+        "start": "2023-10-02",
+        "end": "2023-10-08"
+    },
+    {
+        "id": "110",
+        "title": "World Mental Health Day",
+        "start": "2023-10-10"
+    },
+    {
+        "id": "111",
+        "title": "World Sight Day",
+        "start": "2023-10-12"
+    },
+    {
+        "id": "112",
+        "title": "Bone and Joint Week",
+        "start": "2023-10-12",
+        "end": "2023-10-20"
+    },
+    {
+        "id": "113",
+        "title": "World Spine Day",
+        "start": "2023-10-16"
+    },
+    {
+        "id": "114",
+        "title": "Get Online Week",
+        "start": "2023-10-17",
+        "end": "2023-10-23"
+    },
+    {
+        "id": "115",
+        "title": "World Osteoporosis Day",
+        "start": "2023-10-20"
+    },
+    {
+        "id": "116",
+        "title": "International Stammering Awareness Day",
+        "start": "2023-10-22"
+    },
+    {
+        "id": "117",
+        "title": "International Stress Awareness Week",
+        "start": "2023-10-30",
+        "end": "2023-11-03"
+    },
+    {
+        "id": "118",
+        "title": "Movember",
+        "start": "2023-11-01",
+        "end": "2023-11-30"
+    },
+    {
+        "id": "119",
+        "title": "International Stress Awareness Day",
+        "start": "2023-11-01"
+    },
+    {
+        "id": "120",
+        "title": "Smart Home Day",
+        "start": "2023-11-03"
+    },
+    {
+        "id": "121",
+        "title": "World Usability Day",
+        "start": "2023-11-09"
+    },
+    {
+        "id": "122",
+        "title": "World Diabetes Day",
+        "start": "2023-11-14"
+    },
+    {
+        "id": "123",
+        "title": "Self Care Week",
+        "start": "2023-11-14",
+        "end": "2023-11-20"
+    },
+    {
+        "id": "124",
+        "title": "World Chronic Obstructive Pulmonary Disease Day",
+        "start": "2023-11-15"
+    },
+    {
+        "id": "125",
+        "title": "Disability History Month",
+        "start": "2023-11-22",
+        "end": "2023-12-22"
+    },
+    {
+        "id": "126",
+        "title": "Computer Security Day",
+        "start": "2023-11-30"
+    },
+    {
+        "id": "127",
+        "title": "International Day of Disabled Persons",
+        "start": "2023-12-03"
+    },
+    {
+        "id": "128",
+        "title": "Human Rights Day",
+        "start": "2023-12-10"
+    },
+    {
+        "id": "129",
+        "title": "International Shareware Day",
+        "start": "2023-12-10"
+    },
+    {
+        "id": "130",
+        "title": "End of Disability History Month",
+        "start": "2023-12-22"
+    }
+
+]

@@ -10,6 +10,9 @@ import Login from './views/Login.vue'
 import store from './store'
 import axios from 'axios'
 import 'bootstrap/dist/css/bootstrap.css'
+import VCalendar from 'v-calendar';
+import 'v-calendar/dist/style.css';
+
 
 axios.defaults.baseURL = 'http://127.0.0.1:8000'
 
@@ -62,6 +65,6 @@ router.beforeEach((to, from, next) => {
     }
 })
 
-createApp(App).use(store).use(router, axios).mount('#app')
+createApp(App).use(store).use(router, axios).use(VCalendar, {}).mount('#app')
 
 import 'bootstrap/dist/js/bootstrap.js'
