@@ -1,3 +1,7 @@
+from django.contrib.auth.models import AbstractUser
 from django.db import models
 
-# Create your models here.
+class CustomUser(AbstractUser):
+    user_information = models.TextField('User Information', max_length=300,default='', blank=True)    
+    class Meta:
+        db_table = 'auth_user'
