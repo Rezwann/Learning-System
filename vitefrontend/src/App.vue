@@ -1,7 +1,12 @@
 <template>
-    <nav class="container-fluid navbar navbar-expand-lg navbar-light bg-indigo-800">
-      <h4 class="mx-4 text-white container-fluid">Rezwan: LMS</h4>
+    <div class="navbar navbar-expand navbar-light bg-indigo-800">
+      <h4 class="mx-4 mt-2 text-white me-auto">Rezwan: LMS</h4>
+
       <div class="navbar-nav ml-auto mx-4 mb-1 mt-1">
+          <!-- Button trigger modal -->
+          <button type="button" class="btn btn-success nav-item nav-link text-white mx-2" data-bs-toggle="modal" data-bs-target="#exampleModal">
+          Launch Key Dates Calendar
+          </button>
         <button
           class="nav-item nav-link btn btn-light mx-2 "
           @click="$router.push('/')"
@@ -41,24 +46,37 @@
           </button>
         </template>
       </div>
-    </nav>
+    </div>
 
-    <div
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Key Dates</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+
+        <div
     v-if='selectedDay'
     class='selected-day alert alert-info container-sm'>
-    <h4>{{ selectedDay.date.toDateString() }}</h4>
-    <ul>
+    <h4>Date: {{ selectedDay.date.toDateString() }}</h4>
+    <ul v-if="selectedDay.attributes.length > 0">
       <li
         v-for='attr in selectedDay.attributes'
         :key='attr.key'>
         {{ attr.customData.title }}
       </li>      
     </ul>
+    <ul v-else>
+      <li>This may well be an important day, but no information has been added</li>      
+    </ul>
   </div>
   <div
-  v-else
+  v-if="!selectedDay"
     class='selected-day alert alert-info container-sm'>
-    <h4>Choose a day that has a bar near it</h4>
+    <h4>Choose a day that has a bar next to it</h4>
     <hr>
     <ul>
       <li>
@@ -66,8 +84,15 @@
       </li>
     </ul>
   </div>
+  <v-calendar is-expanded is-dark :attributes='attributes' @dayclick='dayClicked'></v-calendar>
 
-  <v-calendar is-dark :attributes='attributes' @dayclick='dayClicked'></v-calendar>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
 
     <router-view></router-view>
   </template>  
