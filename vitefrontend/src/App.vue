@@ -1,6 +1,6 @@
 <template>
   <div id="brightness-target">
-    <div v-bind:key="font" v-bind:style="{ fontFamily: font }">
+    <div v-bind:key="font" v-bind:style="{ fontFamily: font}">
     <div class="navbar navbar-expand navbar-light bg-indigo-800">
       <h4 class="mx-4 mt-2 text-white me-auto">Rezwan: LMS 🙂</h4>
             <div class="navbar-nav ml-auto mx-4 mb-1 mt-1">
