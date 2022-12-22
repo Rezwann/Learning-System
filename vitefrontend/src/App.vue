@@ -1,6 +1,6 @@
 <template>
     <div class="navbar navbar-expand navbar-light bg-indigo-800">
-      <h4 class="mx-4 mt-2 text-white me-auto">Rezwan: LMS</h4>
+      <h4 class="mx-4 mt-2 text-white me-auto">Rezwan: LMS 🙂</h4>
 
       <div class="navbar-nav ml-auto mx-4 mb-1 mt-1">
           <!-- Button trigger modal -->
@@ -39,7 +39,7 @@
             Register
           </button>
           <button
-            class="nav-item nav-link text-white btn btn-secondary mx-2"
+            class="nav-item nav-link btn btn-warning mx-2"
             @click="$router.push('/login')"
           >
             Login

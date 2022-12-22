@@ -1,6 +1,6 @@
 <template>
           <div class="mb-4"></div>
-<h1 class="text-center">Are you sure you want to log out?</h1>
+<h1 class="text-center">Are you sure you want to log out? 🤔</h1>
 
 <div class="d-flex justify-content-center mt-4">
   <button @click="logout()" class="btn btn-danger text-center">Yes, Log Out</button>
