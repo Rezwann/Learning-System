@@ -12,15 +12,19 @@ import axios from 'axios'
 
 export default {
     name: 'Logout',
-    methods:{
-        logout(){
-            axios.post("/api/v1/token/logout/").then(response => {
-            axios.defaults.headers.common['Authorization'] = ""
-            localStorage.removeItem("token")
-            this.$store.commit('removeToken')
-            this.$router.push('/')
-            })
-        }
+    methods: {
+  async logout() {
+    try {
+      await axios.post("/api/v1/token/logout/");
+      axios.defaults.headers.common['Authorization'] = "";
+      localStorage.removeItem("token");
+      this.$store.commit("removeToken");
+      this.$router.push("/");
+    } catch (error) {
+      console.error(error);
     }
+  }
+}
+
 }
 </script>

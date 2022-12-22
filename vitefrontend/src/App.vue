@@ -1,13 +1,14 @@
 <template>
+  <div id="brightness-target">
     <div v-bind:key="font" v-bind:style="{ fontFamily: font }">
     <div class="navbar navbar-expand navbar-light bg-indigo-800">
       <h4 class="mx-4 mt-2 text-white me-auto">Rezwan: LMS 🙂</h4>
             <div class="navbar-nav ml-auto mx-4 mb-1 mt-1">
-
+              <button class="btn btn-success nav-item nav-link text-white mx-2" v-on:click="changeSaturation">Toggle Dimmer</button>
               <button class="btn btn-success nav-item nav-link text-white mx-2" @click="changeFont">Toggle Font Style</button>    
               <!-- Button trigger modal -->
           <button type="button" class="btn btn-success nav-item nav-link text-white mx-2" data-bs-toggle="modal" data-bs-target="#exampleModal">
-          Launch Key Dates Calendar
+          View Key Dates
           </button>
         <button
           class="nav-item nav-link btn btn-light mx-2 "
@@ -49,7 +50,9 @@
         </template>
       </div>
     </div>
-
+    <router-view></router-view>
+  </div>
+</div>
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -97,8 +100,6 @@
     </div>
   </div>
 </div>
-    <router-view></router-view>
-  </div>
 </template>  
   
 <script>
@@ -138,6 +139,10 @@
 },
     },
   methods: {
+    changeSaturation() {
+      const target = document.getElementById('brightness-target');
+      target.classList.toggle('brightness-low');
+    },
     changeFont() {
       if (this.font !=='OpenDyslexic'){
       this.font = 'OpenDyslexic';
@@ -194,4 +199,8 @@
   font-family: 'OpenDyslexic';
   src: url('./assets/fonts/OpenDyslexic.ttf') format('truetype');
 }
+
+.brightness-low {
+  filter: saturate(40%);
+  }
 </style>
