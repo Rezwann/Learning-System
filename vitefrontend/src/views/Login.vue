@@ -17,9 +17,17 @@
           </p>
         </div>
         <div class="col d-flex justify-content-center mt-3">
-          <button class="btn btn-primary my-2">Log In</button>
+          <button class="btn btn-success my-2">Log In</button>
         </div>
       </form>
+      <div class="col d-flex justify-content-center mt-2">
+      <button
+            class="btn btn-primary my-2"
+            @click="$router.push('/register')"
+          >
+            I need to create an account
+          </button>
+          </div>
     </div>
   </template>
 
