@@ -53,7 +53,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">Key Dates</h1>
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Key Dates 📅</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -67,6 +67,7 @@
         v-for='attr in selectedDay.attributes'
         :key='attr.key'>
         {{ attr.customData.title }}
+        <button class="btn" @click="speakText(attr.customData.title)"><h5>🔊</h5></button>
       </li>      
     </ul>
     <ul v-else>
@@ -79,9 +80,10 @@
     <h4>Choose a day that has a bar next to it</h4>
     <hr>
     <ul>
-      <li>
-        A coloured bar indicates that a day is significant in celebrating learner inclusiveness, wellbeing, accessibility, disability, or another factor of equal value
-      </li>
+      <div class="d-inline-flex">
+    <li v-bind:textContent="guidanceText"></li>
+    <button class="btn" @click="speakText('')"><h5>🔊</h5></button>
+  </div>
     </ul>
   </div>
   <v-calendar is-expanded is-dark :attributes='attributes' @dayclick='dayClicked'></v-calendar>
@@ -105,8 +107,9 @@
     name: 'App',
     data() {
     return {
-        selectedDay: null,
-      eventsJSON 
+    guidanceText:'A coloured bar indicates that a day is significant in celebrating learner inclusiveness, wellbeing, accessibility, disability, or another factor of equal value',
+    selectedDay: null,
+    eventsJSON 
 }
     },
     computed: {
@@ -133,7 +136,17 @@
   methods: {
     dayClicked(day) {
       this.selectedDay = day;
+    },
+    speakText(text) {
+      if (text === '') {
+        const speech = new SpeechSynthesisUtterance(this.guidanceText);
+        window.speechSynthesis.speak(speech);  
+      }
+      else {
+      const speech = new SpeechSynthesisUtterance(text);
+      window.speechSynthesis.speak(speech);
     }
+    },
   },
     beforeCreate() {
       this.$store.commit('initalizeStore')

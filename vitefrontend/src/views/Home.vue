@@ -4,7 +4,8 @@
     <div><h1 class="text-center">Home</h1></div>
     <div class="alert alert-success" role="alert">
   <h4 class="alert-heading">Hello!</h4>
-  <p>This example text is going to run a bit longer.</p>
+  <p ref="text">Hey</p>
+  <button class="btn btn-info" @click="speakText">Read Aloud</button>
   <hr>
   <p class="mb-0">Whenever you need to, be sure to use margin utilities to keep things nice and tidy.</p>
 </div>
@@ -13,6 +14,20 @@
 
 <script>
 export default {
-    name: 'Home'
-}
+  name: 'Home',
+  data() {
+    return {
+      text: ''
+    };
+  },
+  mounted() {
+    this.text = this.$refs.text.textContent;
+  },
+  methods: {
+    speakText() {
+      const speech = new SpeechSynthesisUtterance(this.text);
+      window.speechSynthesis.speak(speech);
+    }
+  }
+};
 </script>
