@@ -107,7 +107,7 @@
     name: 'App',
     data() {
     return {
-    guidanceText:'A coloured bar indicates that a day is significant in celebrating learner inclusiveness, wellbeing, accessibility, disability, or another factor of equal value',
+    guidanceText:'A coloured bar in the below calendar indicates that a day is significant in celebrating learner inclusiveness, wellbeing, accessibility, disability, or another factor of equal value',
     selectedDay: null,
     eventsJSON 
 }
