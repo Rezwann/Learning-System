@@ -1,8 +1,8 @@
 <template>
+    <div style="font-family:OpenDyslexic">
     <div class="navbar navbar-expand navbar-light bg-indigo-800">
       <h4 class="mx-4 mt-2 text-white me-auto">Rezwan: LMS 🙂</h4>
-
-      <div class="navbar-nav ml-auto mx-4 mb-1 mt-1">
+            <div class="navbar-nav ml-auto mx-4 mb-1 mt-1">
           <!-- Button trigger modal -->
           <button type="button" class="btn btn-success nav-item nav-link text-white mx-2" data-bs-toggle="modal" data-bs-target="#exampleModal">
           Launch Key Dates Calendar
@@ -95,7 +95,7 @@
     </div>
   </div>
 </div>
-
+</div>
     <router-view></router-view>
   </template>  
   
@@ -107,9 +107,9 @@
     name: 'App',
     data() {
     return {
-    guidanceText:'A coloured bar in the below calendar indicates that a day is significant in celebrating learner inclusiveness, wellbeing, accessibility, disability, or another factor of equal value',
-    selectedDay: null,
-    eventsJSON 
+      guidanceText:'A coloured bar in the below calendar indicates that a day is significant in celebrating learner inclusiveness, wellbeing, accessibility, disability, or another factor of equal value',
+      selectedDay: null,
+      eventsJSON 
 }
     },
     computed: {
@@ -173,5 +173,10 @@
 
 .selected-day {
   margin-left: 10px;
+}
+
+@font-face {
+  font-family: 'OpenDyslexic';
+  src: url('./assets/fonts/OpenDyslexic.ttf') format('truetype');
 }
 </style>
