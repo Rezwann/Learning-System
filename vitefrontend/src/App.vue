@@ -54,6 +54,7 @@
   </div>
 </div>
 <!-- Modal -->
+<div v-bind:key="font" v-bind:style="{ fontFamily: font}">
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -99,6 +100,7 @@
       </div>
     </div>
   </div>
+</div>
 </div>
 </template>  
   
