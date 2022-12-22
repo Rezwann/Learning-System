@@ -1,9 +1,11 @@
 <template>
-    <div style="font-family:OpenDyslexic">
+    <div v-bind:key="font" v-bind:style="{ fontFamily: font }">
     <div class="navbar navbar-expand navbar-light bg-indigo-800">
       <h4 class="mx-4 mt-2 text-white me-auto">Rezwan: LMS 🙂</h4>
             <div class="navbar-nav ml-auto mx-4 mb-1 mt-1">
-          <!-- Button trigger modal -->
+
+              <button class="btn btn-success nav-item nav-link text-white mx-2" @click="changeFont">Toggle Font Style</button>    
+              <!-- Button trigger modal -->
           <button type="button" class="btn btn-success nav-item nav-link text-white mx-2" data-bs-toggle="modal" data-bs-target="#exampleModal">
           Launch Key Dates Calendar
           </button>
@@ -95,9 +97,9 @@
     </div>
   </div>
 </div>
-</div>
     <router-view></router-view>
-  </template>  
+  </div>
+</template>  
   
 <script>
   import eventsJSON from './json/events.json';
@@ -107,6 +109,8 @@
     name: 'App',
     data() {
     return {
+      font: '',
+      defaultFont: '',
       guidanceText:'A coloured bar in the below calendar indicates that a day is significant in celebrating learner inclusiveness, wellbeing, accessibility, disability, or another factor of equal value',
       selectedDay: null,
       eventsJSON 
@@ -134,6 +138,14 @@
 },
     },
   methods: {
+    changeFont() {
+      if (this.font !=='OpenDyslexic'){
+      this.font = 'OpenDyslexic';
+      }
+      else { 
+        this.font = this.defaultFont;
+      }
+    },
     dayClicked(day) {
       this.selectedDay = day;
     },
@@ -157,6 +169,9 @@
       } else {
         axios.defaults.headers.common['Authorization'] = ""
       }
+    }, mounted(){
+      this.font = this.defaultFont;
+
     }
   }
 
