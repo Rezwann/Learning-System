@@ -4,8 +4,8 @@
       <h1 class="text-center">Log In</h1>
       <form @submit.prevent="submitForm" class="row mx-auto d-flex justify-content-center flex-column">
         <div class="col form-group mt-2">
-          <label class="mb-2">Email </label>
-          <input type="email" name="username" class="form-control" v-model="username">
+          <label class="mb-2">Username</label>
+          <input type="text" name="username" class="form-control" v-model="username">
         </div>
         <div class="col form-group mt-2">
           <label class="mb-2">Password 🔑</label>
@@ -38,8 +38,10 @@ export default {
     data(){
         return {
             username:'',
+            email:'',
             password:'',
-            errors:[]
+            password2:'',
+            errors:[]    
         }
     },
     methods: {
