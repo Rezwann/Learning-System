@@ -19,41 +19,29 @@
 </div>
 
 <div class="">
-    <ul class=" mx-2 list-group list-group-horizontal">
+    <ul class=" col d-flex justify-content-center mb-4 mt-2 mx-2 list-group list-group-horizontal">
   <li class="list-group-item active">An item</li>
   <li class="list-group-item">A second item</li>
   <li class="list-group-item">A third item</li>
-  <li class="list-group-item">A third item</li>
-  <li class="list-group-item">A third item</li>
-  <li class="list-group-item">A third item</li>
 </ul>
 </div>
-
-
-
-<!-- <div class="container-sm mb-4">
-<div class="progress">
-  <div class="progress-bar progress-bar-striped bg-primary" role="progressbar" aria-label="Warning striped example" style="width: 75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">75%</div>
-</div>
-</div> -->
-
-
 
 <div class="accordion" id="">
     <div v-for="subject in subjects" v-bind:key="subject.id">
     <div class="accordion-item">
         <h2 class="accordion-header">
             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" v-bind:data-bs-target="'#accordion-item-' + subject.id" aria-expanded="false" v-bind:aria-controls="'accordion-item-' + subject.id">
-                {{subject.name}}
+                {{subject.name}} - Subject Code: {{subject.subject_code}}
             </button>
         </h2>
         <div v-bind:id="'accordion-item-' + subject.id" class="accordion-collapse collapse" v-bind:aria-labelledby="'accordion-item-' + subject.id">
             <div class="accordion-body">
                 <p><strong>Name: </strong>{{subject.name}}</p>
                 <p><strong>Details: </strong>{{subject.details}}</p>
-                <p><strong>Category: </strong>{{subject.category}}</p>
+                <p><strong>Subject Category: </strong>{{subject.category_name}}</p>
                 <p><strong>Year Group: </strong>{{subject.year_group}}</p>
-                <p><strong>Subject Leader: </strong>{{subject.subject_leader}}</p>
+                <p><strong>Subject Leader Name: </strong>{{subject.subject_leader_name}}</p>
+                <p><strong>Subject Leader Contact Email: </strong>{{subject.subject_leader_email}}</p>
             </div>
         </div>
     </div>

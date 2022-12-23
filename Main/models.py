@@ -1,3 +1,5 @@
+import random
+import string
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
@@ -10,7 +12,7 @@ class CustomUser(AbstractUser):
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='student')
     
     def __str__(self):
-        return self.first_name    
+        return self.username    
 
 class SubjectCategory(models.Model):
     CATEGORY_CHOICES = (
@@ -52,11 +54,11 @@ class Subject(models.Model):
     )
     
     YEAR_CHOICES = (
-        ('Year7', 'Year 7'),
-        ('Year8', 'Year 8'),
-        ('Year9', 'Year 9'),
-        ('Year10', 'Year 10'),
-        ('Year11', 'Year 11'),
+        ('Year 7', 'Year 7'),
+        ('Year 8', 'Year 8'),
+        ('Year 9', 'Year 9'),
+        ('Year 10', 'Year 10'),
+        ('Year 11', 'Year 11'),
 
     )
             
@@ -64,7 +66,16 @@ class Subject(models.Model):
     details = models.CharField(max_length=300, default='')
     category = models.OneToOneField(SubjectCategory, on_delete=models.CASCADE)
     year_group = models.CharField(max_length=50, choices=YEAR_CHOICES, default='Year_11')   
+    subject_leader_name = models.CharField(max_length=255, default = '')
     subject_leader = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='leader')
+    subject_code = models.CharField(max_length=8, unique=True, blank=True, null = True)
+        
+    def save(self, *args, **kwargs):
+        if not self.subject_code:
+            name_code = self.name[0]
+            random_code = ''.join(random.choices(string.digits, k=4))
+            self.subject_code = f'{name_code}{random_code}'        
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.name
