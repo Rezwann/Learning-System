@@ -6,8 +6,7 @@ export default createStore({
             username: ''
         },
         isAuthenticated: false,
-        token: '',
-        refresh: ''
+        token: ''
     },
     mutations: {
         initalizeStore(state) {
@@ -28,9 +27,6 @@ export default createStore({
             if (state.isAuthenticated = true) {
                 state.isAuthenticated = false
             }
-        },
-        setRefresh(state, refresh) {
-            state.refresh = refresh
         }
     },
     actions: {

@@ -8,6 +8,26 @@ class CustomUser(AbstractUser):
         ('teacher', 'Teacher'),
     )
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='student')
+    
+    def __str__(self):
+        return self.first_name    
+
+class SubjectCategory(models.Model):
+    CATEGORY_CHOICES = (
+        ('MFL', 'Modern Foreign Languages'),
+        ('Humanity', 'Humanity'),
+        ('Arts', 'Arts'),
+        ('Technical', 'Technical'),
+        ('Core', 'Core'),
+    )    
+    
+    name = models.CharField(max_length=255, choices=CATEGORY_CHOICES)
+    
+    class Meta:
+        verbose_name_plural = "Subject Categories (Departments)"
+    
+    def __str__(self):
+        return self.name
         
 class Subject(models.Model):
     SUBJECT_CHOICES = (
@@ -39,17 +59,10 @@ class Subject(models.Model):
         ('Year11', 'Year 11'),
 
     )
-        
-    CATEGORY_CHOICES = (
-        ('MFL', 'Modern Foreign Languages'),
-        ('Humanity', 'Humanity'),
-        ('Arts', 'Arts'),
-        ('Technical', 'Technical'),
-        ('Core', 'Core'),
-    )
             
     name = models.CharField(max_length=50, choices=SUBJECT_CHOICES, default='Computing')
-    category = models.CharField(max_length=255, choices=CATEGORY_CHOICES)
+    details = models.CharField(max_length=300, default='')
+    category = models.OneToOneField(SubjectCategory, on_delete=models.CASCADE)
     year_group = models.CharField(max_length=50, choices=YEAR_CHOICES, default='Year_11')   
     subject_leader = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='leader')
 

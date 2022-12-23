@@ -46,8 +46,6 @@ export default {
         submitForm(e){
             axios.defaults.headers.common['Authorization'] = ""
             localStorage.removeItem("token")
-
-
             const formData = {
                 username: this.username,
                 password: this.password

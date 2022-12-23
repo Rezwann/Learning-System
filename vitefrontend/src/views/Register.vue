@@ -4,6 +4,14 @@
       <h1 class="text-center">Register</h1>
       <form @submit.prevent="submitForm" class="row mx-auto d-flex justify-content-center flex-column">
         <div class="col form-group mt-2">
+          <label class="mb-2">First Name</label>
+          <input class="form-control" name="first_name" v-model="first_name">
+        </div>
+        <div class="col form-group mt-2">
+          <label class="mb-2">Last Name</label>
+          <input class="form-control" name="last_name" v-model="last_name">
+        </div>
+        <div class="col form-group mt-2">
           <label class="mb-2">Email</label>
           <input type="email" name="username" class="form-control" v-model="username">
         </div>
@@ -34,11 +42,7 @@
         </div>
 
         </div>
-  </template>
-  
-  
-  
-  
+  </template>  
   
 
 <script>
@@ -62,16 +66,19 @@ export default {
           if (this.password !== this.password2){
             this.errors.push('Entered passwords do not match')
           }
+          console.log(this.fname)
 
           if (this.errors.length == 0){
+            
             const formData = {
                 username: this.username,
                 password: this.password,
                 email: this.username
             }
+
             axios.post("/api/v1/users/", formData)
             .then(response => {
-                console.log(response)                
+                console.log(response.data)                
                 this.$router.push('/login')
             })
             .catch(error =>{

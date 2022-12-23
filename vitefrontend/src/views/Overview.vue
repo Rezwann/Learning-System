@@ -18,64 +18,74 @@
   </div>
 </div>
 
+<div class="">
+    <ul class=" mx-2 list-group list-group-horizontal">
+  <li class="list-group-item active">An item</li>
+  <li class="list-group-item">A second item</li>
+  <li class="list-group-item">A third item</li>
+  <li class="list-group-item">A third item</li>
+  <li class="list-group-item">A third item</li>
+  <li class="list-group-item">A third item</li>
+</ul>
+</div>
 
 
 
-
-
-
-<div class="container-sm mb-4">
+<!-- <div class="container-sm mb-4">
 <div class="progress">
   <div class="progress-bar progress-bar-striped bg-primary" role="progressbar" aria-label="Warning striped example" style="width: 75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">75%</div>
 </div>
-</div>
+</div> -->
 
 
 
-<div class="accordion" id="accordionPanelsStayOpenExample">
+<div class="accordion" id="">
+    <div v-for="subject in subjects" v-bind:key="subject.id">
     <div class="accordion-item">
-    <h2 class="accordion-header" id="panelsStayOpen-headingOne">
-      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="false" aria-controls="panelsStayOpen-collapseOne">
-        Accordion Item #1
-      </button>
-    </h2>
-    <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingOne">
-      <div class="accordion-body">
-        <strong>This is the first item's accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
-      </div>
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" v-bind:data-bs-target="'#accordion-item-' + subject.id" aria-expanded="false" v-bind:aria-controls="'accordion-item-' + subject.id">
+                {{subject.name}}
+            </button>
+        </h2>
+        <div v-bind:id="'accordion-item-' + subject.id" class="accordion-collapse collapse" v-bind:aria-labelledby="'accordion-item-' + subject.id">
+            <div class="accordion-body">
+                <p><strong>Name: </strong>{{subject.name}}</p>
+                <p><strong>Details: </strong>{{subject.details}}</p>
+                <p><strong>Category: </strong>{{subject.category}}</p>
+                <p><strong>Year Group: </strong>{{subject.year_group}}</p>
+                <p><strong>Subject Leader: </strong>{{subject.subject_leader}}</p>
+            </div>
+        </div>
     </div>
-  </div>
-  <div class="accordion-item">
-    <h2 class="accordion-header" id="panelsStayOpen-headingTwo">
-      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="false" aria-controls="panelsStayOpen-collapseTwo">
-        Accordion Item #2
-      </button>
-    </h2>
-    <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingTwo">
-      <div class="accordion-body">
-        <strong>This is the second item's accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
-      </div>
-    </div>
-  </div>
-  <div class="accordion-item">
-    <h2 class="accordion-header" id="panelsStayOpen-headingThree">
-      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseThree" aria-expanded="false" aria-controls="panelsStayOpen-collapseThree">
-        Accordion Item #3
-      </button>
-    </h2>
-    <div id="panelsStayOpen-collapseThree" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingThree">
-      <div class="accordion-body">
-        <strong>This is the third item's accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
-      </div>
-    </div>
-  </div>
 </div>
+
+</div>
+
+<nav aria-label="Page navigation example">
+  <ul class="pagination justify-content-center mt-3">
+
+    <li class="page-item active"><a class="page-link" href="#">1</a></li>
+    <li class="page-item"><a class="page-link" href="#">2</a></li>
+    <li class="page-item"><a class="page-link" href="#">3</a></li>
+  </ul>
+</nav>
 
 </template>
 
 <script>
+import axios from 'axios'
 export default {
     name: 'Overview',
-}
+    data(){
+        return {
+            subjects: []
+        }
+    },
+    mounted(){
 
+        axios.get('/api/v1/subjects').then(response =>{
+            this.subjects = response.data
+        })
+    }
+}
 </script>
