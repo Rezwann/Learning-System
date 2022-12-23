@@ -50,6 +50,7 @@ export default {
             username:'',
             password:'',
             password2:'',
+            email:'',
             errors:[]    
     }
     },
@@ -65,7 +66,8 @@ export default {
           if (this.errors.length == 0){
             const formData = {
                 username: this.username,
-                password: this.password
+                password: this.password,
+                email: this.username
             }
             axios.post("/api/v1/users/", formData)
             .then(response => {

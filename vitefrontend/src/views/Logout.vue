@@ -17,7 +17,9 @@ export default {
     try {
       await axios.post("/api/v1/token/logout/");
       axios.defaults.headers.common['Authorization'] = "";
-      localStorage.removeItem("token");
+      localStorage.removeItem('token');
+      localStorage.clear();
+      sessionStorage.clear();
       this.$store.commit("removeToken");
       this.$router.push("/");
     } catch (error) {

@@ -27,19 +27,20 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-CORS_ALLOWED_ORIGINS = [ "http://localhost:5173","http://127.0.0.1:5173" ]
+CORS_ALLOWED_ORIGINS = [ "http://localhost:5173","http://127.0.0.1:5173",
+                        "http://localhost:8000","http://127.0.0.1:8000"]
 # Application definition
 
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES':(
+    'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.TokenAuthentication',
     ),
-    'DEFAULT_PERMISSION_CLASSES':(
+    'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
-    ),
-    'EXPIRATION_DELTA': datetime.timedelta(days=30),
+    )
 }
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
