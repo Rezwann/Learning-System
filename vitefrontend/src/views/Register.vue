@@ -66,7 +66,6 @@ export default {
           if (this.password !== this.password2){
             this.errors.push('Entered passwords do not match')
           }
-          console.log(this.fname)
 
           if (this.errors.length == 0){
             
