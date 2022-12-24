@@ -5,7 +5,7 @@
     <div class="alert alert-success" role="alert">
   <h4 class="alert-heading">Hello!</h4>
   <p ref="text">Hey, what's good </p>
-  <button class="btn btn-info" @click="speakText">🔊</button>
+  <button class="btn btn-dark" @click="speakText">🔊</button>
   <hr>
   <p class="mb-0">Whenever you need to, be sure to use margin utilities to keep things nice and tidy.</p>
 </div>

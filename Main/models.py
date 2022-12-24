@@ -64,6 +64,9 @@ class Subject(models.Model):
             
     name = models.CharField(max_length=50, choices=SUBJECT_CHOICES, default='Computing')
     details = models.CharField(max_length=300, default='')
+    
+#    category = models.ForeignKey(SubjectCategory, on_delete=models.CASCADE)
+    
     category = models.OneToOneField(SubjectCategory, on_delete=models.CASCADE)
     year_group = models.CharField(max_length=50, choices=YEAR_CHOICES, default='Year_11')   
     subject_leader_name = models.CharField(max_length=255, default = '')
