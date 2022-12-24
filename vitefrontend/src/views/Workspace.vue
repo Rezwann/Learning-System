@@ -3,40 +3,41 @@
     <div>
       <h1 class="text-center mb-4">Learning Workspace</h1>
     </div>
-  
+
     <div class="d-flex flex-wrap">
       <div v-for="board in LearningBoards" class="mx-2">
-        <div class="card h-100">
+        <div class="card">
           <div class="card-body">
             <h5 class="card-title">{{board.name}}</h5>
             <p class="card-text">{{board.short_description}}</p>
-            <div class="d-flex flex-wrap">
-              <div v-for="card in LearningBoardsCards" class="mx-2">
-                <div v-if="card.learning_board_id == board.id" class="card h-100 shadow-sm">
-                  <div class="card-body p-3">
-                    <h6 class="card-title">{{card.name}}</h6>
-                    <p class="card-text">{{card.short_description}}</p>
-                    <div class="d-flex flex-wrap">
-                      <div v-for="list in LearningBoardsCardsLists" class="mx-2">
+            <div v-for="card in LearningBoardsCards">
+              <div v-if="card.learning_board_id == board.id">
+                <div class="card mt-3 p-3">
+                  <h6 class="card-title">{{card.name}}</h6>
+                  <p class="card-text">{{card.short_description}}</p>
+                  <div class="card mt-3">
+                    <div class="card-body">
+                      <div v-for="list in LearningBoardsCardsLists">
                         <template v-if="list.learning_board_card_id == card.id">
-                          <div class="card h-100 shadow-sm">
-                            <div class="card-body p-3">
+                          <div class="card mt-3">
+                            <div class="card-body">
                               <p>{{ list.name }}</p>
-                              <p>{{ list.short_description }}</p>
+                              {{list.short_description}}
                             </div>
                           </div>
                         </template>
                       </div>
                     </div>
-                  </div>
+                </div>
+                </div>
                 </div>
               </div>
             </div>
-          </div>
         </div>
       </div>
     </div>
   </template>
+
   
 
 <script>
@@ -72,7 +73,6 @@
 .scroll-row{
 overflow-x: scroll;
 }
-
 </style>
 
 <!--         <p>
