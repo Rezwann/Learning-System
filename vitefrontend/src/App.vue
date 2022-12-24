@@ -93,7 +93,7 @@
   </div>
     </ul>
   </div>
-  <v-calendar is-expanded is-dark :attributes='attributes' @dayclick='dayClicked'></v-calendar>
+  <v-calendar mode="date" v-model="date" is-expanded is-dark :attributes='attributes' @dayclick='dayClicked'></v-calendar>
 
       </div>
       <div class="modal-footer">
@@ -148,7 +148,6 @@
   return this.eventsJSON.map(t => {
     const dates = [];
     let currentDate = new Date (t.start);
-
     while (currentDate <= new Date (t.end)) {
       dates.push(currentDate);
       currentDate = new Date(currentDate.getTime() + 24 * 60 * 60 * 1000);
