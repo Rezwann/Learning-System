@@ -4,23 +4,30 @@
       <h1 class="text-center mb-4">Learning Workspace</h1>
     </div>
   
-    <div class="row align-items-start">
-      <div v-for="board in LearningBoards">
-        <div class="card mx-2 col-2">
+    <div class="d-flex flex-wrap">
+      <div v-for="board in LearningBoards" class="mx-2">
+        <div class="card h-100">
           <div class="card-body">
             <h5 class="card-title">{{board.name}}</h5>
             <p class="card-text">{{board.short_description}}</p>
-            <div v-for="card in LearningBoardsCards">
-              <div v-if="card.learning_board_id == board.id">
-                <div class="card">
-                  {{card.id}}
-                  <p>{{card.name}}</p>
-                  <p>{{card.short_description}}</p>
-                  <div v-for="list in LearningBoardsCardsLists">
-                    <template v-if="list.learning_board_card_id == card.id">
-                      {{ list.learning_board_card_id }}
-                      {{ list.name }}
-                    </template>
+            <div class="d-flex flex-wrap">
+              <div v-for="card in LearningBoardsCards" class="mx-2">
+                <div v-if="card.learning_board_id == board.id" class="card h-100 shadow-sm">
+                  <div class="card-body p-3">
+                    <h6 class="card-title">{{card.name}}</h6>
+                    <p class="card-text">{{card.short_description}}</p>
+                    <div class="d-flex flex-wrap">
+                      <div v-for="list in LearningBoardsCardsLists" class="mx-2">
+                        <template v-if="list.learning_board_card_id == card.id">
+                          <div class="card h-100 shadow-sm">
+                            <div class="card-body p-3">
+                              <p>{{ list.name }}</p>
+                              <p>{{ list.short_description }}</p>
+                            </div>
+                          </div>
+                        </template>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
