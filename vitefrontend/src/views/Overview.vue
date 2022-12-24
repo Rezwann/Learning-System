@@ -56,12 +56,12 @@
       }
     },
     async mounted() {
-      await axios.get('api/v1/subjects/subjectCategories/').then(response => {
+      await axios.get('api/v1/LSM/subjectCategories/').then(response => {
         this.subjectAreas = response.data
         console.log(response)
       })
   
-      await axios.get('/api/v1/subjects').then(response => {
+      await axios.get('/api/v1/LSM').then(response => {
         this.subjects = response.data
         this.filteredSubjects = this.subjects
       })

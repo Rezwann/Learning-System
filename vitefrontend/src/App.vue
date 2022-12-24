@@ -31,6 +31,12 @@
             Overview
           </button>
           <button
+            class="nav-item nav-link btn btn-light mx-2"
+            @click="$router.push('/workspace')"
+          >
+            Learning Workspace
+          </button>
+          <button
             class="nav-item nav-link text-white btn btn-danger mx-2"
             @click="$router.push('/logout')">Logout
           </button>
@@ -93,7 +99,7 @@
   </div>
     </ul>
   </div>
-  <v-calendar mode="date" v-model="date" is-expanded is-dark :attributes='attributes' @dayclick='dayClicked'></v-calendar>
+  <v-calendar is-expanded is-dark :attributes='attributes' @dayclick='dayClicked'></v-calendar>
 
       </div>
       <div class="modal-footer">
@@ -201,6 +207,7 @@
         axios.defaults.headers.common['Authorization'] = ""
       }
     }, mounted(){
+      document.title = 'Rezwan: LMS'
       const font = localStorage.getItem('font');
         if (font) {
           this.font = font;

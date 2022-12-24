@@ -66,8 +66,6 @@ class Subject(models.Model):
     details = models.CharField(max_length=300, default='')
     
     category = models.ForeignKey(SubjectCategory, on_delete=models.CASCADE)
-    
-#    category = models.OneToOneField(SubjectCategory, on_delete=models.CASCADE)
     year_group = models.CharField(max_length=50, choices=YEAR_CHOICES, default='Year_11')   
     subject_leader_name = models.CharField(max_length=255, default = '')
     subject_leader = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='leader')
@@ -83,13 +81,40 @@ class Subject(models.Model):
     def __str__(self):
         return self.name
     
-""" class SubjectSpecification(models.Model):
-    subject = models.OneToOneField(Subject, on_delete=models.CASCADE)
-    subheadings = models.TextField()
-    learning_aims = models.TextField()
-    prerequisites = models.TextField()
-    topics_covered = models.TextField()
-    assessment_methods = models.TextField()
-    resources = models.TextField()
-    outcomes = models.TextField()
- """
+class LearningBoard(models.Model):                
+    name = models.CharField(max_length=50)
+    short_description = models.TextField('Learning Board Description', max_length=300, default='', blank=True)
+    cards = models.ManyToManyField('LearningBoardCard', related_name='cards', blank=True)    
+
+    def __str__(self):
+        return self.name
+
+class LearningBoardCard(models.Model):
+    learning_board = models.ForeignKey(LearningBoard, on_delete=models.CASCADE)
+    name = models.CharField(max_length=50)
+    short_description = models.TextField('Card Description', max_length=300, default='', blank=True)
+    lists = models.ManyToManyField('LearningBoardCardList', related_name='lists', blank=True)
+    tags = models.ManyToManyField('LearningBoardCardTag', related_name='cards', blank=True)
+    def __str__(self):
+        return self.name
+
+class LearningBoardCardList(models.Model):
+    learning_board_card = models.ForeignKey(LearningBoardCard, on_delete=models.CASCADE)
+    name = models.CharField(max_length=50)
+    short_description = models.TextField('Card List Description', max_length=300, default='', blank=True)
+    items = models.ManyToManyField('LearningBoardCardListItem', related_name='items', blank=True)
+    def __str__(self):
+        return self.name
+
+class LearningBoardCardListItem(models.Model):
+    learning_board_card_list = models.ForeignKey(LearningBoardCardList, on_delete=models.CASCADE)
+    name = models.CharField(max_length=50)
+    
+    def __str__(self):
+        return self.name
+    
+class LearningBoardCardTag(models.Model):
+    name = models.CharField(max_length=50)
+    
+    def __str__(self):
+        return self.name

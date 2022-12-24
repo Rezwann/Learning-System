@@ -4,5 +4,6 @@ from Main import views
 
 urlpatterns = [
     path('', views.get_subjects),
-    path('subjectCategories/', views.get_subject_categories)
+    path('subjectCategories/', views.get_subject_categories),
+    path('getLearningBoards/', views.get_learning_boards)
 ]
