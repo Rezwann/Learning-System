@@ -4,10 +4,11 @@
     <div class="navbar navbar-expand navbar-light bg-indigo-800">
       <h4 class="mx-4 mt-2 text-white me-auto">Rezwan: LMS 🙂</h4>
             <div class="navbar-nav ml-auto mx-4 mb-1 mt-1">
-              <button class="btn btn-success nav-item nav-link text-white mx-2" v-on:click="changeSaturation">Toggle Dimmer</button>
-              <button class="btn btn-success nav-item nav-link text-white mx-2" @click="changeFont">Toggle Font Style</button>    
+              
+              <!-- Button trigger offcanvas -->
+              <button class="btn btn-success nav-item nav-link text-white mx-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">Accessibility Features</button>
               <!-- Button trigger modal -->
-          <button type="button" class="btn btn-success nav-item nav-link text-white mx-2" data-bs-toggle="modal" data-bs-target="#exampleModal">
+              <button type="button" class="btn btn-success nav-item nav-link text-white mx-2" data-bs-toggle="modal" data-bs-target="#exampleModal">
           View Key Dates
           </button>
         <button
@@ -24,7 +25,7 @@
         </button>
         <template v-if="$store.state.isAuthenticated">
           <button
-            class="nav-item nav-link btn btn-info mx-2"
+            class="nav-item nav-link btn btn-light mx-2"
             @click="$router.push('/overview')"
           >
             Overview
@@ -102,6 +103,23 @@
   </div>
 </div>
 </div>
+
+<div class="offcanvas offcanvas-start text-bg-dark" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title" id="offcanvasExampleLabel">Accessibility Features</h5>
+    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body">
+    <div>
+      <p>Some text as placeholder. In real life you can have the elements you have chosen. Like, text, images, lists, etc.</p>
+      <p><button class="btn btn-success text-white mx-2" v-on:click="changeSaturation">Toggle Dimmer</button>
+              <button class="btn btn-success text-white mx-2" @click="changeFont">Toggle Font Style</button></p>
+<hr>
+    </div>
+    
+  </div>
+</div>
+
 </template>  
   
 <script>
@@ -122,7 +140,6 @@
     },
     created(){
       if (localStorage.getItem('saturation')) {
-      // If it is, use the stored value as the initial brightness
       this.saturation = localStorage.getItem('saturation');
     }
     },
@@ -220,6 +237,5 @@
   font-family: 'OpenDyslexic';
   src: url('./assets/fonts/OpenDyslexic.ttf') format('truetype');
 }
-
 
 </style>
