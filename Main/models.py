@@ -16,7 +16,7 @@ class CustomUser(AbstractUser):
 
 class SubjectCategory(models.Model):
     CATEGORY_CHOICES = (
-        ('MFL', 'Modern Foreign Languages'),
+        ('Modern Foreign Languages', 'Modern Foreign Languages'),
         ('Humanity', 'Humanity'),
         ('Arts', 'Arts'),
         ('Technical', 'Technical'),
