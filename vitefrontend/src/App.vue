@@ -111,6 +111,7 @@
 </div>
 
 <div class="offcanvas offcanvas-start text-bg-dark" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
+  <div v-bind:key="font" v-bind:style="{ fontFamily: font}">
   <div class="offcanvas-header">
     <h5 class="offcanvas-title" id="offcanvasExampleLabel">Accessibility Features</h5>
     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
@@ -118,11 +119,11 @@
   <div class="offcanvas-body">
     <div>
       <p>Some text as placeholder. In real life you can have the elements you have chosen. Like, text, images, lists, etc.</p>
-      <p><button class="btn btn-success text-white mx-2" v-on:click="changeSaturation">Toggle Dimmer</button>
-              <button class="btn btn-success text-white mx-2" @click="changeFont">Toggle Font Style</button></p>
+      <p><button class="btn btn-success text-white mx-2" v-on:click="changeSaturation">Toggle Dimmer</button></p>
+              <p><button class="btn btn-success text-white mx-2" @click="changeFont">Toggle Font Style</button></p>
 <hr>
     </div>
-    
+  </div>  
   </div>
 </div>
 
