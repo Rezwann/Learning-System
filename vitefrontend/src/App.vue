@@ -1,5 +1,5 @@
 <template>
-  <div id="brightness-target">
+  <div v-bind:style="{ filter: 'saturate(' + saturation + '%)' }">
     <div v-bind:key="font" v-bind:style="{ fontFamily: font}">
     <div class="navbar navbar-expand navbar-light bg-indigo-800">
       <h4 class="mx-4 mt-2 text-white me-auto">Rezwan: LMS 🙂</h4>
@@ -112,12 +112,19 @@
     name: 'App',
     data() {
     return {
+      saturation: 100,
       font: '',
       defaultFont: '',
       guidanceText:'A coloured bar in the below calendar indicates that a day is significant in celebrating learner inclusiveness, wellbeing, accessibility, disability, or another factor of equal value',
       selectedDay: null,
       eventsJSON 
 }
+    },
+    created(){
+      if (localStorage.getItem('saturation')) {
+      // If it is, use the stored value as the initial brightness
+      this.saturation = localStorage.getItem('saturation');
+    }
     },
     computed: {
     attributes() {
@@ -142,8 +149,9 @@
     },
   methods: {
     changeSaturation() {
-      const target = document.getElementById('brightness-target');
-      target.classList.toggle('brightness-low');
+      this.saturation = this.saturation === 100 ? 50 : 100;
+      localStorage.setItem('saturation', this.saturation);
+
     },
     changeFont() {
       if (this.font !=='OpenDyslexic'){
@@ -177,7 +185,19 @@
         axios.defaults.headers.common['Authorization'] = ""
       }
     }, mounted(){
-      this.font = this.defaultFont;
+      const font = localStorage.getItem('font');
+        if (font) {
+          this.font = font;
+        } else {
+        this.font = this.defaultFont;
+      }
+    },
+    watch: {
+      font: {
+        handler(newFontValue) {
+          localStorage.setItem('font', newFontValue);
+        }
+      }
     }
   }
 
@@ -201,7 +221,5 @@
   src: url('./assets/fonts/OpenDyslexic.ttf') format('truetype');
 }
 
-.brightness-low {
-  filter: saturate(40%);
-  }
+
 </style>

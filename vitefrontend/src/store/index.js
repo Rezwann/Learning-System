@@ -6,7 +6,7 @@ export default createStore({
             username: ''
         },
         isAuthenticated: false,
-        token: ''
+        token: '',
     },
     mutations: {
         initalizeStore(state) {
@@ -29,10 +29,6 @@ export default createStore({
             }
         }
     },
-    actions: {
-
-    },
-    modules: {
-
-    }
+    actions: {},
+    modules: {}
 })
