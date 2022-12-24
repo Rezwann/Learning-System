@@ -79,3 +79,14 @@ class Subject(models.Model):
 
     def __str__(self):
         return self.name
+    
+""" class SubjectSpecification(models.Model):
+    subject = models.OneToOneField(Subject, on_delete=models.CASCADE)
+    subheadings = models.TextField()
+    learning_aims = models.TextField()
+    prerequisites = models.TextField()
+    topics_covered = models.TextField()
+    assessment_methods = models.TextField()
+    resources = models.TextField()
+    outcomes = models.TextField()
+ """
