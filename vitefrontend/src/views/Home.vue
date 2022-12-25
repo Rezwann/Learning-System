@@ -1,6 +1,7 @@
 <template>
     <div class="container-sm">
-          <div class="mb-4 m-5"></div>
+      <div class="mb-4"></div>
+
     <div><h1 class="text-center">Home</h1></div>
     <div class="alert alert-success" role="alert">
   <h4 class="alert-heading">Hello!</h4>

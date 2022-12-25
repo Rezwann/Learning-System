@@ -83,4 +83,8 @@
 .bg-indigo-800 {
   background-color: #5e00c3;
 }
+
+.bg-indigo-400 {
+  background-color: #866f9e;
+}
 </style>

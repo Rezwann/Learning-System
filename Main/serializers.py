@@ -21,7 +21,7 @@ class SubjectCategorySerializer(serializers.ModelSerializer):
 class LearningBoardSerializer(serializers.ModelSerializer):                
     class Meta:
         model = LearningBoard
-        fields = ('id', 'name', 'short_description', 'cards')
+        fields = ('id', 'name', 'short_description', 'cards', 'created_at')
 
 class LearningBoardCardSerializer(serializers.ModelSerializer):
     learning_board_id = serializers.SerializerMethodField()

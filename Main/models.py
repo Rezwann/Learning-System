@@ -81,10 +81,13 @@ class Subject(models.Model):
     def __str__(self):
         return self.name
     
+from django.db import models
+
 class LearningBoard(models.Model):                
     name = models.CharField(max_length=50)
     short_description = models.TextField('Learning Board Description', max_length=300, default='', blank=True)
-    cards = models.ManyToManyField('LearningBoardCard', related_name='cards', blank=True)    
+    cards = models.ManyToManyField('LearningBoardCard', related_name='cards', blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.name

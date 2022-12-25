@@ -1,8 +1,8 @@
 <template>
     <div class="container-sm">
       <div class="mb-4"></div>
-    <div><h1 class="text-center">About</h1></div>
-    <div class="alert alert-warning" role="alert">
+    <div><h1 class="text-center">Pomodoro</h1></div>
+    <div class="alert alert-danger" role="alert">
   <h4 class="alert-heading">Hello!</h4>
   <p>This example text is going to run a bit longer.</p>
   <hr>
@@ -10,10 +10,14 @@
 </div>
 </div>
 
+<div class="">
+</div>
+
+
 </template>
 
 <script>
 export default {
-    name: 'About'
+    name: 'Pomodoro'
 }
 </script>

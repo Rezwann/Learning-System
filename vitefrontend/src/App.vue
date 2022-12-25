@@ -1,17 +1,17 @@
 <template>
-  <div v-bind:style="{ filter: 'saturate(' + saturation + '%)' }">
+  <div class="" v-bind:style="{ filter: 'saturate(' + saturation + '%)' }">
     <div v-bind:key="font" v-bind:style="{ fontFamily: font}">
     <div class="navbar navbar-expand navbar-light bg-indigo-800">
       <h4 class="mx-4 mt-2 text-white me-auto">Rezwan: LMS 🙂</h4>
             <div class="navbar-nav ml-auto mx-4 mb-1 mt-1">
-              
               <!-- Button trigger offcanvas -->
-              <button class="btn btn-success nav-item nav-link text-white mx-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">Accessibility Features</button>
+              <button class="btn btn-success nav-item nav-link text-white mx-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">Accessibility</button>
               <!-- Button trigger modal -->
               <button type="button" class="btn btn-success nav-item nav-link text-white mx-2" data-bs-toggle="modal" data-bs-target="#exampleModal">
           View Key Dates
           </button>
-        <button
+
+          <button
           class="nav-item nav-link btn btn-light mx-2 "
           @click="$router.push('/')"
         >
@@ -36,6 +36,12 @@
           >
             Learning Workspace
           </button>
+          <button 
+          class="nav-item nav-link btn btn-light mx-2 "
+          @click="$router.push('/pomodoro')"
+          >
+          Pomodoro Study Timer
+        </button>
           <button
             class="nav-item nav-link text-white btn btn-danger mx-2"
             @click="$router.push('/logout')">Logout
@@ -239,6 +245,7 @@
 .selected-day {
   margin-left: 10px;
 }
+
 
 @font-face {
   font-family: 'OpenDyslexic';
