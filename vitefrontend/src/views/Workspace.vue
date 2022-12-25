@@ -4,10 +4,10 @@
     <h1 class="text-center">Learning Workspace</h1>
   </div>
   <div class="mx-3">
-    <div class="container-fluid p-1 bg-indigo-400 mt-3">
+    <div class="container-fluid p-2 bg-indigo-400 mt-3">
 <div class="shadow-sm scroll-row" style="display: flex;">
         <div v-for="board in LearningBoards" style="flex-grow: 1;" class="mx-1">
-        <div style="width: 20vw;" class="shadow-sm alert alert-warning scrollable rounded mt-2">
+        <div style="width: 25vw;" class="shadow-sm alert alert-warning scrollable rounded mt-2">
           <div class="">
             <h5 class="card-title">{{board.name}}</h5>
             <p class="card-text">{{board.short_description}}</p>
@@ -18,12 +18,10 @@
                 <div class="card mt-3 p-3 shadow-sm alert alert-info">
                   <h6 class="card-title">{{card.name}}</h6>
                   <p class="card-text">{{card.short_description}}</p>
-                  <div class="card mt-2 shadow-sm alert alert-success">
                     <div class="card-body">
                       <div v-for="list in LearningBoardsCardsLists">
-                        <template v-if="list.learning_board_card_id == card.id">
-                            
-                          <div class="card mt-1 shadow-sm alert alert-primary">
+                        <template v-if="list.learning_board_card_id == card.id">                            
+                          <div class="card shadow-sm alert alert-success">
                             <div class="card-body">
                               <h6>{{ list.name }}</h6>
                               <p>{{list.short_description}}</p>
@@ -31,7 +29,6 @@
                           </div>
                         </template>
                       </div>
-                    </div>
                   </div>
                 </div>
               </div>
@@ -91,7 +88,7 @@ max-width: 100%;
 
 .scroll-row::-webkit-scrollbar {
     border-radius: 10rem;
-    background-color: #F1F1F1;
+    background-color: #f1f1f19a;
     width: 0.55rem;
 }
 
@@ -115,7 +112,7 @@ max-width: 100%;
 
 .scrollable::-webkit-scrollbar {
     border-radius: 10rem;
-    background-color: #F1F1F1;
+    background-color: #f1f1f19a;
     width: 0.75rem;
 }
 
