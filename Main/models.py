@@ -88,7 +88,7 @@ class LearningBoard(models.Model):
     short_description = models.TextField('Learning Board Description', max_length=300, default='', blank=True)
     cards = models.ManyToManyField('LearningBoardCard', related_name='cards', blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
-
+    
     def __str__(self):
         return self.name
 
@@ -100,9 +100,16 @@ class LearningBoardCard(models.Model):
     tags = models.ManyToManyField('LearningBoardCardTag', related_name='cards', blank=True)
     def __str__(self):
         return self.name
+    
+class LearningBoardCardTag(models.Model):
+    related_card = models.ForeignKey(LearningBoardCard, on_delete=models.CASCADE)
+    name = models.CharField(max_length=50)
+    
+    def __str__(self):
+        return self.name
 
 class LearningBoardCardList(models.Model):
-    learning_board_card = models.ForeignKey(LearningBoardCard, on_delete=models.CASCADE)
+    learning_board_card = models.ForeignKey(LearningBoardCard, on_delete=models.CASCADE, blank=True)
     name = models.CharField(max_length=50)
     short_description = models.TextField('Card List Description', max_length=300, default='', blank=True)
     items = models.ManyToManyField('LearningBoardCardListItem', related_name='items', blank=True)
@@ -111,12 +118,6 @@ class LearningBoardCardList(models.Model):
 
 class LearningBoardCardListItem(models.Model):
     learning_board_card_list = models.ForeignKey(LearningBoardCardList, on_delete=models.CASCADE)
-    name = models.CharField(max_length=50)
-    
-    def __str__(self):
-        return self.name
-    
-class LearningBoardCardTag(models.Model):
     name = models.CharField(max_length=50)
     
     def __str__(self):

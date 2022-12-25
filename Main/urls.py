@@ -7,7 +7,7 @@ urlpatterns = [
     path('subjectCategories/', views.get_subject_categories),
     path('getLearningBoards/', views.get_learning_boards),
     path('getLearningBoardsCards/', views.get_learning_boards_cards),
+    path('getLearningBoardsCardsTags/', views.get_learning_boards_cards_tags),
     path('getLearningBoardsCardsLists/', views.get_learning_boards_cards_lists),
-    path('getLearningBoardsCardsListsItems/', views.get_learning_boards_cards_lists_items),
-    
+    path('getLearningBoardsCardsListsItems/', views.get_learning_boards_cards_lists_items)
 ]

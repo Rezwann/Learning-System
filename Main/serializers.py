@@ -23,8 +23,14 @@ class LearningBoardSerializer(serializers.ModelSerializer):
         model = LearningBoard
         fields = ('id', 'name', 'short_description', 'cards', 'created_at')
 
+class LearningBoardCardTagSerializer(serializers.ModelSerializer):                
+    class Meta:
+        model = LearningBoardCardTag
+        fields = ('id','name', 'related_card_id')
+        
 class LearningBoardCardSerializer(serializers.ModelSerializer):
     learning_board_id = serializers.SerializerMethodField()
+
     class Meta:
         model = LearningBoardCard
         fields = ('id', 'learning_board_id','name', 'short_description', 
@@ -32,9 +38,10 @@ class LearningBoardCardSerializer(serializers.ModelSerializer):
     
     def get_learning_board_id(self, obj):
         return obj.learning_board.id
-
+    
 class LearningBoardCardListSerializer(serializers.ModelSerializer):                
     learning_board_card_id = serializers.SerializerMethodField()
+
     class Meta:
         model = LearningBoardCardList
         fields = ('id', 'learning_board_card_id','name', 'short_description', 
@@ -51,8 +58,3 @@ class LearningBoardCardListItemSerializer(serializers.ModelSerializer):
         fields = ('id', 'learning_board_card_list_id','name')
     def get_learning_board_card_list_id(self, obj):
         return obj.learning_board_card_list.id
-    
-class LearningBoardCardTagSerializer(serializers.ModelSerializer):                
-    class Meta:
-        model = LearningBoardCardTag
-        fields = ('id','name')

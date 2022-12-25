@@ -6,7 +6,7 @@ from .models import LearningBoardCardList, LearningBoardCardListItem, LearningBo
 
 from .serializers import SubjectSerializer, SubjectCategorySerializer, LearningBoardSerializer, LearningBoardCardSerializer
 from .serializers import LearningBoardCardListSerializer, LearningBoardCardListItemSerializer
-from .serializers import LearningBoardCardListItemSerializer
+from .serializers import LearningBoardCardListItemSerializer, LearningBoardCardTagSerializer
 
 @api_view(['GET'])
 def get_subjects(request):
@@ -30,6 +30,12 @@ def get_learning_boards(request):
 def get_learning_boards_cards(request):
     learning_boards_cards = LearningBoardCard.objects.all()
     serializer = LearningBoardCardSerializer(learning_boards_cards, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def get_learning_boards_cards_tags(request):
+    learning_boards_cards_tags = LearningBoardCardTag.objects.all()
+    serializer = LearningBoardCardTagSerializer(learning_boards_cards_tags, many=True)
     return Response(serializer.data)
 
 @api_view(['GET'])

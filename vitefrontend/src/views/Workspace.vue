@@ -1,5 +1,4 @@
 <template >
-
 <div class="mb-4"></div>
   <div>
     <h1 class="text-center">Learning Workspace</h1>
@@ -19,6 +18,28 @@
                 <div class="card mt-3 p-3 shadow-sm alert alert-info">
                   <h6 class="card-title">{{card.name}}</h6>
                   <p class="card-text">{{card.short_description}}</p>
+                  
+                  
+<!--                   only show see tags if card has tags
+ -->
+ <div id="tag-related" class="d-flex align-items-center">
+                   <template v-if="LearningBoardsCardsTags.some(tag => tag.related_card_id == card.id)">
+  <p><button class="btn btn-primary btn-sm" type="button" data-bs-toggle="collapse" v-bind:data-bs-target="'#tags' + card.id" aria-expanded="false" v-bind:aria-controls="'tags' + card.id">Tags</button></p>
+</template>
+
+<div class="collapse" v-bind:id="'tags' + card.id">
+      <div class="row align-items">
+        <h6 class="mx-2 mb-3">
+          
+          <template v-for="tag in LearningBoardsCardsTags">
+            <template v-if="tag.related_card_id == card.id">
+              <span class="fw-semibold badge text-bg-success mx-1 mt-1">🏷️ {{tag.name}}</span>
+            </template>
+          </template>
+        </h6>
+      </div>
+    </div>
+</div>
                     <div class="card-body">
                       <div v-for="list in LearningBoardsCardsLists">
                         <template v-if="list.learning_board_card_id == card.id">                            
@@ -39,8 +60,6 @@
     </template>
   </div>
 </template>
-
-
                       </div>
                   </div>
                 </div>
@@ -66,6 +85,7 @@
         LearningBoardsCards: [],
         LearningBoardsCardsLists: [],
         LearningBoardsCardsListsItems: [],
+        LearningBoardsCardsTags:[]
       }
     },
     methods: {        
@@ -86,6 +106,10 @@
         this.LearningBoardsCards = response.data
         console.log(this.LearningBoardsCards)
       }),
+      await axios.get('api/v1/LSM/getLearningBoardsCardsTags/').then(response => {
+        this.LearningBoardsCardsTags = response.data
+        console.log(this.LearningBoardsCardsTags)
+      })
       await axios.get('api/v1/LSM/getLearningBoardsCardsLists/').then(response => {
         this.LearningBoardsCardsLists = response.data
         console.log(this.LearningBoardsCardsLists)
@@ -153,17 +177,3 @@ max-width: 100%;
 }
 
 </style>
-
-<!--         <p>
-  <button class="btn btn-primary btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-    See labels</button>
-</p>
-<div class="collapse" id="collapseExample">
-  <div class="row align-items">
-    <h6>
-        Labels:
-        <span class="fw-semibold badge text-bg-success mx-1 mt-1">🏷️ Cool</span>
-        <span class="fw-semibold badge text-bg-success mx-1 mt-1">🏷️ Great</span>
-        </h6>
-</div>
-</div>      -->
