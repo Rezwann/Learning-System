@@ -37,3 +37,9 @@ def get_learning_boards_cards_lists(request):
     learning_boards_cards_lists = LearningBoardCardList.objects.all()
     serializer = LearningBoardCardListSerializer(learning_boards_cards_lists, many=True)
     return Response(serializer.data)
+
+@api_view(['GET'])
+def get_learning_boards_cards_lists_items(request):
+    learning_boards_cards_lists_items = LearningBoardCardListItem.objects.all()
+    serializer = LearningBoardCardListItemSerializer(learning_boards_cards_lists_items, many=True)
+    return Response(serializer.data)

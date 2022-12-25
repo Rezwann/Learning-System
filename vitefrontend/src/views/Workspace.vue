@@ -1,4 +1,5 @@
 <template >
+
 <div class="mb-4"></div>
   <div>
     <h1 class="text-center">Learning Workspace</h1>
@@ -21,13 +22,25 @@
                     <div class="card-body">
                       <div v-for="list in LearningBoardsCardsLists">
                         <template v-if="list.learning_board_card_id == card.id">                            
-                          <div class="card shadow-sm alert alert-success">
-                            <div class="card-body">
-                              <h6>{{ list.name }}</h6>
-                              <p>{{list.short_description}}</p>
-                            </div>
-                          </div>
-                        </template>
+  <div class="card shadow-sm alert alert-success">
+    <div class="card-body">
+      <h6>{{ list.name }}</h6>
+      <p>{{list.short_description}}</p>
+    </div>
+
+    <div v-for="item in LearningBoardsCardsListsItems">
+      <div v-if="item.learning_board_card_list_id == list.id">
+        <li>{{item.name}}</li>
+      </div>                        
+    </div>
+
+    <template v-if="!LearningBoardsCardsListsItems.some(item => item.learning_board_card_list_id == list.id)">
+      <p>An item is yet to be added to this list</p>
+    </template>
+  </div>
+</template>
+
+
                       </div>
                   </div>
                 </div>
@@ -51,7 +64,8 @@
       return {
         LearningBoards: [],
         LearningBoardsCards: [],
-        LearningBoardsCardsLists: []
+        LearningBoardsCardsLists: [],
+        LearningBoardsCardsListsItems: [],
       }
     },
     methods: {        
@@ -75,6 +89,10 @@
       await axios.get('api/v1/LSM/getLearningBoardsCardsLists/').then(response => {
         this.LearningBoardsCardsLists = response.data
         console.log(this.LearningBoardsCardsLists)
+      }),
+      await axios.get('api/v1/LSM/getLearningBoardsCardsListsItems/').then(response => {
+        this.LearningBoardsCardsListsItems = response.data
+        console.log(this.LearningBoardsCardsListsItems)
       })
       },
 }
