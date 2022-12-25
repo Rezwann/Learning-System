@@ -20,8 +20,7 @@
                   <p class="card-text">{{card.short_description}}</p>
                   
                   
-<!--                   only show see tags if card has tags
- -->
+<!-- only show see tags if card has tags -->
  <div id="tag-related" class="d-flex align-items-center">
                    <template v-if="LearningBoardsCardsTags.some(tag => tag.related_card_id == card.id)">
   <p><button class="btn btn-primary btn-sm" type="button" data-bs-toggle="collapse" v-bind:data-bs-target="'#tags' + card.id" aria-expanded="false" v-bind:aria-controls="'tags' + card.id">Tags</button></p>
