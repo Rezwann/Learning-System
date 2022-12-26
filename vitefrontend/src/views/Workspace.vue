@@ -3,23 +3,66 @@
   <div>
     <h1 class="text-center">Learning Workspace</h1>
   </div>
+
+  <div class="mx-3">
+    <div class="container-fluid p-2 bg-indigo-400 mt-3">
+      <div class="row mt-2">
+        <div class="col-sm-12 col-md-6 offset-md-3">
+          <div class="card shadow-sm alert alert-warning">
+            
+              <form @submit.prevent ="submitNewBoard();">
+                <div class="col form-group mt-2">
+                  <label class="mb-2">Name</label>
+                  <input type="text" name="name" class="form-control" v-model="addBoardForm.name">
+                </div>
+                <div class="col form-group mt-2">
+                  <label class="mb-2">Short Description</label>
+                  <input
+                    type="text"
+                    name="short_description"
+                    class="form-control"
+                    v-model="addBoardForm.short_description"
+                  />
+                </div>
+                <div v-if="errors.length" class="col">
+                  <p
+                    class="alert alert-info mt-3"
+                    role="alert"
+                    v-for="error in errors"
+                    v-bind:key="error"
+                  >
+                    {{ error }}
+                  </p>
+                </div>
+                <div class="col d-flex justify-content-center mt-3">
+                    <button class="btn btn-warning">Add Board</button>
+                </div>
+              </form>
+          </div>
+        </div>
+      </div></div></div>
+
   <div class="mx-3">
     <div class="container-fluid p-2 bg-indigo-400 mt-3">
 <div class="shadow-sm scroll-row" style="display: flex;">
         <div v-for="board in LearningBoards" style="flex-grow: 1;" class="mx-1">
         <div style="width: 25vw;" class="shadow-sm alert alert-warning scrollable rounded mt-2">
-          <div class="">
-            <h5 class="card-title">{{board.name}}</h5>
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+            <button class="btn btn-sm btn-danger mx-1" @click="deleteBoard(board.id)">Delete Board</button>            
+        </div>
+            <h5 class="card-title">⭐ {{board.name}}</h5>
             <p class="card-text">{{board.short_description}}</p>
             <p class="card-subtitle text-muted">{{timeElapsed(board.created_at)}}</p>
             <hr>
-            <div v-for="card in LearningBoardsCards">
+            <div v-for="card in LearningBoardsCards">                
               <div v-if="card.learning_board_id == board.id">
                 <div class="card mt-3 p-3 shadow-sm alert alert-info">
-                  <h6 class="card-title">{{card.name}}</h6>
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+            <button class="btn btn-sm btn-danger mx-1" @click="deleteCard(card.id)">Delete Card</button>            
+        </div>
+                    <h6 class="card-title">{{card.name}}</h6>
                   <p class="card-text">{{card.short_description}}</p>
-                  
-                  
+                                    
 <!-- only show see tags if card has tags -->
  <div id="tag-related" class="d-flex align-items-center">
                    <template v-if="LearningBoardsCardsTags.some(tag => tag.related_card_id == card.id)">
@@ -64,9 +107,11 @@
                 </div>
               </div>
             </div>
-          </div>
-          </div>
         </div>
+    </div>
+
+
+
       </div>
     </div>
   </div>    
@@ -80,40 +125,75 @@
     name: 'Workspace',
     data() {
       return {
+        addBoardForm: {
+            name:'',
+            short_description:''
+        },
         LearningBoards: [],
         LearningBoardsCards: [],
         LearningBoardsCardsLists: [],
         LearningBoardsCardsListsItems: [],
-        LearningBoardsCardsTags:[]
+        LearningBoardsCardsTags:[],
+        errors:[],
+        id: 0,
       }
     },
     methods: {        
-    timeElapsed(created_at) {
-      const currentDate = moment()
-      const createdAt = moment(created_at)
-      const date = createdAt.format('MMM D, YYYY [at] h:mm A')
-      const elapsed = moment.duration(currentDate.diff(createdAt)).humanize()
-    return `${date} (${elapsed} ago)`
-}
-  },
+        timeElapsed(created_at) {
+            const currentDate = moment()
+            const createdAt = moment(created_at)
+            const date = createdAt.format('MMM D, YYYY [at] h:mm A')
+            const elapsed = moment.duration(currentDate.diff(createdAt)).humanize()
+                    return `${date} (${elapsed} ago)`
+        },
+        async submitNewBoard(){
+            await axios.post('api/v1/LP/addLearningBoard/', this.addBoardForm)
+            .then(response => {
+            }),
+            
+            this.addBoardForm = {};
+
+            await axios.get('api/v1/LP/getLearningBoards/').then(response => {
+            this.LearningBoards = response.data
+            })
+        },
+        async deleteBoard(id) { 
+          await axios.post('api/v1/LP/deleteLearningBoard/', {num:id})
+          .then(response => {
+          })
+
+          await axios.get('api/v1/LP/getLearningBoards/').then(response => {
+            this.LearningBoards = response.data
+          })
+        },
+        async deleteCard(id) { 
+          await axios.post('api/v1/LP/deleteLearningBoardCard/', {num:id})
+          .then(response => {
+          })
+
+          await axios.get('api/v1/LP/getLearningBoardsCards/').then(response => {
+            this.LearningBoardsCards = response.data
+          })
+        }
+    },
     async mounted() {
-      await axios.get('api/v1/LSM/getLearningBoards/').then(response => {
+      await axios.get('api/v1/LP/getLearningBoards/').then(response => {
         this.LearningBoards = response.data
         console.log(this.LearningBoards)
       }),
-      await axios.get('api/v1/LSM/getLearningBoardsCards/').then(response => {
+      await axios.get('api/v1/LP/getLearningBoardsCards/').then(response => {
         this.LearningBoardsCards = response.data
         console.log(this.LearningBoardsCards)
       }),
-      await axios.get('api/v1/LSM/getLearningBoardsCardsTags/').then(response => {
+      await axios.get('api/v1/LP/getLearningBoardsCardsTags/').then(response => {
         this.LearningBoardsCardsTags = response.data
         console.log(this.LearningBoardsCardsTags)
       })
-      await axios.get('api/v1/LSM/getLearningBoardsCardsLists/').then(response => {
+      await axios.get('api/v1/LP/getLearningBoardsCardsLists/').then(response => {
         this.LearningBoardsCardsLists = response.data
         console.log(this.LearningBoardsCardsLists)
       }),
-      await axios.get('api/v1/LSM/getLearningBoardsCardsListsItems/').then(response => {
+      await axios.get('api/v1/LP/getLearningBoardsCardsListsItems/').then(response => {
         this.LearningBoardsCardsListsItems = response.data
         console.log(this.LearningBoardsCardsListsItems)
       })
