@@ -83,6 +83,8 @@ class Subject(models.Model):
     def __str__(self):
         return f"{self.name}, {self.subject_code}, {self.year_group}"        
 
+
+
 # Learning Workplace/Learning Boards
 
 class LearningBoard(models.Model):                

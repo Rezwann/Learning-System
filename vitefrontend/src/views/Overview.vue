@@ -50,16 +50,16 @@
               <div class="row">
   <div class="col-4 rounded" style="background-color: var(--dark-purple);">
     <nav class="flex-column mt-4">
-      <nav class="nav flex-column">
-        <a class="nav-link text-white font-weight-bold" style="background-color: var(--dark-gray);">Item 1</a>
-        <nav class="nav flex-column">
-          <a class="nav-link ms-3 my-1 text-white" style="background-color: var(--light-gray);">Item 1-1</a>
-          <a class="nav-link ms-3 my-1 text-white" style="background-color: var(--light-gray);">Item 1-2</a>
+      <nav class="nav flex-column mx-2">
+        <a class="nav-link text-white font-weight-bold rounded mt-2" style="background-color: var(--dark-gray);">Item 1</a>
+        <nav class="nav flex-column mt-2">
+          <a class="nav-link ms-4 my-1 text-white rounded" style="background-color: var(--light-gray);">Item 1-1</a>
+          <a class="nav-link ms-4 my-1 text-white rounded" style="background-color: var(--light-gray);">Item 1-2</a>
         </nav>
-        <a class="nav-link text-white font-weight-bold" style="background-color: var(--dark-gray);">Item 2</a>
-        <nav class="nav flex-column">
-          <a class="nav-link ms-3 my-1 text-white" style="background-color: var(--light-gray);">Item 2-1</a>
-          <a class="nav-link ms-3 my-1 text-white" style="background-color: var(--light-gray);">Item 2-2</a>
+        <a class="nav-link text-white font-weight-bold rounded mt-2" style="background-color: var(--dark-gray);">Item 2</a>
+        <nav class="nav flex-column mt-2">
+          <a class="nav-link ms-4 my-1 text-white rounded" style="background-color: var(--light-gray);">Item 2-1</a>
+          <a class="nav-link ms-4 my-1 text-white rounded" style="background-color: var(--light-gray);">Item 2-2</a>
         </nav>
       </nav>
     </nav>
