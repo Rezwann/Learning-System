@@ -4,6 +4,7 @@
     <div class="navbar navbar-expand navbar-light bg-indigo-800">
       <h4 class="mx-4 mt-2 text-white me-auto">Rezwan: LMS 🙂</h4>
             <div class="navbar-nav ml-auto mx-4 mb-1 mt-1">
+              
               <!-- Button trigger offcanvas -->
               <button class="btn btn-success nav-item nav-link text-white mx-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">Accessibility</button>
               <!-- Button trigger modal -->

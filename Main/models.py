@@ -84,8 +84,8 @@ class Subject(models.Model):
 from django.db import models
 
 class LearningBoard(models.Model):                
-    name = models.CharField(max_length=50)
-    short_description = models.TextField('Learning Board Description', max_length=300, default='short description', blank=True)
+    name = models.CharField(max_length=300,  default='Learning Board Name')
+    short_description = models.TextField('Learning Board Description', max_length=300, default='Learning Board Description', blank=True)
     cards = models.ManyToManyField('LearningBoardCard', related_name='cards', blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     
@@ -94,8 +94,8 @@ class LearningBoard(models.Model):
 
 class LearningBoardCard(models.Model):
     learning_board = models.ForeignKey(LearningBoard, on_delete=models.CASCADE)
-    name = models.CharField(max_length=50)
-    short_description = models.TextField('Card Description', max_length=300, default='', blank=True)
+    name = models.CharField(max_length=300, default='Learning Board Card Name')
+    short_description = models.TextField('Card Description', max_length=300, default='Learning Board Card Description', blank=True)
     lists = models.ManyToManyField('LearningBoardCardList', related_name='lists', blank=True)
     tags = models.ManyToManyField('LearningBoardCardTag', related_name='cards', blank=True)
     def __str__(self):
@@ -103,22 +103,22 @@ class LearningBoardCard(models.Model):
     
 class LearningBoardCardTag(models.Model):
     related_card = models.ForeignKey(LearningBoardCard, on_delete=models.CASCADE)
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=50, default='Tag Name')
     
     def __str__(self):
         return self.name
 
 class LearningBoardCardList(models.Model):
     learning_board_card = models.ForeignKey(LearningBoardCard, on_delete=models.CASCADE, blank=True)
-    name = models.CharField(max_length=50)
-    short_description = models.TextField('Card List Description', max_length=300, default='', blank=True)
+    name = models.CharField(max_length=50, default = 'Card List Name')
+    short_description = models.TextField('Card List Description', max_length=300, default='Card List Description', blank=True)
     items = models.ManyToManyField('LearningBoardCardListItem', related_name='items', blank=True)
     def __str__(self):
         return self.name
 
 class LearningBoardCardListItem(models.Model):
     learning_board_card_list = models.ForeignKey(LearningBoardCardList, on_delete=models.CASCADE)
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=50, default='Learning Board Card List Item')
     
     def __str__(self):
         return self.name

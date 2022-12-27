@@ -5,50 +5,45 @@
   </div>
 
   <div class="mx-3">
-    <div class="container-fluid p-2 bg-indigo-400 mt-3">
+    <div class="container-fluid p-2 bg-indigo-400 mt-3 mb-3">
       <div class="row mt-2">
         <div class="col-sm-12 col-md-6 offset-md-3">
-          <div class="card shadow-sm alert alert-warning">
-            
-              <form @submit.prevent ="submitNewBoard();">
-                <div class="col form-group mt-2">
-                  <label class="mb-2">Name</label>
-                  <input type="text" name="name" class="form-control" v-model="addBoardForm.name">
-                </div>
-                <div class="col form-group mt-2">
-                  <label class="mb-2">Short Description</label>
-                  <input
-                    type="text"
-                    name="short_description"
-                    class="form-control"
-                    v-model="addBoardForm.short_description"
-                  />
-                </div>
-                <div v-if="errors.length" class="col">
-                  <p
-                    class="alert alert-info mt-3"
-                    role="alert"
-                    v-for="error in errors"
-                    v-bind:key="error"
-                  >
-                    {{ error }}
-                  </p>
-                </div>
-                <div class="col d-flex justify-content-center mt-3">
-                    <button class="btn btn-warning">Add Board</button>
-                </div>
-              </form>
-          </div>
+            <div class="card shadow-sm alert alert-warning">
+  <form @submit.prevent="submitNewBoard();">
+    <div class="row">
+  <h5 class="card-text">Add a board</h5>
+  <div class="col-4 mb-3">
+    <label class="mb-1">Name</label>
+    <input type="text" name="name" class="form-control" v-model="addBoardForm.name" placeholder="Name">
+  </div>
+  <div class="col-4 mb-3">
+    <label class="mb-1">Short Description</label>
+    <input
+      type="text"
+      name="short_description"
+      class="form-control"
+      v-model="addBoardForm.short_description" placeholder="Short Description"
+    />
+  </div>
+  <div class="col-4 mt-4 mb-3">
+    <button class="btn btn-warning">Add Board</button>
+  </div>
+  <span class="text-center error" v-if="errorMessage">{{ errorMessage }}</span>
+</div>
+  </form>
+</div>
         </div>
-      </div></div></div>
+      </div>
+    </div>
+</div>
 
   <div class="mx-3">
-    <div class="container-fluid p-2 bg-indigo-400 mt-3">
+    <div class="container-fluid p-2 bg-indigo-400 mt-3 mb-4">
 <div class="shadow-sm scroll-row" style="display: flex;">
         <div v-for="board in LearningBoards" style="flex-grow: 1;" class="mx-1">
         <div style="width: 25vw;" class="shadow-sm alert alert-warning scrollable rounded mt-2">
             <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-            <button class="btn btn-sm btn-danger mx-1" @click="deleteBoard(board.id)">Delete Board</button>            
+            <button class="btn btn-sm btn-warning mb-2" @click="deleteBoard(board.id)">Delete Board</button>            
         </div>
             <h5 class="card-title">⭐ {{board.name}}</h5>
             <p class="card-text">{{board.short_description}}</p>
@@ -107,11 +102,32 @@
                 </div>
               </div>
             </div>
+
+
+
+            
+
+
+            <form @submit.prevent="">    
+  <div class="">
+    <label class="">Name</label>
+    <input type="text" name="name" class="form-control" placeholder="Name">
+  </div>
+  <div class="">
+    <label class="">Short Description</label>
+    <input
+      type="text"
+      name="short_description"
+      class="form-control"
+       placeholder="Short Description"
+    />
+  </div>
+  <div class="">
+    <button class="btn btn-warning mt-2">Add Card</button>
+  </div>
+  </form>
         </div>
     </div>
-
-
-
       </div>
     </div>
   </div>    
@@ -124,6 +140,7 @@
   export default {
     name: 'Workspace',
     data() {
+        errorMessage: ''
       return {
         addBoardForm: {
             name:'',
@@ -147,11 +164,21 @@
                     return `${date} (${elapsed} ago)`
         },
         async submitNewBoard(){
+            if (this.addBoardForm.name && this.addBoardForm.short_description){
             await axios.post('api/v1/LP/addLearningBoard/', this.addBoardForm)
             .then(response => {
-            }),
-            
+            }).catch(error =>{
+                if(error.response){
+                    for (const property in error.response.data){
+                        this.errors.push(`${property}: ${error.response.data[property]}`)
+                    }
+                }
+            })
+            this.errorMessage = '';
             this.addBoardForm = {};
+            } else {
+                this.errorMessage = 'Both fields are required';
+              }
 
             await axios.get('api/v1/LP/getLearningBoards/').then(response => {
             this.LearningBoards = response.data
