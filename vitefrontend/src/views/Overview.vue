@@ -65,7 +65,7 @@
     </nav>
   </div>
   <div class="col-8 text-white">
-    <div class="p-3 rounded" style="background-color: var(--dark-purple);">
+    <div class="p-3 rounded scrollable" style="background-color: var(--dark-purple);">
       <h4>Item 1</h4>
       <div class="mb-4 alert alert-secondary">
         <div class="d-flex">
@@ -77,7 +77,7 @@
         </div>
         <p class="mb-0 mt-3">This is an example message.</p>
       </div>
-      <div class="mb-4 alert alert-secondary">
+      <div class="mb-3 alert alert-secondary">
         <div class="d-flex">
           <img src="https://via.placeholder.com/50x50" alt="Avatar" class="rounded mx-2">
           <div>
@@ -87,7 +87,7 @@
         </div>
         <p class="mb-0 mt-3">This is an example message.</p>
       </div>
-      <div class="mb-4 alert alert-secondary">
+      <div class="mb-3 alert alert-secondary">
         <div class="d-flex align-items-center">
           <img src="https://via.placeholder.com/50x50" alt="Avatar" class="rounded mx-2">
           <div>
@@ -98,14 +98,17 @@
         <p class="mb-0 mt-3">And another example message.</p>
       </div>
       
-      <!-- Input field for posting messages -->
-      <form @submit.prevent="">
+    </div>
+    <div class="p-3 mt-2 rounded" style="background-color: var(--dark-purple);">
+          <!-- Input field for posting messages -->
+          <form @submit.prevent="">
         <div class="form-group">
           <input type="text" class="form-control" placeholder="Type a message...">
           <button type="submit" class="btn btn-primary mt-2">Send</button>
         </div>
       </form>
     </div>
+
   </div>
 </div>  
 </div>
@@ -167,4 +170,31 @@
     --dark-gray: #6800d7;
     --dark-purple: #2d005d;
   }
+
+
+  .scrollable {
+  overflow-y: scroll;
+  max-height: 60vh; 
+
+}
+
+.scrollable::-webkit-scrollbar {
+    border-radius: 10rem;
+    background-color: #f1f1f19a;
+    width: 0.75rem;
+}
+
+.scrollable::-webkit-scrollbar-thumb {
+  border-radius: 1rem;
+  margin: 1rem;
+  width: 0.75rem;
+  background-color: #ffd856;
+}
+
+.scrollable::-webkit-scrollbar-thumb:hover {
+  border-radius: 1rem;
+  margin: 1rem;
+  width: 0.75rem;
+  background-color: #facb30;
+}
 </style>

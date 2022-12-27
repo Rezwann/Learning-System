@@ -83,7 +83,26 @@ class Subject(models.Model):
     def __str__(self):
         return f"{self.name}, {self.subject_code}, {self.year_group}"        
 
+# Subject communication Area
+class CommunicationArea(models.Model):
+    related_subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return f"{self.related_subject}"
+    
+class Channel(models.Model):
+    communication_area = models.ForeignKey(CommunicationArea, on_delete=models.CASCADE)
+    name = models.CharField(max_length=100, default='Channel Name')
+    short_description = models.TextField('Channel Description', max_length=300, default='Channel Description', blank=True)
+
+    def __str__(self):
+        return f"{self.communication_area}, {self.name}"
+
+class Post(models.Model):
+    channel = models.ForeignKey(Channel, on_delete=models.CASCADE)
+    author = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    content = models.TextField('Post Content', max_length=300, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
 # Learning Workplace/Learning Boards
 
