@@ -1,6 +1,6 @@
 <template>
     <div class="mb-4"></div>
-    <div><h1 class="text-center">Overview</h1></div>
+    <div><h1 class="text-center mb-4">{{currentUser}}'s Overview</h1></div>
   
     <div>
       <ul class=" col d-flex justify-content-center mb-4 mt-2 mx-2 list-group list-group-horizontal">
@@ -48,8 +48,8 @@
   </div>
 </div>              
               <div class="row">
-  <div class="col-4 bg-dark rounded">
-    <nav class="flex-column">
+  <div class="col-4 rounded" style="background-color: var(--dark-purple);">
+    <nav class="flex-column mt-4">
       <nav class="nav flex-column">
         <a class="nav-link text-white font-weight-bold" style="background-color: var(--dark-gray);">Item 1</a>
         <nav class="nav flex-column">
@@ -64,8 +64,8 @@
       </nav>
     </nav>
   </div>
-  <div class="col-8">
-    <div class="p-3 alert-success alert rounded">
+  <div class="col-8 text-white">
+    <div class="p-3 rounded" style="background-color: var(--dark-purple);">
       <h4>Item 1</h4>
       <div class="mb-4 alert alert-secondary">
         <div class="d-flex">
@@ -108,11 +108,6 @@
     </div>
   </div>
 </div>  
-
-
-
-
-
 </div>
           </div>
         </div>
@@ -127,6 +122,7 @@
     name: 'Overview',
     data() {
       return {
+        currentUser:'',
         subjectAreas: [],
         subjects: [],
         filteredSubjects: [],
@@ -142,6 +138,10 @@
       await axios.get('/api/v1/LP').then(response => {
         this.subjects = response.data
         this.filteredSubjects = this.subjects
+      })
+
+      await axios.get('/api/v1/LP/getCurrentUser/').then(response => {
+        this.currentUser = response.data.username
       })
     },
     methods: {
@@ -163,7 +163,8 @@
 }
 
 :root {
-    --light-gray: #2f3136;
-    --dark-gray: #23272a;
+    --light-gray: #4b009b;
+    --dark-gray: #6800d7;
+    --dark-purple: #2d005d;
   }
 </style>

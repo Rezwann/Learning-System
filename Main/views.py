@@ -1,6 +1,6 @@
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from django.shortcuts import get_object_or_404
+from django.http import JsonResponse
 
 from .models import Subject, SubjectCategory, LearningBoard, LearningBoardCard
 from .models import LearningBoardCardList, LearningBoardCardListItem, LearningBoardCardTag
@@ -11,7 +11,8 @@ from .serializers import LearningBoardCardListItemSerializer, LearningBoardCardT
 
 @api_view(['GET'])
 def get_subjects(request):
-    subjects = Subject.objects.all()
+    user = request.user
+    subjects = user.subjects.all()
     serializer = SubjectSerializer(subjects, many=True)
     return Response(serializer.data)
 
@@ -81,3 +82,11 @@ def delete_learning_board_card(request):
     learningboardcard.delete()
              
     return Response({'deleted:deleted'})
+
+@api_view(['GET'])
+def get_current_user(request):
+    if request.user.is_authenticated:
+        username = request.user.username
+        return JsonResponse({'username': username})
+    else:
+        return JsonResponse({'error': 'User is not authenticated'})

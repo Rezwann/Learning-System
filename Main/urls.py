@@ -16,5 +16,7 @@ urlpatterns = [
     path('addLearningBoard/', views.add_learning_board),
     
     path('deleteLearningBoard/', views.delete_learning_board),
-    path('deleteLearningBoardCard/', views.delete_learning_board_card)
+    path('deleteLearningBoardCard/', views.delete_learning_board_card),
+    
+    path('getCurrentUser/', views.get_current_user)
 ]

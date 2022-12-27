@@ -10,6 +10,7 @@ class CustomUser(AbstractUser):
         ('teacher', 'Teacher'),
     )
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='student')
+    subjects = models.ManyToManyField('Subject')
     
     def __str__(self):
         return self.username    
@@ -70,6 +71,7 @@ class Subject(models.Model):
     subject_leader_name = models.CharField(max_length=255, default = '')
     subject_leader = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='leader')
     subject_code = models.CharField(max_length=8, unique=True, blank=True, null = True)
+    users = models.ManyToManyField(CustomUser)
         
     def save(self, *args, **kwargs):
         if not self.subject_code:
@@ -79,9 +81,9 @@ class Subject(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return self.name
-    
-from django.db import models
+        return f"{self.name}, {self.subject_code}, {self.year_group}"        
+
+# Learning Workplace/Learning Boards
 
 class LearningBoard(models.Model):                
     name = models.CharField(max_length=300,  default='Learning Board Name')
