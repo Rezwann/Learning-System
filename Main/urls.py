@@ -11,6 +11,7 @@ urlpatterns = [
     path('getCommunicationAreas/', views.get_communication_areas),    
     path('getCommunicationChannels/', views.get_channels),    
     path('getCommunicationChannelPosts/', views.get_posts),
+    path('addCommunicationChannelPost/', views.add_channel_post),
     
     path('getLearningBoards/', views.get_learning_boards),
     path('getLearningBoardsCards/', views.get_learning_boards_cards),

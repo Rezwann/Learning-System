@@ -47,6 +47,20 @@ def get_posts(request):
     serializer = PostSerializer(posts, many=True)
     return Response(serializer.data)
 
+@api_view(['POST'])
+def add_channel_post(request):
+    channel_passed = Channel.objects.get(id=request.data.get('num'))
+    user = request.user    
+
+    if (request.data.get('content') != ''):
+        new_post = Post.objects.create(
+            channel = channel_passed,
+            author = user, content = request.data.get('content')        
+        )    
+        new_post.save()    
+    
+    return Response({'added:added'})
+
 
 @api_view(['GET'])
 def get_learning_boards(request):

@@ -90,11 +90,13 @@
                 <div v-if="communicationArea.displayChannelClicked && communicationArea.currentChannelPosts.length === 0">
           no content </div><div v-else><div v-if="communicationArea.currentChannelPosts.length === 0">browse</div>
 </div></div>
+
+
     <div class="p-3 mt-2 rounded" style="background-color: var(--dark-purple);">
           <!-- Input field for posting messages -->
-          <form @submit.prevent="">
+          <form @submit.prevent="addChannelPost()">
         <div class="form-group">
-          <input type="text" class="form-control" placeholder="Type a message...">
+          <input v-model="communicationArea.channelPost" type="text" class="form-control" placeholder="Type a message...">
           <button type="submit" class="btn btn-primary mt-2">Send</button>
         </div>
       </form>
@@ -127,6 +129,9 @@
           currentChannelName:'',
           currentChannelPosts:[],
           displayChannelClicked: false,
+          currentChannelID: null,
+          currentChannel: [],
+          channelPost:''
         }
       }
     },
@@ -157,6 +162,8 @@
     },
     methods: {
       displayChannel(channel) {
+        this.communicationArea.currentChannel = channel;
+        this.communicationArea.currentChannelID = channel.id;
         this.communicationArea.displayChannelClicked = true;
         this.communicationArea.currentChannelName = channel.name;
         console.log(channel.id)
@@ -165,6 +172,15 @@
             this.communicationArea.currentChannelPosts = response.data
       })        
   },
+    async addChannelPost(){
+      if (this.communicationArea.currentChannelID){
+        await axios.post('api/v1/LP/addCommunicationChannelPost/', {num:this.communicationArea.currentChannelID, content:this.communicationArea.channelPost})
+          .then(response => {
+      })     
+      this.displayChannel(this.communicationArea.currentChannel) 
+      this.communicationArea.channelPost = '' 
+      }      
+    },
   filterSubjects(category) {
     this.currentSubjectArea = category
     if (category === '') {
