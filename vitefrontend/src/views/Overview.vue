@@ -144,9 +144,13 @@
       }
     },
     async mounted() {
-      await axios.get('api/v1/LP/subjectCategories/').then(response => {
+      await axios.get('api/v1/LP/getCustomUsers/').then(response => {
         this.subjectAreas = response.data
         console.log(response)
+      })
+
+      await axios.get('api/v1/LP/subjectCategories/').then(response => {
+        this.subjectAreas = response.data
       })
   
       await axios.get('/api/v1/LP').then(response => {

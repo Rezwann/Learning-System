@@ -3,22 +3,26 @@ from rest_framework.decorators import api_view
 from django.http import JsonResponse
 from django.db.models import Q
 
-from .models import Subject, SubjectCategory, LearningBoard, LearningBoardCard
+from .models import CustomUser, Subject, SubjectCategory, LearningBoard, LearningBoardCard
 from .models import LearningBoardCardList, LearningBoardCardListItem, LearningBoardCardTag
 from .models import CommunicationArea, Channel, Post
 
-from .serializers import SubjectSerializer, SubjectCategorySerializer, LearningBoardSerializer, LearningBoardCardSerializer
+from .serializers import CustomUserSerializer, SubjectSerializer, SubjectCategorySerializer, LearningBoardSerializer, LearningBoardCardSerializer
 from .serializers import LearningBoardCardListSerializer, LearningBoardCardListItemSerializer
 from .serializers import LearningBoardCardListItemSerializer, LearningBoardCardTagSerializer
 from .serializers import CommunicationAreaSerializer, ChannelSerializer, PostSerializer
 
 @api_view(['GET'])
+def get_custom_users(request):
+    users = CustomUser.objects.all()
+    serializer = CustomUserSerializer(users, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
 def get_subjects(request):
     user = request.user
-
-    # Get all subjects where the user is the subject leader or is in the users field
+    # Get all subjects where the user is in the users field
     subjects = Subject.objects.filter(Q(users=user))
-
     serializer = SubjectSerializer(subjects, many=True)
     return Response(serializer.data)
 

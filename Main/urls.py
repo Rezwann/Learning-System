@@ -7,7 +7,7 @@ urlpatterns = [
 # GET api's
     path('', views.get_subjects),
     path('subjectCategories/', views.get_subject_categories),
-
+    path('getCustomUsers/', views.get_custom_users),
     path('getCommunicationAreas/', views.get_communication_areas),    
     path('getCommunicationChannels/', views.get_channels),    
     path('getCommunicationChannelPosts/', views.get_posts),

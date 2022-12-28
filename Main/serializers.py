@@ -3,6 +3,19 @@ from .models import CustomUser, Subject, SubjectCategory, LearningBoard, Learnin
 from .models import LearningBoardCardList, LearningBoardCardListItem, LearningBoardCardTag
 from .models import CommunicationArea, Channel, Post
 
+class CustomUserSerializer(serializers.ModelSerializer):
+    profile_image_url = serializers.SerializerMethodField()
+    
+    class Meta:
+        model = CustomUser
+        fields = ('id', 'username', 'user_information', 'role', 'subjects', 'profile_image', 'profile_image_url')
+    
+    def get_profile_image_url(self, obj):
+        if obj.profile_image:
+            return obj.profile_image.url
+        return None
+
+
 class SubjectSerializer(serializers.ModelSerializer):
     category_name = serializers.CharField(source='category.name')
     subject_leader_email = serializers.CharField(source='subject_leader.email')
