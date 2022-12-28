@@ -87,6 +87,14 @@ class Subject(models.Model):
     def __str__(self):
         return f"{self.name}, {self.subject_code}, {self.year_group}"        
 
+class SubjectLearningOutcome(models.Model):
+    name = models.CharField(max_length=255)
+    description = models.TextField(max_length=500)
+    subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
+    
+    def __str__(self):
+        return self.name
+
 # Subject Communication Area
 class CommunicationArea(models.Model):
     related_subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
@@ -101,7 +109,8 @@ class CommunicationArea(models.Model):
 
     def __str__(self):
         return f"{self.related_subject}, {self.name}"
-    
+
+# Communication channel    
 class Channel(models.Model):
     communication_area = models.ForeignKey(CommunicationArea, on_delete=models.CASCADE)
     name = models.CharField(max_length=100, default='Channel Name')
@@ -116,10 +125,53 @@ class Post(models.Model):
     content = models.TextField('Post Content', max_length=300, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
+# Adding Visual or Text Quizzes of differing levels to communication area
+class LearningQuiz(models.Model):
+    channel = models.ForeignKey(Channel, on_delete=models.CASCADE)
+    name = models.CharField(max_length=100, default='Quiz Name')
+    description = models.TextField('Quiz Description', max_length=300, default='Quiz Description', blank=True)
+    learning_outcomes = models.ManyToManyField(SubjectLearningOutcome)
+    created_by = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='creator')
+    intended_for = models.ManyToManyField(CustomUser, related_name='intended_quizzes')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+class QuizSession(models.Model):
+    DIFFICULTY_LEVELS = (
+        ('Low', 'Low'),
+        ('Medium', 'Medium'),
+        ('High', 'High'),
+    )
+    
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    quiz = models.ForeignKey(LearningQuiz, on_delete=models.CASCADE)
+    score = models.PositiveSmallIntegerField(null=True, blank=True)
+    results = models.TextField(null=True, blank=True)
+    current_question = models.PositiveIntegerField(null=True, blank=True)
+    difficulty_attempted = models.CharField(max_length=50, choices = DIFFICULTY_LEVELS, default='Low')  
+
+class Question(models.Model):
+    DIFFICULTY_LEVELS = (
+        ('Low', 'Low'),
+        ('Medium', 'Medium'),
+        ('High', 'High'),
+    )
+    
+    quiz = models.ForeignKey(LearningQuiz, on_delete=models.CASCADE)
+    learning_outcome = models.ForeignKey(SubjectLearningOutcome, on_delete=models.CASCADE)
+    question = models.TextField()
+    hint = models.TextField(blank=True)
+    difficulty = models.CharField(max_length=50, choices = DIFFICULTY_LEVELS, default='Low')   
+    media = models.URLField(blank=True)
+    points = models.PositiveSmallIntegerField()
+
+class QuestionOption(models.Model):
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    option_text = models.CharField(max_length=255)
+    is_correct = models.BooleanField(default=False)
 
 
 
-# Learning Workplace/Learning Boards
+# Learning Workspace/Learning Boards
 
 class LearningBoard(models.Model):                
     name = models.CharField(max_length=300,  default='Learning Board Name')
