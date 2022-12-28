@@ -86,15 +86,12 @@
           <img src="https://via.placeholder.com/50x50" alt="Avatar" class="rounded mx-2">
           <div>
             <h5 class="mb-0">{{post.author_username}}</h5>
-            <small>{{post.created_at}}</small>
+            <small>{{timeElapsed(post.created_at)}}</small>
           </div>
         </div>
         <p class="mb-0 mt-3">{{post.content}}</p>
       </div>
-            </div></div>
-                
-
-
+            </div></div>                
 </div>
 
 
@@ -124,7 +121,7 @@
   
   <script>
   import axios from 'axios'
-  
+  import moment from 'moment'
   export default {
     name: 'Overview',
     data() {
@@ -172,6 +169,13 @@
       })
     },
     methods: {
+      timeElapsed(created_at) {
+            const currentDate = moment()
+            const createdAt = moment(created_at)
+            const date = createdAt.format('MMM D, YYYY [at] h:mm A')
+            const elapsed = moment.duration(currentDate.diff(createdAt)).humanize()
+                    return `${date} (${elapsed} ago)`
+        },
       async displayChannel(channel) {
         this.communicationArea.currentChannel = channel;
         this.communicationArea.currentChannelID = channel.id;
