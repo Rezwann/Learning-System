@@ -79,16 +79,27 @@ class Subject(models.Model):
             random_code = ''.join(random.choices(string.digits, k=4))
             self.subject_code = f'{name_code}{random_code}'        
         super().save(*args, **kwargs)
-
+        
+        # Create CommunicationArea for a Subject instance
+        CommunicationArea.objects.create(related_subject=self)
+        
     def __str__(self):
         return f"{self.name}, {self.subject_code}, {self.year_group}"        
 
-# Subject communication Area
+# Subject Communication Area
 class CommunicationArea(models.Model):
     related_subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
-
+    name = models.CharField(max_length=255, default='', blank=True)
+    
+    def save(self, *args, **kwargs):
+        if not self.name:
+            self.name = f"{self.related_subject.name} - {self.related_subject.subject_code} Area"
+        super().save(*args, **kwargs)
+        if not self.channel_set.filter(name='Main Channel').exists():
+            Channel.objects.create(communication_area=self, name='Main Channel', short_description = 'Main Channel Description')
+        
     def __str__(self):
-        return f"{self.related_subject}"
+        return f"{self.related_subject}, {self.name}"
     
 class Channel(models.Model):
     communication_area = models.ForeignKey(CommunicationArea, on_delete=models.CASCADE)

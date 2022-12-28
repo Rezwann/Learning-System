@@ -7,6 +7,10 @@ urlpatterns = [
 # GET api's
     path('', views.get_subjects),
     path('subjectCategories/', views.get_subject_categories),
+
+    path('getCommunicationAreas/', views.get_communication_areas),    
+    path('getCommunicationChannels/', views.get_channels),    
+
     path('getLearningBoards/', views.get_learning_boards),
     path('getLearningBoardsCards/', views.get_learning_boards_cards),
     path('getLearningBoardsCardsTags/', views.get_learning_boards_cards_tags),

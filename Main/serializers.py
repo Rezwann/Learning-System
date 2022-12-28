@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from .models import CustomUser, Subject, SubjectCategory, LearningBoard, LearningBoardCard
 from .models import LearningBoardCardList, LearningBoardCardListItem, LearningBoardCardTag
-
+from .models import CommunicationArea, Channel
 
 class SubjectSerializer(serializers.ModelSerializer):
     category_name = serializers.CharField(source='category.name')
@@ -17,6 +17,17 @@ class SubjectCategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = SubjectCategory
         fields = ('id', 'name')
+        
+class CommunicationAreaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CommunicationArea
+        fields = ['id', 'related_subject_id', 'name']                
+
+class ChannelSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Channel
+        fields = ['id', 'communication_area', 'name', 'short_description']
+
 
 class LearningBoardSerializer(serializers.ModelSerializer):                
     class Meta:

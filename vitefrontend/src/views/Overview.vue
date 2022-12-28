@@ -47,23 +47,32 @@
     </div>
   </div>
 </div>              
-              <div class="row">
+
+<!-- communication area channels -->
+        <div class="row">
   <div class="col-4 rounded" style="background-color: var(--dark-purple);">
     <nav class="flex-column mt-4">
       <nav class="nav flex-column mx-2">
-        <a class="nav-link text-white font-weight-bold rounded mt-2" style="background-color: var(--dark-gray);">Item 1</a>
+        <div v-for="communicationArea in communicationArea.communicationAreas">
+  <div v-if="communicationArea.related_subject_id == subject.id">
+    
+    <h6 class="text-white font-weight-bold">{{communicationArea.name}}</h6>
+
+  
+  </div></div>
+        
+
+        <a class="nav-link text-white font-weight-bold rounded mt-2" style="background-color: var(--dark-gray);">All</a>
         <nav class="nav flex-column mt-2">
           <a class="nav-link ms-4 my-1 text-white rounded" style="background-color: var(--light-gray);">Item 1-1</a>
           <a class="nav-link ms-4 my-1 text-white rounded" style="background-color: var(--light-gray);">Item 1-2</a>
         </nav>
-        <a class="nav-link text-white font-weight-bold rounded mt-2" style="background-color: var(--dark-gray);">Item 2</a>
-        <nav class="nav flex-column mt-2">
-          <a class="nav-link ms-4 my-1 text-white rounded" style="background-color: var(--light-gray);">Item 2-1</a>
-          <a class="nav-link ms-4 my-1 text-white rounded" style="background-color: var(--light-gray);">Item 2-2</a>
-        </nav>
+        
       </nav>
     </nav>
   </div>
+
+  <!-- communication area main content -->
   <div class="col-8 text-white">
     <div class="p-3 rounded scrollable" style="background-color: var(--dark-purple);">
       <h4>Item 1</h4>
@@ -109,8 +118,8 @@
       </form>
     </div>
 
-  </div>
 </div>  
+</div>
 </div>
           </div>
         </div>
@@ -129,7 +138,11 @@
         subjectAreas: [],
         subjects: [],
         filteredSubjects: [],
-        currentSubjectArea: ''
+        currentSubjectArea: '',
+        communicationArea: {
+          communicationAreas:[],
+          communicationChannels:[]
+        }
       }
     },
     async mounted() {
@@ -140,9 +153,19 @@
   
       await axios.get('/api/v1/LP').then(response => {
         this.subjects = response.data
+        console.log(response.data)
         this.filteredSubjects = this.subjects
       })
 
+      await axios.get('/api/v1/LP/getCommunicationAreas/').then(response => {
+        this.communicationArea.communicationAreas = response.data
+      })
+
+      await axios.get('/api/v1/LP/getCommunicationChannels/').then(response => {
+        this.communicationArea.communicationChannels = response.data
+        console.log(response.data)
+      })
+      
       await axios.get('/api/v1/LP/getCurrentUser/').then(response => {
         this.currentUser = response.data.username
       })
@@ -162,7 +185,7 @@
 
 <style>
 .bg-indigo-800 {
-  background-color: #5e00c3;
+  background-color: #6800d7;
 }
 
 :root {

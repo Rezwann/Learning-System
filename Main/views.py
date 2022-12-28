@@ -1,18 +1,24 @@
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from django.http import JsonResponse
+from django.db.models import Q
 
 from .models import Subject, SubjectCategory, LearningBoard, LearningBoardCard
 from .models import LearningBoardCardList, LearningBoardCardListItem, LearningBoardCardTag
+from .models import CommunicationArea, Channel
 
 from .serializers import SubjectSerializer, SubjectCategorySerializer, LearningBoardSerializer, LearningBoardCardSerializer
 from .serializers import LearningBoardCardListSerializer, LearningBoardCardListItemSerializer
 from .serializers import LearningBoardCardListItemSerializer, LearningBoardCardTagSerializer
+from .serializers import CommunicationAreaSerializer, ChannelSerializer
 
 @api_view(['GET'])
 def get_subjects(request):
     user = request.user
-    subjects = user.subjects.all()
+
+    # Get all subjects where the user is the subject leader or is in the users field
+    subjects = Subject.objects.filter(Q(subject_leader=user) | Q(users=user))
+
     serializer = SubjectSerializer(subjects, many=True)
     return Response(serializer.data)
 
@@ -21,6 +27,19 @@ def get_subject_categories(request):
     subject_categories = SubjectCategory.objects.all()
     serializer = SubjectCategorySerializer(subject_categories, many=True)
     return Response(serializer.data)
+
+@api_view(['GET'])
+def get_communication_areas(request):
+    communication_areas = CommunicationArea.objects.all()
+    serializer = CommunicationAreaSerializer(communication_areas, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def get_channels(request):
+    channels = Channel.objects.all()
+    serializer = ChannelSerializer(channels, many=True)
+    return Response(serializer.data)
+
 
 @api_view(['GET'])
 def get_learning_boards(request):
