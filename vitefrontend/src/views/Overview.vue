@@ -74,10 +74,14 @@
 
   <!-- communication area main content -->
   <div class="col-8 text-white">
-    <div class="p-3 rounded scrollable-g" style="height: 50vh; background-color: var(--dark-purple);">
+    <div class="p-3 rounded" style="background-color: var(--dark-purple);">
       <h4>{{communicationArea.currentChannelName}}</h4>
+      <div class="scrollable-g" style="height: 40vh;">
+        <div v-if="communicationArea.displayChannelClicked && communicationArea.currentChannelPosts.length === 0">
+          no content </div><div v-else><div v-if="communicationArea.currentChannelPosts.length === 0">browse</div>
+</div>
       <div v-for="post in communicationArea.currentChannelPosts">
-      <div class="mb-2 alert alert-secondary">
+      <div class="mb-2 alert alert-secondary mx-2">
         <div class="d-flex">
           <img src="https://via.placeholder.com/50x50" alt="Avatar" class="rounded mx-2">
           <div>
@@ -87,10 +91,11 @@
         </div>
         <p class="mb-0 mt-3">{{post.content}}</p>
       </div>
-            </div>
-                <div v-if="communicationArea.displayChannelClicked && communicationArea.currentChannelPosts.length === 0">
-          no content </div><div v-else><div v-if="communicationArea.currentChannelPosts.length === 0">browse</div>
-</div></div>
+            </div></div>
+                
+
+
+</div>
 
 
     <div class="p-3 mt-2 rounded" style="background-color: var(--dark-purple);">
