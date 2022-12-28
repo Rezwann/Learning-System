@@ -12,6 +12,7 @@ class CustomUserAdmin(UserAdmin):
         (None, {'fields': ('user_information',)}),
         (None, {'fields': ('role',)}),
         (None, {'fields': ('subjects',)}),
+        (None, {'fields': ('profile_image',)}),
         )
 
 class CommunicationAreaAdmin(admin.ModelAdmin):

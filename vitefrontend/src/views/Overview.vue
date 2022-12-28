@@ -76,24 +76,25 @@
   <div class="col-8 text-white">
     <div class="p-3 rounded" style="background-color: var(--dark-purple);">
       <h4>{{communicationArea.currentChannelName}}</h4>
-      <div class="scrollable-g" style="height: 40vh;">
+      <div class="scrollable-g mt-2" style="height: 40vh;">
         <div v-if="communicationArea.displayChannelClicked && communicationArea.currentChannelPosts.length === 0">
           no content </div><div v-else><div v-if="communicationArea.currentChannelPosts.length === 0">browse</div>
 </div>
       <div v-for="post in communicationArea.currentChannelPosts">
-      <div class="mb-2 alert alert-secondary mx-2">
+      <div class="alert alert-secondary mx-2">
         <div class="d-flex">
-          <img src="https://via.placeholder.com/50x50" alt="Avatar" class="rounded mx-2">
+          <div v-for="user in users">
+    <img v-if="post.author_username == user.username" class="img rounded mx-2" style="width: 4vw" :src="'http://127.0.0.1:8000'+ user.profile_image_url">
+  </div>
+
           <div>
-            <h6 class="mb-0">{{post.author_username}} ({{ post.author_role }})</h6>
-            <small>{{timeElapsed(post.created_at)}}</small>
+            <h6 class="p-2">{{post.author_username}} ({{ post.author_role }}) <span class="text-muted p-1"> - {{timeElapsed(post.created_at)}}</span></h6>
           </div>
         </div>
         <p class="mb-0 mt-3">{{post.content}}</p>
       </div>
             </div></div>                
 </div>
-
 
     <div class="p-3 mt-2 rounded" style="background-color: var(--dark-purple);">
           <!-- Input field for posting messages -->
@@ -127,6 +128,7 @@
     data() {
       return {
         currentUser:'',
+        users: [],
         subjectAreas: [],
         subjects: [],
         filteredSubjects: [],
@@ -145,7 +147,10 @@
     },
     async mounted() {
       await axios.get('api/v1/LP/getCustomUsers/').then(response => {
-        this.subjectAreas = response.data
+      this.users = response.data
+    })
+
+      await axios.get('api/v1/LP/getCustomUsers/').then(response => {
         console.log(response)
       })
 
