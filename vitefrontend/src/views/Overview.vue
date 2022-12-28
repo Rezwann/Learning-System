@@ -24,7 +24,7 @@
         <div class="accordion-item mt-2 mb-2">
           <h2 class="accordion-header">
             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" v-bind:data-bs-target="'#accordion-item-' + subject.id" aria-expanded="false" v-bind:aria-controls="'accordion-item-' + subject.id">
-              ⭐ {{subject.name}} ({{subject.subject_code}}) | {{subject.category_name}}
+              ⭐ {{subject.name}} ({{subject.subject_code}}) - {{subject.category_name}}
             </button>
           </h2>
           <div v-bind:id="'accordion-item-' + subject.id" class="accordion-collapse collapse" v-bind:aria-labelledby="'accordion-item-' + subject.id">
@@ -50,64 +50,46 @@
 
 <!-- communication area channels -->
         <div class="row">
-  <div class="col-4 rounded" style="background-color: var(--dark-purple);">
+  <div class="col-4 rounded" style="height: 40vh; background-color: var(--dark-purple);">
     <nav class="flex-column mt-4">
       <nav class="nav flex-column mx-2">
-        <div v-for="communicationArea in communicationArea.communicationAreas">
-  <div v-if="communicationArea.related_subject_id == subject.id">
+        <div v-for="Area in communicationArea.communicationAreas">
+  <div v-if="Area.related_subject_id == subject.id">
     
-    <h6 class="text-white font-weight-bold">{{communicationArea.name}}</h6>
-
-  
-  </div></div>
-        
-
-        <a class="nav-link text-white font-weight-bold rounded mt-2" style="background-color: var(--dark-gray);">All</a>
-        <nav class="nav flex-column mt-2">
-          <a class="nav-link ms-4 my-1 text-white rounded" style="background-color: var(--light-gray);">Item 1-1</a>
-          <a class="nav-link ms-4 my-1 text-white rounded" style="background-color: var(--light-gray);">Item 1-2</a>
-        </nav>
-        
+    <h6 class="text-white font-weight-bold">{{Area.name}}</h6>
+    <a class="nav-link text-white font-weight-bold rounded mt-2" style="background-color: var(--dark-gray);">Channels</a>  
+    <div v-for="channel in communicationArea.communicationChannels">
+    <div v-if="channel.communication_area_id == Area.id">
+      <nav class="nav flex-column mt-2 hover">
+              <a @click="displayChannel(channel)" class="btn nav-link ms-4 my-1 text-white rounded" style="background-color: var(--light-gray);">{{ channel.name }}</a>
+        </nav>        
+    </div>    
+    </div>
+  </div>
+</div>
       </nav>
     </nav>
   </div>
 
   <!-- communication area main content -->
   <div class="col-8 text-white">
-    <div class="p-3 rounded scrollable" style="background-color: var(--dark-purple);">
-      <h4>Item 1</h4>
+    <div class="p-3 rounded scrollable" style="height: 50vh; background-color: var(--dark-purple);">
+      <h4>{{communicationArea.currentChannelName}}</h4>
+      <div v-for="post in communicationArea.currentChannelPosts">
       <div class="mb-4 alert alert-secondary">
         <div class="d-flex">
           <img src="https://via.placeholder.com/50x50" alt="Avatar" class="rounded mx-2">
           <div>
-            <h5 class="mb-0">Username</h5>
-            <small>12:34 PM</small>
+            <h5 class="mb-0">{{post.author_username}}</h5>
+            <small>{{post.created_at}}</small>
           </div>
         </div>
-        <p class="mb-0 mt-3">This is an example message.</p>
+        <p class="mb-0 mt-3">{{post.content}}</p>
       </div>
-      <div class="mb-3 alert alert-secondary">
-        <div class="d-flex">
-          <img src="https://via.placeholder.com/50x50" alt="Avatar" class="rounded mx-2">
-          <div>
-            <h5 class="mb-0">Username</h5>
-            <small>12:34 PM</small>
-          </div>
-        </div>
-        <p class="mb-0 mt-3">This is an example message.</p>
-      </div>
-      <div class="mb-3 alert alert-secondary">
-        <div class="d-flex align-items-center">
-          <img src="https://via.placeholder.com/50x50" alt="Avatar" class="rounded mx-2">
-          <div>
-            <h5 class="mb-0">Username</h5>
-            <small>12:35 PM</small>
-          </div>
-        </div>
-        <p class="mb-0 mt-3">And another example message.</p>
-      </div>
-      
-    </div>
+            </div>
+                <div v-if="communicationArea.displayChannelClicked && communicationArea.currentChannelPosts.length === 0">
+          no content </div><div v-else><div v-if="communicationArea.currentChannelPosts.length === 0">browse</div>
+</div></div>
     <div class="p-3 mt-2 rounded" style="background-color: var(--dark-purple);">
           <!-- Input field for posting messages -->
           <form @submit.prevent="">
@@ -141,7 +123,10 @@
         currentSubjectArea: '',
         communicationArea: {
           communicationAreas:[],
-          communicationChannels:[]
+          communicationChannels:[],
+          currentChannelName:'',
+          currentChannelPosts:[],
+          displayChannelClicked: false,
         }
       }
     },
@@ -163,7 +148,7 @@
 
       await axios.get('/api/v1/LP/getCommunicationChannels/').then(response => {
         this.communicationArea.communicationChannels = response.data
-        console.log(response.data)
+        
       })
       
       await axios.get('/api/v1/LP/getCurrentUser/').then(response => {
@@ -171,6 +156,15 @@
       })
     },
     methods: {
+      displayChannel(channel) {
+        this.communicationArea.displayChannelClicked = true;
+        this.communicationArea.currentChannelName = channel.name;
+        console.log(channel.id)
+        axios.post('api/v1/LP/getCommunicationChannelPosts/', {num:channel.id})
+          .then(response => {
+            this.communicationArea.currentChannelPosts = response.data
+      })        
+  },
   filterSubjects(category) {
     this.currentSubjectArea = category
     if (category === '') {

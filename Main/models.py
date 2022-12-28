@@ -95,9 +95,9 @@ class CommunicationArea(models.Model):
         if not self.name:
             self.name = f"{self.related_subject.name} - {self.related_subject.subject_code} Area"
         super().save(*args, **kwargs)
-        if not self.channel_set.filter(name='Main Channel').exists():
-            Channel.objects.create(communication_area=self, name='Main Channel', short_description = 'Main Channel Description')
-        
+        if not self.channel_set.filter(name='Main Channel').exists():        
+            Channel.objects.create(communication_area=self, name=f"{self.related_subject.name} ({self.related_subject.subject_code}) - Main Channel", short_description = 'Main Channel Description')
+
     def __str__(self):
         return f"{self.related_subject}, {self.name}"
     

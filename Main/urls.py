@@ -10,7 +10,8 @@ urlpatterns = [
 
     path('getCommunicationAreas/', views.get_communication_areas),    
     path('getCommunicationChannels/', views.get_channels),    
-
+    path('getCommunicationChannelPosts/', views.get_posts),
+    
     path('getLearningBoards/', views.get_learning_boards),
     path('getLearningBoardsCards/', views.get_learning_boards_cards),
     path('getLearningBoardsCardsTags/', views.get_learning_boards_cards_tags),

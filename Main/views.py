@@ -5,12 +5,12 @@ from django.db.models import Q
 
 from .models import Subject, SubjectCategory, LearningBoard, LearningBoardCard
 from .models import LearningBoardCardList, LearningBoardCardListItem, LearningBoardCardTag
-from .models import CommunicationArea, Channel
+from .models import CommunicationArea, Channel, Post
 
 from .serializers import SubjectSerializer, SubjectCategorySerializer, LearningBoardSerializer, LearningBoardCardSerializer
 from .serializers import LearningBoardCardListSerializer, LearningBoardCardListItemSerializer
 from .serializers import LearningBoardCardListItemSerializer, LearningBoardCardTagSerializer
-from .serializers import CommunicationAreaSerializer, ChannelSerializer
+from .serializers import CommunicationAreaSerializer, ChannelSerializer, PostSerializer
 
 @api_view(['GET'])
 def get_subjects(request):
@@ -38,6 +38,13 @@ def get_communication_areas(request):
 def get_channels(request):
     channels = Channel.objects.all()
     serializer = ChannelSerializer(channels, many=True)
+    return Response(serializer.data)
+
+@api_view(['POST'])
+def get_posts(request):
+    cid = request.data.get('num')
+    posts = Post.objects.filter(channel_id=cid)
+    serializer = PostSerializer(posts, many=True)
     return Response(serializer.data)
 
 
