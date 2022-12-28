@@ -73,10 +73,10 @@
 
   <!-- communication area main content -->
   <div class="col-8 text-white">
-    <div class="p-3 rounded scrollable" style="height: 50vh; background-color: var(--dark-purple);">
+    <div class="p-3 rounded scrollable-g" style="height: 50vh; background-color: var(--dark-purple);">
       <h4>{{communicationArea.currentChannelName}}</h4>
       <div v-for="post in communicationArea.currentChannelPosts">
-      <div class="mb-4 alert alert-secondary">
+      <div class="mb-2 alert alert-secondary">
         <div class="d-flex">
           <img src="https://via.placeholder.com/50x50" alt="Avatar" class="rounded mx-2">
           <div>
@@ -97,7 +97,7 @@
           <form @submit.prevent="addChannelPost()">
         <div class="form-group">
           <input v-model="communicationArea.channelPost" type="text" class="form-control" placeholder="Type a message...">
-          <button type="submit" class="btn btn-primary mt-2">Send</button>
+          <button type="submit" class="btn btn-success mt-2">Send</button>
         </div>
       </form>
     </div>
@@ -161,13 +161,13 @@
       })
     },
     methods: {
-      displayChannel(channel) {
+      async displayChannel(channel) {
         this.communicationArea.currentChannel = channel;
         this.communicationArea.currentChannelID = channel.id;
         this.communicationArea.displayChannelClicked = true;
         this.communicationArea.currentChannelName = channel.name;
         console.log(channel.id)
-        axios.post('api/v1/LP/getCommunicationChannelPosts/', {num:channel.id})
+        await axios.post('api/v1/LP/getCommunicationChannelPosts/', {num:channel.id})
           .then(response => {
             this.communicationArea.currentChannelPosts = response.data
       })        
@@ -205,29 +205,29 @@
   }
 
 
-  .scrollable {
+  .scrollable-g {
   overflow-y: scroll;
   max-height: 60vh; 
 
 }
 
-.scrollable::-webkit-scrollbar {
+.scrollable-g::-webkit-scrollbar {
     border-radius: 10rem;
     background-color: #f1f1f19a;
     width: 0.75rem;
 }
 
-.scrollable::-webkit-scrollbar-thumb {
+.scrollable-g::-webkit-scrollbar-thumb {
   border-radius: 1rem;
   margin: 1rem;
   width: 0.75rem;
-  background-color: #ffd856;
+  background-color: rgb(0, 158, 13);
 }
 
-.scrollable::-webkit-scrollbar-thumb:hover {
+.scrollable-g::-webkit-scrollbar-thumb:hover {
   border-radius: 1rem;
   margin: 1rem;
   width: 0.75rem;
-  background-color: #facb30;
+  background-color: rgb(0, 192, 16);
 }
 </style>

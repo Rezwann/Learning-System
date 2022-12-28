@@ -17,7 +17,7 @@ def get_subjects(request):
     user = request.user
 
     # Get all subjects where the user is the subject leader or is in the users field
-    subjects = Subject.objects.filter(Q(subject_leader=user) | Q(users=user))
+    subjects = Subject.objects.filter(Q(users=user))
 
     serializer = SubjectSerializer(subjects, many=True)
     return Response(serializer.data)
