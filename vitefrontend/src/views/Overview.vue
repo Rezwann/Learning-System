@@ -85,7 +85,7 @@
         <div class="d-flex">
           <img src="https://via.placeholder.com/50x50" alt="Avatar" class="rounded mx-2">
           <div>
-            <h5 class="mb-0">{{post.author_username}}</h5>
+            <h6 class="mb-0">{{post.author_username}} ({{ post.author_role }})</h6>
             <small>{{timeElapsed(post.created_at)}}</small>
           </div>
         </div>

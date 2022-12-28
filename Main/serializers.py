@@ -30,10 +30,10 @@ class ChannelSerializer(serializers.ModelSerializer):
 
 class PostSerializer(serializers.ModelSerializer):
     author_username = serializers.CharField(source='author.username', read_only=True)
-    
+    author_role = serializers.CharField(source='author.role', read_only=True)
     class Meta:
         model = Post
-        fields = ['id', 'channel_id', 'author', 'author_username', 'content', 'created_at']
+        fields = ['id', 'channel_id', 'author', 'author_username', 'author_role', 'content', 'created_at']
 
 class LearningBoardSerializer(serializers.ModelSerializer):                
     class Meta:
