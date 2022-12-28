@@ -1,23 +1,26 @@
 <template>
     <div class="mb-4"></div>
     <div><h1 class="text-center mb-4">{{currentUser}}'s Overview</h1></div>
-  
+      
     <div>
       <ul class=" col d-flex justify-content-center mb-4 mt-2 mx-2 list-group list-group-horizontal">
 
+
         <li class="btn list-group-item mx-1" :class="{'active': currentSubjectArea === ''}" @click="filterSubjects('')">All
             <span class="badge bg-secondary rounded-pill">{{subjects.length}}</span>
-
         </li>
+
+        
         <div v-for="area in subjectAreas">
+
             <li class="btn list-group-item mx-1" :class="{'active': area.name === currentSubjectArea}" @click="filterSubjects(area.name)">{{area.name}}
             </li> 
         </div>
         </ul>
     </div>
-  
+      
     <div class="accordion alert alert-info mx-4" id ="main-accordion">
-        <div v-if="filteredSubjects.length === 0">
+      <div v-if="filteredSubjects.length === 0">
             <h2 class="text-center mt-4 mb-4">No subjects</h2>
         </div>
         <div v-for="subject in filteredSubjects" v-bind:key="subject.id">
@@ -51,7 +54,7 @@
 
 <!-- communication area channels -->
         <div class="row">
-  <div class="col-4 rounded" style="height: 40vh; background-color: var(--dark-purple);">
+  <div class="col-4 rounded scrollable-g" style="height: 30vh; background-color: var(--dark-purple);">
     <nav class="flex-column mt-4">
       <nav class="nav flex-column mx-2">
         <div v-for="Area in communicationArea.communicationAreas">
@@ -71,12 +74,12 @@
       </nav>
     </nav>
   </div>
-
+  
   <!-- communication area main content -->
   <div class="col-8 text-white">
     <div class="p-3 rounded" style="background-color: var(--dark-purple);">
       <h4>{{communicationArea.currentChannelName}}</h4>
-      <div class="scrollable-g mt-2" style="height: 40vh;">
+      <div class="scrollable-g mt-3" style="height: 40vh;">
         <div v-if="communicationArea.displayChannelClicked && communicationArea.currentChannelPosts.length === 0">
           no content </div><div v-else><div v-if="communicationArea.currentChannelPosts.length === 0">browse</div>
 </div>
@@ -123,6 +126,9 @@
   <script>
   import axios from 'axios'
   import moment from 'moment'
+
+
+  
   export default {
     name: 'Overview',
     data() {

@@ -116,6 +116,9 @@ class Post(models.Model):
     content = models.TextField('Post Content', max_length=300, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
+
+
+
 # Learning Workplace/Learning Boards
 
 class LearningBoard(models.Model):                
