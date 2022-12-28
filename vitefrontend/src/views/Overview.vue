@@ -16,18 +16,19 @@
         </ul>
     </div>
   
-    <div class="accordion alert alert-info mx-4">
+    <div class="accordion alert alert-info mx-4" id ="main-accordion">
         <div v-if="filteredSubjects.length === 0">
             <h2 class="text-center mt-4 mb-4">No subjects</h2>
         </div>
         <div v-for="subject in filteredSubjects" v-bind:key="subject.id">
         <div class="accordion-item mt-2 mb-2">
           <h2 class="accordion-header">
-            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" v-bind:data-bs-target="'#accordion-item-' + subject.id" aria-expanded="false" v-bind:aria-controls="'accordion-item-' + subject.id">
+            <button @click="resetCommunicationArea" class="accordion-button collapsed" type="button"  data-bs-toggle="collapse" v-bind:data-bs-target="'#accordion-item-' + subject.id" aria-expanded="false" v-bind:aria-controls="'accordion-item-' + subject.id">
               ⭐ {{subject.name}} ({{subject.subject_code}}) - {{subject.category_name}}
             </button>
           </h2>
-          <div v-bind:id="'accordion-item-' + subject.id" class="accordion-collapse collapse" v-bind:aria-labelledby="'accordion-item-' + subject.id">
+          <div v-bind:id="'accordion-item-' + subject.id" class="accordion-collapse collapse" data-bs-parent="#main-accordion" v-bind:aria-labelledby="'accordion-item-' + subject.id">
+
             <div class="accordion-body">
               <div class="alert alert-success">
   <div class="row">
@@ -105,6 +106,11 @@
 </div>  
 </div>
 </div>
+
+
+
+
+
           </div>
         </div>
       </div>
@@ -181,6 +187,22 @@
       this.communicationArea.channelPost = '' 
       }      
     },
+    async resetCommunicationArea() {
+      this.communicationArea.currentChannel = [];
+      this.communicationArea.currentChannelPosts = [];
+        this.communicationArea.currentChannelID = null;
+        this.communicationArea.displayChannelClicked = false;
+        this.communicationArea.currentChannelName = 'Browse a channel',
+      await axios.get('/api/v1/LP/getCommunicationAreas/').then(response => {
+        this.communicationArea.communicationAreas = response.data
+      })
+
+      await axios.get('/api/v1/LP/getCommunicationChannels/').then(response => {
+        this.communicationArea.communicationChannels = response.data
+        
+      })
+    },
+
   filterSubjects(category) {
     this.currentSubjectArea = category
     if (category === '') {
