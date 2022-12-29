@@ -125,6 +125,7 @@ class Post(models.Model):
     content = models.TextField('Post Content', max_length=300, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
+# Overview - subject task
 class LearningTask(models.Model):
     channel = models.ForeignKey(Channel, on_delete=models.CASCADE)
     name = models.CharField(max_length=100, default='Quiz Name')
@@ -133,8 +134,18 @@ class LearningTask(models.Model):
     created_by = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="creators")
     intended_for = models.ManyToManyField(CustomUser)
     created_at = models.DateTimeField(auto_now_add=True)
+    progress = models.FloatField(default=0)
+    completed = models.BooleanField(default=False)
     # start date
     # end date
+
+    def update_progress(self, user):
+        attempted_subtasks = UserResponse.objects.filter(learning_subtask__learning_task=self, user=user).count()
+        total_subtasks = self.learningsubtask_set.count()
+        self.progress = attempted_subtasks / total_subtasks * 100
+        if self.progress == 100:
+            self.completed = True
+        self.save()
     
 class LearningSubTask(models.Model):    
     learning_task = models.ForeignKey(LearningTask, on_delete=models.CASCADE)    
@@ -149,8 +160,6 @@ class UserResponse(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="responses")
     response = models.TextField()
     submitted_at = models.DateTimeField(auto_now_add=True)
-    is_correct = models.BooleanField(default=False)
-
 
 # Learning Workspace/Learning Boards
 
