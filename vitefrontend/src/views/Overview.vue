@@ -79,7 +79,7 @@
   <div class="col-8 text-white">
     <div class="p-3 rounded" style="background-color: var(--dark-purple);">
       <h4>{{communicationArea.currentChannelName}}</h4>
-      <div class="scrollable-g mt-3" style="height: 40vh;">
+      <div  class="scrollable-g mt-3" style="height: 40vh;">
         <div v-if="communicationArea.displayChannelClicked && communicationArea.currentChannelPosts.length === 0">
           no content </div><div v-else><div v-if="communicationArea.currentChannelPosts.length === 0">browse</div>
 </div>

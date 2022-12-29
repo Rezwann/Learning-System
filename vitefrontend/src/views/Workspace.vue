@@ -66,8 +66,7 @@
 
 <div class="collapse" v-bind:id="'tags' + card.id">
       <div class="row align-items">
-        <h6 class="mx-2 mb-3">
-          
+        <h6 class="mx-2 mb-3">          
           <template v-for="tag in LearningBoardsCardsTags">
             <template v-if="tag.related_card_id == card.id">
               <span class="fw-semibold badge text-bg-success mx-1 mt-1">🏷️ {{tag.name}}</span>
@@ -103,17 +102,11 @@
               </div>
             </div>
 
-
-
-            
-
-
             <form @submit.prevent="">    
   <div class="">
     <label class="">Name</label>
     <input type="text" name="name" class="form-control" placeholder="Name">
   </div>
-  <div class="">
     <label class="">Short Description</label>
     <input
       type="text"
@@ -121,10 +114,7 @@
       class="form-control"
        placeholder="Short Description"
     />
-  </div>
-  <div class="">
     <button class="btn btn-warning mt-2">Add Card</button>
-  </div>
   </form>
         </div>
     </div>
