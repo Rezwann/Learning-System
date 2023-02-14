@@ -80,8 +80,6 @@ class Subject(models.Model):
             random_code = ''.join(random.choices(string.digits, k=4))
             self.subject_code = f'{name_code}{random_code}'        
         super().save(*args, **kwargs)
-        
-        # Create CommunicationArea for a Subject instance
         CommunicationArea.objects.create(related_subject=self)
         
     def __str__(self):
@@ -125,7 +123,7 @@ class Post(models.Model):
     content = models.TextField('Post Content', max_length=300, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
-# Overview - subject task
+# Overview - subject task (form quiz)
 class LearningTask(models.Model):
     channel = models.ForeignKey(Channel, on_delete=models.CASCADE)
     name = models.CharField(max_length=100, default='Quiz Name')

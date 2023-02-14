@@ -102,20 +102,21 @@
               </div>
             </div>
 
-            <form @submit.prevent="">    
-  <div class="">
+<!-- form outside of any v-for template -->
+            <form @submit.prevent="addCard(board.id);">    
+      <div class="">
     <label class="">Name</label>
-    <input type="text" name="name" class="form-control" placeholder="Name">
+    <input type="text" name="name" class="form-control" v-model="newCard.name" placeholder="Name">
   </div>
+  <div class="">
     <label class="">Short Description</label>
-    <input
-      type="text"
-      name="short_description"
-      class="form-control"
-       placeholder="Short Description"
-    />
-    <button class="btn btn-warning mt-2">Add Card</button>
-  </form>
+    <input type="text" name="short_description" class="form-control" v-model="newCard.description" placeholder="Short Description">
+  </div>
+  <div class="mt-3">
+    <button class="btn btn-primary">Add Card</button>
+  </div>
+</form>
+
         </div>
     </div>
       </div>
@@ -132,6 +133,11 @@
     data() {
         errorMessage: ''
       return {
+        newCard: {
+        board_id: null,
+        name: '',
+        description: ''
+      },
         addBoardForm: {
             name:'',
             short_description:''
@@ -191,7 +197,19 @@
           await axios.get('api/v1/LP/getLearningBoardsCards/').then(response => {
             this.LearningBoardsCards = response.data
           })
+        },
+        async addCard(id) { 
+          await axios.post('api/v1/LP/addLearningBoardCard/', {num:id, name:this.newCard.name, description:this.newCard.description})
+          .then(response => {
+          })
+
+          this.newCard = { name: '', description: '' };
+          
+          await axios.get('api/v1/LP/getLearningBoardsCards/').then(response => {
+            this.LearningBoardsCards = response.data
+          })
         }
+
     },
     async mounted() {
       await axios.get('api/v1/LP/getLearningBoards/').then(response => {

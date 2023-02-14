@@ -12,7 +12,8 @@ urlpatterns = [
     path('getCommunicationChannels/', views.get_channels),    
     path('getCommunicationChannelPosts/', views.get_posts),
     path('addCommunicationChannelPost/', views.add_channel_post),
-    
+
+# Learning Board API's  
     path('getLearningBoards/', views.get_learning_boards),
     path('getLearningBoardsCards/', views.get_learning_boards_cards),
     path('getLearningBoardsCardsTags/', views.get_learning_boards_cards_tags),
@@ -23,6 +24,8 @@ urlpatterns = [
     
     path('deleteLearningBoard/', views.delete_learning_board),
     path('deleteLearningBoardCard/', views.delete_learning_board_card),
-    
+    path('addLearningBoardCard/', views.add_learning_board_card),
+
+# User API's    
     path('getCurrentUser/', views.get_current_user)
 ]

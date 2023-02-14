@@ -5,12 +5,10 @@
     <div>
       <ul class=" col d-flex justify-content-center mb-4 mt-2 mx-2 list-group list-group-horizontal">
 
-
         <li class="btn list-group-item mx-1" :class="{'active': currentSubjectArea === ''}" @click="filterSubjects('')">All
             <span class="badge bg-secondary rounded-pill">{{subjects.length}}</span>
-        </li>
+        </li>        
 
-        
         <div v-for="area in subjectAreas">
 
             <li class="btn list-group-item mx-1" :class="{'active': area.name === currentSubjectArea}" @click="filterSubjects(area.name)">{{area.name}}
@@ -49,6 +47,8 @@
     <div class="col-6">
       <p><strong>Subject Leader Contact Email: </strong>{{subject.subject_leader_email}}</p>
     </div>
+
+    
   </div>
 </div>              
 
@@ -112,11 +112,6 @@
 </div>  
 </div>
 </div>
-
-
-
-
-
           </div>
         </div>
       </div>
@@ -126,8 +121,6 @@
   <script>
   import axios from 'axios'
   import moment from 'moment'
-
-
   
   export default {
     name: 'Overview',

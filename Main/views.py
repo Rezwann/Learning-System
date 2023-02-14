@@ -127,6 +127,24 @@ def delete_learning_board_card(request):
              
     return Response({'deleted:deleted'})
 
+@api_view(['POST'])
+def add_learning_board_card(request):
+    learningboard_id = request.data.get('num')
+    new_card_name = request.data.get('name')
+    new_card_desc = request.data.get('description')
+    learningboard = LearningBoard.objects.get(id=learningboard_id)
+    
+    new_card = LearningBoardCard.objects.create(
+        name=new_card_name,
+        short_description=new_card_desc,
+        learning_board=learningboard
+    )
+    new_card.save()
+    
+    serializer = LearningBoardCardSerializer(new_card)
+    return Response(serializer.data)
+
+
 @api_view(['GET'])
 def get_current_user(request):
     if request.user.is_authenticated:

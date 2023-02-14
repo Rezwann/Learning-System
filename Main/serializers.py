@@ -15,7 +15,6 @@ class CustomUserSerializer(serializers.ModelSerializer):
             return obj.profile_image.url
         return None
 
-
 class SubjectSerializer(serializers.ModelSerializer):
     category_name = serializers.CharField(source='category.name')
     subject_leader_email = serializers.CharField(source='subject_leader.email')
