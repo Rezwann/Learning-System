@@ -40,7 +40,7 @@
   <div class="mx-3">
     <div class="container-fluid p-2 bg-indigo-400 mt-3 mb-4">
 <div class="shadow-sm scroll-row" style="display: flex;">
-        <div v-for="board in LearningBoards" style="flex-grow: 1;" class="mx-1">
+        <div v-for="board in LearningBoards" :key ="board.id" style="flex-grow: 1;" class="mx-1">
         <div style="width: 25vw;" class="shadow-sm alert alert-warning scrollable rounded mt-2">
             <div class="d-grid gap-2 d-md-flex justify-content-md-end">
             <button class="btn btn-sm btn-warning mb-2" @click="deleteBoard(board.id)">Delete Board</button>            
@@ -52,12 +52,13 @@
             <div v-for="card in LearningBoardsCards">                
               <div v-if="card.learning_board_id == board.id">
                 <div class="card mt-3 p-3 shadow-sm alert alert-info">
+                  
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
             <button class="btn btn-sm btn-danger mx-1" @click="deleteCard(card.id)">Delete Card</button>            
-        </div>
+        </div>        
                     <h6 class="card-title">{{card.name}}</h6>
                   <p class="card-text">{{card.short_description}}</p>
-                                    
+
 <!-- only show see tags if card has tags -->
  <div id="tag-related" class="d-flex align-items-center">
                    <template v-if="LearningBoardsCardsTags.some(tag => tag.related_card_id == card.id)">
@@ -72,10 +73,19 @@
               <span class="fw-semibold badge text-bg-success mx-1 mt-1">🏷️ {{tag.name}}</span>
             </template>
           </template>
+
+          <div class="input-group input-group-sm mb-3 mt-2">
+  <div class="input-group">
+    <span class="input-group-text fw-semibold text-bg-primary mx-1 mt-1">🏷️<input type="text" class="form-control fw-semibold mx-1 mt-1" v-model="newTag" placeholder="Add a tag">
+    <button class="btn btn-primary btn-sm" @click="addNewTag(board.id)"><b>+</b></button></span>
+  </div>
+</div>
+
+
         </h6>
       </div>
     </div>
-</div>
+  </div>
                     <div class="card-body">
                       <div v-for="list in LearningBoardsCardsLists">
                         <template v-if="list.learning_board_card_id == card.id">                            
@@ -102,20 +112,25 @@
               </div>
             </div>
 
-<!-- form outside of any v-for template -->
-            <form @submit.prevent="addCard(board.id);">    
-      <div class="">
+            
+  <form v-if="currentBoardForm === board.id" @submit.prevent="addCard(board.id);">
+  <div class="">
     <label class="">Name</label>
     <input type="text" name="name" class="form-control" v-model="newCard.name" placeholder="Name">
   </div>
   <div class="">
     <label class="">Short Description</label>
-    <input type="text" name="short_description" class="form-control" v-model="newCard.description" placeholder="Short Description">
+    <input type="text" name="description" class="form-control" v-model="newCard.description" placeholder="Description">
   </div>
   <div class="mt-3">
-    <button class="btn btn-primary">Add Card</button>
+    <button class="btn btn-success" @click="currentBoardForm = board.id">Add Card</button>
   </div>
 </form>
+
+<button class="btn btn-sm btn-primary my-2" @click="currentBoardForm = currentBoardForm === board.id ? null : board.id">
+  {{ currentBoardForm === board.id ? 'Hide' : 'Show' }} Form
+</button>
+
 
         </div>
     </div>
@@ -133,6 +148,7 @@
     data() {
         errorMessage: ''
       return {
+        currentBoardForm: null,
         newCard: {
         board_id: null,
         name: '',
@@ -204,7 +220,7 @@
           })
 
           this.newCard = { name: '', description: '' };
-          
+          this.currentBoardForm = null;          
           await axios.get('api/v1/LP/getLearningBoardsCards/').then(response => {
             this.LearningBoardsCards = response.data
           })
