@@ -27,5 +27,5 @@ urlpatterns = [
     path('addLearningBoardCard/', views.add_learning_board_card),
 
 # User API's    
-    path('getCurrentUser/', views.get_current_user)
+    path('getCurrentUser/', views.get_current_user),
 ]

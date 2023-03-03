@@ -37,12 +37,14 @@
           >
             Learning Workspace
           </button>
-<!--           <button 
-          class="nav-item nav-link btn btn-light mx-2 "
-          @click="$router.push('/pomodoro')"
-          >
-          Pomodoro Study Timer
-        </button> -->
+          <template v-if="currentUserRole === 'Teacher'">
+            <button 
+            class="nav-item nav-link btn btn-light mx-2"
+              @click="$router.push('/manage')"
+            >
+              Manage Teaching
+            </button>
+          </template>
           <button
             class="nav-item nav-link text-white btn btn-danger mx-2"
             @click="$router.push('/logout')">Logout
@@ -65,11 +67,13 @@
       </div>
     </div>
     <template v-if="$store.state.isAuthenticated">
-    <div class="navbar bg-indigo-1000">
-<div>
-  <h5 class="ml-auto mx-4 mb-1 mt-1 text-white font-weight-bold" v-text="'Current User: ' + currentUser"></h5>
+      <div class="navbar bg-indigo-1000">
+  <div class="d-flex align-items-center">
+    <h6 class="ml-auto mx-3 mb-1 mt-1 text-white font-weight-bold" v-text="'Current User: ' + currentUser"></h6>
+    <h6 class="ml-auto mx-3 mb-1 mt-1 text-white font-weight-bold" v-text="'Role: ' + currentUserRole"></h6>
+  </div>
 </div>
-</div>
+
 </template>
 
     <router-view>
@@ -148,12 +152,15 @@
 <script>
   import eventsJSON from './json/events.json';
   import axios from 'axios';
+  import moment from 'moment'
 
   export default {
     name: 'App',
     data() {
     return {
       currentUser:'',
+      currentUserRole:'',
+      currentUserLastLogin:'',
       saturation: 100,
       font: '',
       defaultFont: '',
@@ -167,8 +174,10 @@
       this.saturation = localStorage.getItem('saturation');
     }
     axios.get('/api/v1/LP/getCurrentUser/').then(response => {
-        this.currentUser = response.data.username
-      })
+    this.currentUser = response.data.username; 
+    this.currentUserRole = response.data.role; 
+    });
+
     },
     computed: {
     attributes() {
@@ -191,10 +200,16 @@
 },
     },
   methods: {
+    timeElapsed(created_at) {
+            const currentDate = moment()
+            const createdAt = moment(created_at)
+            const date = createdAt.format('MMM D, YYYY [at] h:mm A')
+            const elapsed = moment.duration(currentDate.diff(createdAt)).humanize()
+                    return `${date} (${elapsed} ago)`
+        },
     changeSaturation() {
       this.saturation = this.saturation === 100 ? 50 : 100;
       localStorage.setItem('saturation', this.saturation);
-
     },
     changeFont() {
       if (this.font !=='OpenDyslexic'){
@@ -244,11 +259,13 @@
           localStorage.setItem('font', newFontValue);
         }
       },
-      '$store.state.isAuthenticated': function (newValue, oldValue) {
+      '$store.state.isAuthenticated': function () {
         axios.get('/api/v1/LP/getCurrentUser/').then(response => {
         this.currentUser = response.data.username
+        this.currentUserRole = response.data.role; 
+
       })
-    }
+    },
     }
   }
 

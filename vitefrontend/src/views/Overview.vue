@@ -189,6 +189,15 @@
         this.currentUser = response.data.username
       })
     },
+    created(){
+      axios.get('/api/v1/LP/getCurrentUser/').then(response => {
+        this.currentUser = response.data.username
+      })
+      axios.get('/api/v1/LP/getCurrentUser/').then(response => {
+        this.currentUser = response.data.username
+      })
+
+    },
     methods: {     
       timeElapsed(created_at) {
             const currentDate = moment()

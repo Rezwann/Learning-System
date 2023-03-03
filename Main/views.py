@@ -2,7 +2,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from django.http import JsonResponse
 from django.db.models import Q
-
+from django.utils import timezone
 from .models import CustomUser, Subject, SubjectCategory, LearningBoard, LearningBoardCard
 from .models import LearningBoardCardList, LearningBoardCardListItem, LearningBoardCardTag
 from .models import CommunicationArea, Channel, Post
@@ -144,11 +144,11 @@ def add_learning_board_card(request):
     serializer = LearningBoardCardSerializer(new_card)
     return Response(serializer.data)
 
-
 @api_view(['GET'])
 def get_current_user(request):
     if request.user.is_authenticated:
         username = request.user.username
-        return JsonResponse({'username': username})
+        role = request.user.role        
+        return JsonResponse({'username': username, 'role':role})
     else:
         return JsonResponse({'error': 'User is not authenticated'})

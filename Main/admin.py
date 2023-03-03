@@ -10,11 +10,26 @@ class CustomUserAdmin(UserAdmin):
 
 class CustomUserAdmin(UserAdmin):
     fieldsets = UserAdmin.fieldsets + (
-        (None, {'fields': ('user_information',)}),
-        (None, {'fields': ('role',)}),
-        (None, {'fields': ('subjects',)}),
-        (None, {'fields': ('profile_image',)}),
-        )
+        ('Custom fields', {
+            'fields': ('user_information', 'role', 'subjects', 'profile_image')
+        }),
+        ('Insight Assessments', {
+            'fields': (
+                'insight_verbal_memory_level', 
+                'insight_non_verbal_memory_level', 'insight_visual_perception_level', 
+                'insight_numeracy_level', 'insight_literacy_level'
+            )
+        }),
+        ('Teacher Observations', {
+            'fields': (
+                'executive_function_level', 'visual_information_processing_speed_level', 
+                'verbal_reasoning_level'
+            )
+        })
+    )
+
+    list_display = ('username', 'email', 'first_name', 'last_name', 'is_staff')
+
 
 class CommunicationAreaAdmin(admin.ModelAdmin):
     list_display = ('related_subject',)

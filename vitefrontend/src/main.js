@@ -8,7 +8,7 @@ import Workspace from './views/Workspace.vue'
 import Logout from './views/Logout.vue'
 import Register from './views/Register.vue'
 import Login from './views/Login.vue'
-import Pomodoro from './views/Pomodoro.vue'
+import Manage from './views/Manage.vue'
 import store from './store'
 import axios from 'axios'
 import 'bootstrap/dist/css/bootstrap.css'
@@ -63,14 +63,14 @@ const router = createRouter({
                 requireAuthentication: true
             }
         },
-        /*         {
-                    path: '/pomodoro',
-                    name: 'Pomodoro',
-                    component: Pomodoro,
-                    meta: {
-                        requireAuthentication: true
-                    }
-                } */
+        {
+            path: '/manage',
+            name: 'Manage',
+            component: Manage,
+            meta: {
+                requireAuthentication: true
+            }
+        }
     ]
 })
 

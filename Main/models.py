@@ -6,13 +6,26 @@ from django.db import models
 class CustomUser(AbstractUser):
     user_information = models.TextField('User Information', max_length=300, default='', blank=True)
     ROLE_CHOICES = (
-        ('student', 'Student'),
-        ('teacher', 'Teacher'),
+        ('Student', 'Student'),
+        ('Teacher', 'Teacher'),
     )
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='student')
     subjects = models.ManyToManyField('Subject')
     profile_image = models.ImageField(upload_to='profile_images', default="profile_images/icon.png", blank=True, null=True)
-    
+
+    # Insight Assessments
+    insight_verbal_memory_level = models.FloatField(default=0.0)
+    insight_non_verbal_memory_level = models.FloatField(default=0.0)
+    insight_visual_perception_level = models.FloatField(default=0.0)
+    insight_numeracy_level = models.FloatField(default=0.0)
+    insight_literacy_level = models.FloatField(default=0.0)
+
+    # Teacher Observations
+    executive_function_level = models.FloatField(default=0.0)
+    visual_information_processing_speed_level = models.FloatField(default=0.0)
+    verbal_reasoning_level = models.FloatField(default=0.0)
+
+
     def __str__(self):
         return self.username    
 
