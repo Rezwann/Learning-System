@@ -52,8 +52,18 @@
   </div>
 </div>              
 
+<div class="d-flex justify-content-center">
+  <button class="btn btn-dark" style="background-color: var(--dark-gray);" data-bs-toggle="collapse" data-bs-target="#collapseExample" @click="toggleCommunicationArea">
+    {{ communicationArea.showCommunicationArea ? 'Hide Communication Area' : 'Show Communication Area' }} for {{subject.name}} ({{subject.subject_code}})
+  </button>
+</div>
+
+
 <!-- communication area channels -->
-        <div class="row">
+
+<div class="collapse" id="collapseExample">
+  <div class="card card-body mt-3" style="outline: none;">
+        <div class="row ms-1">
   <div class="col-4 rounded scrollable-g" style="height: 30vh; background-color: var(--dark-purple);">
     <nav class="flex-column mt-4">
       <nav class="nav flex-column mx-2">
@@ -106,17 +116,19 @@
           <input v-model="communicationArea.channelPost" type="text" class="form-control" placeholder="Type a message...">
           <button type="submit" class="btn btn-success mt-2">Send</button>
         </div>
-      </form>
+      </form>            
     </div>
 
 </div>  
+</div>
+</div>
 </div>
 </div>
           </div>
         </div>
       </div>
     </div>
-  </template>
+</template>
   
   <script>
   import axios from 'axios'
@@ -133,6 +145,7 @@
         filteredSubjects: [],
         currentSubjectArea: '',
         communicationArea: {
+          showCommunicationArea: false,
           communicationAreas:[],
           communicationChannels:[],
           currentChannelName:'',
@@ -176,7 +189,7 @@
         this.currentUser = response.data.username
       })
     },
-    methods: {
+    methods: {     
       timeElapsed(created_at) {
             const currentDate = moment()
             const createdAt = moment(created_at)
@@ -189,7 +202,7 @@
         this.communicationArea.currentChannelID = channel.id;
         this.communicationArea.displayChannelClicked = true;
         this.communicationArea.currentChannelName = channel.name;
-        console.log(channel.id)
+        
         await axios.post('api/v1/LP/getCommunicationChannelPosts/', {num:channel.id})
           .then(response => {
             this.communicationArea.currentChannelPosts = response.data
@@ -202,7 +215,8 @@
       })     
       this.displayChannel(this.communicationArea.currentChannel) 
       this.communicationArea.channelPost = '' 
-      }      
+      }
+      else {console.log("hmmm")}      
     },
     async resetCommunicationArea() {
       this.communicationArea.currentChannel = [];
@@ -218,6 +232,9 @@
         this.communicationArea.communicationChannels = response.data
         
       })
+    },
+    toggleCommunicationArea() {
+      this.communicationArea.showCommunicationArea = !this.communicationArea.showCommunicationArea;
     },
 
   filterSubjects(category) {

@@ -128,14 +128,11 @@ class LearningTask(models.Model):
     channel = models.ForeignKey(Channel, on_delete=models.CASCADE)
     name = models.CharField(max_length=100, default='Quiz Name')
     description = models.TextField('Quiz Description', max_length=300, default='Quiz Description', blank=True)
-    learning_outcomes = models.ManyToManyField(SubjectLearningOutcome)
     created_by = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="creators")
     intended_for = models.ManyToManyField(CustomUser)
     created_at = models.DateTimeField(auto_now_add=True)
     progress = models.FloatField(default=0)
     completed = models.BooleanField(default=False)
-    # start date
-    # end date
 
     def update_progress(self, user):
         attempted_subtasks = UserResponse.objects.filter(learning_subtask__learning_task=self, user=user).count()
@@ -147,7 +144,6 @@ class LearningTask(models.Model):
     
 class LearningSubTask(models.Model):    
     learning_task = models.ForeignKey(LearningTask, on_delete=models.CASCADE)    
-    learning_outcome = models.ForeignKey(SubjectLearningOutcome, on_delete=models.CASCADE)
     question = models.TextField(max_length=100, default='Question')
     hint = models.TextField(blank=True)
     points = models.PositiveSmallIntegerField()

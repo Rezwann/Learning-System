@@ -5,10 +5,8 @@
     <div><h1 class="text-center">Home</h1></div>
     <div class="alert alert-success" role="alert">
   <h4 class="alert-heading">Hello!</h4>
-  <p ref="text">Hey, what's good </p>
-  <button class="btn btn-dark" @click="speakText">🔊</button>
   <hr>
-  <p class="mb-0">Whenever you need to, be sure to use margin utilities to keep things nice and tidy.</p>
+  <p class="mb-0">.</p>
 </div>
 </div>
 </template>
@@ -21,14 +19,5 @@ export default {
       text: ''
     };
   },
-  mounted() {
-    this.text = this.$refs.text.textContent;
-  },
-  methods: {
-    speakText() {
-      const speech = new SpeechSynthesisUtterance(this.text);
-      window.speechSynthesis.speak(speech);
-    }
-  }
 };
 </script>

@@ -63,14 +63,14 @@ const router = createRouter({
                 requireAuthentication: true
             }
         },
-        {
-            path: '/pomodoro',
-            name: 'Pomodoro',
-            component: Pomodoro,
-            meta: {
-                requireAuthentication: true
-            }
-        }
+        /*         {
+                    path: '/pomodoro',
+                    name: 'Pomodoro',
+                    component: Pomodoro,
+                    meta: {
+                        requireAuthentication: true
+                    }
+                } */
     ]
 })
 

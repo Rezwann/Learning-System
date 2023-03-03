@@ -2,7 +2,7 @@
   <div class="" v-bind:style="{ filter: 'saturate(' + saturation + '%)' }">
     <div v-bind:key="font" v-bind:style="{ fontFamily: font}">
     <div class="navbar navbar-expand navbar-light bg-indigo-800">
-      <h4 class="mx-4 mt-2 text-white me-auto">Rezwan: LMS 🙂</h4>
+      <h4 class="mx-4 mt-2 text-white me-auto">Rezwan: Learning Platform 🙂</h4>
             <div class="navbar-nav ml-auto mx-4 mb-1 mt-1">
               
               <!-- Button trigger offcanvas -->
@@ -37,12 +37,12 @@
           >
             Learning Workspace
           </button>
-          <button 
+<!--           <button 
           class="nav-item nav-link btn btn-light mx-2 "
           @click="$router.push('/pomodoro')"
           >
           Pomodoro Study Timer
-        </button>
+        </button> -->
           <button
             class="nav-item nav-link text-white btn btn-danger mx-2"
             @click="$router.push('/logout')">Logout
@@ -64,6 +64,14 @@
         </template>
       </div>
     </div>
+    <template v-if="$store.state.isAuthenticated">
+    <div class="navbar bg-indigo-1000">
+<div>
+  <h5 class="ml-auto mx-4 mb-1 mt-1 text-white font-weight-bold" v-text="'Current User: ' + currentUser"></h5>
+</div>
+</div>
+</template>
+
     <router-view>
     </router-view>
   </div>
@@ -145,6 +153,7 @@
     name: 'App',
     data() {
     return {
+      currentUser:'',
       saturation: 100,
       font: '',
       defaultFont: '',
@@ -157,6 +166,9 @@
       if (localStorage.getItem('saturation')) {
       this.saturation = localStorage.getItem('saturation');
     }
+    axios.get('/api/v1/LP/getCurrentUser/').then(response => {
+        this.currentUser = response.data.username
+      })
     },
     computed: {
     attributes() {
@@ -215,8 +227,10 @@
       } else {
         axios.defaults.headers.common['Authorization'] = ""
       }
-    }, mounted(){
-      document.title = 'Rezwan: LMS'
+      
+    }, 
+    async mounted(){
+      document.title = 'Rezwan: Learning Platform'
       const font = localStorage.getItem('font');
         if (font) {
           this.font = font;
@@ -229,7 +243,12 @@
         handler(newFontValue) {
           localStorage.setItem('font', newFontValue);
         }
-      }
+      },
+      '$store.state.isAuthenticated': function (newValue, oldValue) {
+        axios.get('/api/v1/LP/getCurrentUser/').then(response => {
+        this.currentUser = response.data.username
+      })
+    }
     }
   }
 
@@ -238,6 +257,10 @@
 <style>
 .bg-indigo-800 {
   background-color: #5e00c3;
+}
+
+.bg-indigo-1000 {
+  background-color: #7f9ace;
 }
 
 #main-calendar {
