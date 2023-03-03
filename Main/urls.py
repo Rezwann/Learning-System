@@ -28,4 +28,7 @@ urlpatterns = [
 
 # User API's    
     path('getCurrentUser/', views.get_current_user),
+
+# Teacher    
+    path('getMyTeachingSubjects/', views.get_my_teaching_subjects),
 ]

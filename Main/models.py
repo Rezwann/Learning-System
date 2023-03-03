@@ -9,7 +9,7 @@ class CustomUser(AbstractUser):
         ('Student', 'Student'),
         ('Teacher', 'Teacher'),
     )
-    role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='student')
+    role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='Student')
     subjects = models.ManyToManyField('Subject')
     profile_image = models.ImageField(upload_to='profile_images', default="profile_images/icon.png", blank=True, null=True)
 
@@ -92,6 +92,12 @@ class Subject(models.Model):
             name_code = self.name[0]
             random_code = ''.join(random.choices(string.digits, k=4))
             self.subject_code = f'{name_code}{random_code}'        
+        if not self.subject_leader_name:
+            self.subject_leader_name = self.subject_leader.username.capitalize()
+
+        if not self.subject_leader_name[0].isupper():
+            self.subject_leader_name = self.subject_leader_name.capitalize()
+            
         super().save(*args, **kwargs)
         CommunicationArea.objects.create(related_subject=self)
         

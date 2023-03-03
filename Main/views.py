@@ -1,12 +1,12 @@
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from django.http import JsonResponse
 from django.db.models import Q
 from django.utils import timezone
 from .models import CustomUser, Subject, SubjectCategory, LearningBoard, LearningBoardCard
 from .models import LearningBoardCardList, LearningBoardCardListItem, LearningBoardCardTag
 from .models import CommunicationArea, Channel, Post
-
+from rest_framework.permissions import IsAuthenticated
 from .serializers import CustomUserSerializer, SubjectSerializer, SubjectCategorySerializer, LearningBoardSerializer, LearningBoardCardSerializer
 from .serializers import LearningBoardCardListSerializer, LearningBoardCardListItemSerializer
 from .serializers import LearningBoardCardListItemSerializer, LearningBoardCardTagSerializer
@@ -18,11 +18,19 @@ def get_custom_users(request):
     serializer = CustomUserSerializer(users, many=True)
     return Response(serializer.data)
 
-@api_view(['GET'])
+""" @api_view(['GET'])
 def get_subjects(request):
     user = request.user
     # Get all subjects where the user is in the users field
     subjects = Subject.objects.filter(Q(users=user))
+    serializer = SubjectSerializer(subjects, many=True)
+    return Response(serializer.data)
+ """
+@api_view(['GET'])
+def get_subjects(request):
+    user = request.user
+    # Get all subjects where the user is in the users field or subject_leader field
+    subjects = Subject.objects.filter(Q(users=user) | Q(subject_leader=user))
     serializer = SubjectSerializer(subjects, many=True)
     return Response(serializer.data)
 
@@ -152,3 +160,20 @@ def get_current_user(request):
         return JsonResponse({'username': username, 'role':role})
     else:
         return JsonResponse({'error': 'User is not authenticated'})
+    
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_my_teaching_subjects(request):
+    user = request.user    
+
+    if user.role =="Student":
+        return Response({'error': 'You do not have permission to perform this action.'})
+    
+    # Check if user is the subject leader of any subjects
+    subject_leader_subjects = Subject.objects.filter(subject_leader=user)
+    
+    if subject_leader_subjects.exists():
+        serializer = SubjectSerializer(subject_leader_subjects, many=True)
+        return Response(serializer.data)
+    else:
+        return JsonResponse({'no subjects': 'none'})

@@ -163,7 +163,6 @@
     })
 
       await axios.get('api/v1/LP/getCustomUsers/').then(response => {
-        console.log(response)
       })
 
       await axios.get('api/v1/LP/subjectCategories/').then(response => {
@@ -172,7 +171,6 @@
   
       await axios.get('/api/v1/LP').then(response => {
         this.subjects = response.data
-        console.log(response.data)
         this.filteredSubjects = this.subjects
       })
 

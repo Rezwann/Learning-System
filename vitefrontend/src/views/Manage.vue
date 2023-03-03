@@ -17,7 +17,31 @@
 </template>
 
 <script>
+import axios from 'axios'
+import moment from 'moment'
+
 export default {
-    name: 'Manage'
+  name: 'Manage',
+  data() {
+    return {
+      currentUser:'',      
+    }
+  },
+  async mounted() {
+    await axios.get('/api/v1/LP/getCurrentUser/').then(response => {
+      this.currentUser = response.data.username
+    })
+  },
+  created(){
+    axios.get('/api/v1/LP/getCurrentUser/').then(response => {
+      this.currentUser = response.data.username
+    })
+    axios.get('/api/v1/LP/getMyTeachingSubjects/').then(response => {
+      console.log(response.data)
+    })
+  },
+  methods: {     
+
+}
 }
 </script>
