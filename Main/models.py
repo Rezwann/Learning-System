@@ -1,5 +1,6 @@
 import random
 import string
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
@@ -13,19 +14,24 @@ class CustomUser(AbstractUser):
     subjects = models.ManyToManyField('Subject')
     profile_image = models.ImageField(upload_to='profile_images', default="profile_images/icon.png", blank=True, null=True)
 
-    # Insight Assessments
-    insight_verbal_memory_level = models.FloatField(default=0.0)
-    insight_non_verbal_memory_level = models.FloatField(default=0.0)
-    insight_visual_perception_level = models.FloatField(default=0.0)
-    insight_numeracy_level = models.FloatField(default=0.0)
-    insight_literacy_level = models.FloatField(default=0.0)
+    verbal_memory_level = models.FloatField(default=50.0, validators=[MinValueValidator(1.0), MaxValueValidator(100.0)])
+    non_verbal_memory_level = models.FloatField(default=50.0, validators=[MinValueValidator(1.0), MaxValueValidator(100.0)])
+    visual_perception_level = models.FloatField(default=50.0, validators=[MinValueValidator(1.0), MaxValueValidator(100.0)])
+    numeracy_level = models.FloatField(default=50.0, validators=[MinValueValidator(1.0), MaxValueValidator(100.0)])
+    literacy_level = models.FloatField(default=50.0, validators=[MinValueValidator(1.0), MaxValueValidator(100.0)])
+    executive_function_level = models.FloatField(default=50.0, validators=[MinValueValidator(1.0), MaxValueValidator(100.0)])
+    visual_information_processing_speed_level = models.FloatField(default=50.0, validators=[MinValueValidator(1.0), MaxValueValidator(100.0)])
+    verbal_reasoning_level = models.FloatField(default=50.0, validators=[MinValueValidator(1.0), MaxValueValidator(100.0)])
 
-    # Teacher Observations
-    executive_function_level = models.FloatField(default=0.0)
-    visual_information_processing_speed_level = models.FloatField(default=0.0)
-    verbal_reasoning_level = models.FloatField(default=0.0)
-
-
+    # condition = select from many options, 
+    # condition details = many points relating to above condition
+    
+    def save(self, *args, **kwargs):
+        is_new = not self.pk
+        super().save(*args, **kwargs)
+        if is_new:
+            LearningBoardWorkspace.objects.create(user=self, name=f"{self.username}'s Workspace")
+            
     def __str__(self):
         return self.username    
 
@@ -174,14 +180,21 @@ class UserResponse(models.Model):
     response = models.TextField()
     submitted_at = models.DateTimeField(auto_now_add=True)
 
-# Learning Workspace/Learning Boards
+# Learning Workspace
+class LearningBoardWorkspace(models.Model):
+    name = models.CharField(max_length=300, default='Learning Workspace')
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.name
 
 class LearningBoard(models.Model):                
     name = models.CharField(max_length=300,  default='Learning Board Name')
     short_description = models.TextField('Learning Board Description', max_length=300, default='Learning Board Description', blank=True)
     cards = models.ManyToManyField('LearningBoardCard', related_name='cards', blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    
+    workspace = models.ForeignKey('LearningBoardWorkspace', on_delete=models.CASCADE)
+
     def __str__(self):
         return self.name
 

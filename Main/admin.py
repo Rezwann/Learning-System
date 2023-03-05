@@ -3,7 +3,7 @@ from django.contrib.auth.admin import UserAdmin
 from .models import CustomUser, Subject, SubjectCategory, LearningBoard, LearningBoardCard
 from .models import LearningBoardCardList, LearningBoardCardListItem, LearningBoardCardTag
 from .models import CommunicationArea, Channel, Post
-from .models import LearningTask, LearningSubTask
+from .models import LearningTask, LearningSubTask, LearningBoardWorkspace
 
 class CustomUserAdmin(UserAdmin):
     model = CustomUser
@@ -39,10 +39,12 @@ class ChannelAdmin(admin.ModelAdmin):
 
 class PostAdmin(admin.ModelAdmin):
     list_display = ('channel', 'author', 'content', 'created_at')
+
     
 admin.site.register(CustomUser, CustomUserAdmin)
 admin.site.register(Subject)
 admin.site.register(SubjectCategory)
+admin.site.register(LearningBoardWorkspace)
 admin.site.register(LearningBoard)
 admin.site.register(LearningBoardCard)
 admin.site.register(LearningBoardCardTag)
