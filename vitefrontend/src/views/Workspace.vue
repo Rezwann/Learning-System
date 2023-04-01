@@ -80,8 +80,6 @@
     <button class="btn btn-primary btn-sm" @click="addNewTag(board.id)"><b>+</b></button></span>
   </div>
 </div>
-
-
         </h6>
       </div>
     </div>

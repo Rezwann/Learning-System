@@ -18,6 +18,13 @@ def get_custom_users(request):
     serializer = CustomUserSerializer(users, many=True)
     return Response(serializer.data)
 
+@api_view(['POST'])
+def get_user_neurobackground(request):
+    username = request.data.get('studentname')
+    user = CustomUser.objects.get(username=username)
+    serializer = CustomUserSerializer(user)
+    return Response(serializer.data)
+
 @api_view(['GET'])
 def get_subjects(request):
     user = request.user

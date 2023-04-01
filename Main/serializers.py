@@ -8,7 +8,13 @@ class CustomUserSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = CustomUser
-        fields = ('id', 'username', 'user_information', 'role', 'subjects', 'profile_image', 'profile_image_url')
+        fields = ('id', 'username', 'user_information', 'role', 'subjects', 
+                  'profile_image', 'profile_image_url','verbal_memory_level'
+                  ,'non_verbal_memory_level', 'visual_perception_level',
+                  'visual_information_processing_speed_level',
+                  'numeracy_level', 'literacy_level', 'executive_function_level',
+                  'verbal_reasoning_level'
+                  )
     
     def get_profile_image_url(self, obj):
         if obj.profile_image:

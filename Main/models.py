@@ -17,10 +17,10 @@ class CustomUser(AbstractUser):
     verbal_memory_level = models.FloatField(default=50.0, validators=[MinValueValidator(1.0), MaxValueValidator(100.0)])
     non_verbal_memory_level = models.FloatField(default=50.0, validators=[MinValueValidator(1.0), MaxValueValidator(100.0)])
     visual_perception_level = models.FloatField(default=50.0, validators=[MinValueValidator(1.0), MaxValueValidator(100.0)])
+    visual_information_processing_speed_level = models.FloatField(default=50.0, validators=[MinValueValidator(1.0), MaxValueValidator(100.0)])
     numeracy_level = models.FloatField(default=50.0, validators=[MinValueValidator(1.0), MaxValueValidator(100.0)])
     literacy_level = models.FloatField(default=50.0, validators=[MinValueValidator(1.0), MaxValueValidator(100.0)])
     executive_function_level = models.FloatField(default=50.0, validators=[MinValueValidator(1.0), MaxValueValidator(100.0)])
-    visual_information_processing_speed_level = models.FloatField(default=50.0, validators=[MinValueValidator(1.0), MaxValueValidator(100.0)])
     verbal_reasoning_level = models.FloatField(default=50.0, validators=[MinValueValidator(1.0), MaxValueValidator(100.0)])
     
     def save(self, *args, **kwargs):
@@ -145,7 +145,7 @@ class Post(models.Model):
     content = models.TextField('Post Content', max_length=300, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
-# Overview - subject task (form quiz)
+# Overview - subject task
 class LearningTask(models.Model):
     channel = models.ForeignKey(Channel, on_delete=models.CASCADE)
     name = models.CharField(max_length=100, default='Quiz Name')
