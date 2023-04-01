@@ -22,9 +22,6 @@ class CustomUser(AbstractUser):
     executive_function_level = models.FloatField(default=50.0, validators=[MinValueValidator(1.0), MaxValueValidator(100.0)])
     visual_information_processing_speed_level = models.FloatField(default=50.0, validators=[MinValueValidator(1.0), MaxValueValidator(100.0)])
     verbal_reasoning_level = models.FloatField(default=50.0, validators=[MinValueValidator(1.0), MaxValueValidator(100.0)])
-
-    # condition = select from many options, 
-    # condition details = many points relating to above condition
     
     def save(self, *args, **kwargs):
         is_new = not self.pk
@@ -228,3 +225,4 @@ class LearningBoardCardListItem(models.Model):
     
     def __str__(self):
         return self.name
+    

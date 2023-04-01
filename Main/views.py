@@ -3,14 +3,14 @@ from rest_framework.decorators import api_view, permission_classes
 from django.http import JsonResponse
 from django.db.models import Q
 from django.utils import timezone
-from .models import CustomUser, Subject, SubjectCategory, LearningBoard, LearningBoardCard
+from .models import CustomUser, Subject, SubjectCategory, LearningBoard, LearningBoardWorkspace, LearningBoardCard
 from .models import LearningBoardCardList, LearningBoardCardListItem, LearningBoardCardTag
 from .models import CommunicationArea, Channel, Post
 from rest_framework.permissions import IsAuthenticated
 from .serializers import CustomUserSerializer, SubjectSerializer, SubjectCategorySerializer, LearningBoardSerializer, LearningBoardCardSerializer
 from .serializers import LearningBoardCardListSerializer, LearningBoardCardListItemSerializer
 from .serializers import LearningBoardCardListItemSerializer, LearningBoardCardTagSerializer
-from .serializers import CommunicationAreaSerializer, ChannelSerializer, PostSerializer
+from .serializers import CommunicationAreaSerializer, ChannelSerializer, PostSerializer, LearningBoardWorkspaceSerializer
 
 @api_view(['GET'])
 def get_custom_users(request):
@@ -18,14 +18,6 @@ def get_custom_users(request):
     serializer = CustomUserSerializer(users, many=True)
     return Response(serializer.data)
 
-""" @api_view(['GET'])
-def get_subjects(request):
-    user = request.user
-    # Get all subjects where the user is in the users field
-    subjects = Subject.objects.filter(Q(users=user))
-    serializer = SubjectSerializer(subjects, many=True)
-    return Response(serializer.data)
- """
 @api_view(['GET'])
 def get_subjects(request):
     user = request.user
@@ -73,51 +65,62 @@ def add_channel_post(request):
     
     return Response({'added:added'})
 
+@api_view(['GET'])
+def get_learning_workspace(request):
+    user = request.user
+    learning_workspace = LearningBoardWorkspace.objects.filter(user=user)
+    serializer = LearningBoardWorkspaceSerializer(learning_workspace, many=True)
+    return Response(serializer.data)
+
 
 @api_view(['GET'])
 def get_learning_boards(request):
-    learning_boards = LearningBoard.objects.all()
+    user_workspace = request.user.learningboardworkspace
+    learning_boards = LearningBoard.objects.filter(workspace=user_workspace)
     serializer = LearningBoardSerializer(learning_boards, many=True)
     return Response(serializer.data)
-
 @api_view(['GET'])
 def get_learning_boards_cards(request):
-    learning_boards_cards = LearningBoardCard.objects.all()
+    user_workspace = LearningBoardWorkspace.objects.get(user=request.user)
+    learning_boards = LearningBoard.objects.filter(workspace=user_workspace)
+    learning_boards_cards = LearningBoardCard.objects.filter(learning_board__in=learning_boards)
     serializer = LearningBoardCardSerializer(learning_boards_cards, many=True)
     return Response(serializer.data)
 
 @api_view(['GET'])
 def get_learning_boards_cards_tags(request):
-    learning_boards_cards_tags = LearningBoardCardTag.objects.all()
+    user_workspace = request.user.learningboardworkspace
+    learning_boards_cards_tags = LearningBoardCardTag.objects.filter(related_card__learning_board__workspace=user_workspace)
     serializer = LearningBoardCardTagSerializer(learning_boards_cards_tags, many=True)
     return Response(serializer.data)
 
 @api_view(['GET'])
 def get_learning_boards_cards_lists(request):
-    learning_boards_cards_lists = LearningBoardCardList.objects.all()
+    user_workspace = LearningBoardWorkspace.objects.get(user=request.user)
+    learning_boards = LearningBoard.objects.filter(workspace=user_workspace)
+    learning_boards_cards_lists = LearningBoardCardList.objects.filter(learning_board_card__learning_board__in=learning_boards)
     serializer = LearningBoardCardListSerializer(learning_boards_cards_lists, many=True)
     return Response(serializer.data)
 
 @api_view(['GET'])
 def get_learning_boards_cards_lists_items(request):
-    learning_boards_cards_lists_items = LearningBoardCardListItem.objects.all()
+    user_workspace = LearningBoardWorkspace.objects.get(user=request.user)
+    learning_boards = LearningBoard.objects.filter(workspace=user_workspace)
+    learning_boards_cards_lists_items = LearningBoardCardListItem.objects.filter(learning_board_card_list__learning_board_card__learning_board__in=learning_boards)
     serializer = LearningBoardCardListItemSerializer(learning_boards_cards_lists_items, many=True)
     return Response(serializer.data)
 
 @api_view(['POST'])
 def add_learning_board(request):
-    print(request.data)
-    
+    user_workspace = request.user.learningboardworkspace
     new_board = LearningBoard.objects.create(
-        name = request.data.get('name'),
-        short_description = request.data.get('short_description')        
+        name=request.data.get('name'),
+        short_description=request.data.get('short_description'),
+        workspace=user_workspace,
     )
-    
-    new_board.save()
-    
-    print(new_board)
-    
-    return Response({'added:added'})
+    serializer = LearningBoardSerializer(new_board)
+    return Response(serializer.data)
+
 
 @api_view(['POST'])
 def delete_learning_board(request):
@@ -168,8 +171,6 @@ def get_my_teaching_subjects(request):
 
     if user.role =="Student":
         return Response({'error': 'You do not have permission to perform this action.'})
-    
-    # Check if user is the subject leader of any subjects
     subject_leader_subjects = Subject.objects.filter(subject_leader=user)
     
     if subject_leader_subjects.exists():

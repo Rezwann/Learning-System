@@ -1,7 +1,7 @@
 <template >
 <div class="mb-4"></div>
   <div>
-    <h1 class="text-center">Learning Workspace</h1>
+    <h1 class="text-center">{{currentUser}}'s Learning Workspace</h1>
   </div>
 
   <div class="mx-3">
@@ -158,6 +158,7 @@
             name:'',
             short_description:''
         },
+        LearningWorkspace: [],
         LearningBoards: [],
         LearningBoardsCards: [],
         LearningBoardsCardsLists: [],
@@ -165,6 +166,7 @@
         LearningBoardsCardsTags:[],
         errors:[],
         id: 0,
+        currentUser:'',
       }
     },
     methods: {        
@@ -196,6 +198,7 @@
             this.LearningBoards = response.data
             })
         },
+        
         async deleteBoard(id) { 
           await axios.post('api/v1/LP/deleteLearningBoard/', {num:id})
           .then(response => {
@@ -228,27 +231,31 @@
 
     },
     async mounted() {
+      await axios.get('api/v1/LP/getLearningWorkspace/').then(response => {
+        this.LearningWorkspace = response.data
+      }),
       await axios.get('api/v1/LP/getLearningBoards/').then(response => {
         this.LearningBoards = response.data
-        console.log(this.LearningBoards)
       }),
       await axios.get('api/v1/LP/getLearningBoardsCards/').then(response => {
         this.LearningBoardsCards = response.data
-        console.log(this.LearningBoardsCards)
       }),
       await axios.get('api/v1/LP/getLearningBoardsCardsTags/').then(response => {
         this.LearningBoardsCardsTags = response.data
-        console.log(this.LearningBoardsCardsTags)
       })
       await axios.get('api/v1/LP/getLearningBoardsCardsLists/').then(response => {
         this.LearningBoardsCardsLists = response.data
-        console.log(this.LearningBoardsCardsLists)
       }),
       await axios.get('api/v1/LP/getLearningBoardsCardsListsItems/').then(response => {
         this.LearningBoardsCardsListsItems = response.data
-        console.log(this.LearningBoardsCardsListsItems)
+      }),
+      await axios.get('/api/v1/LP/getCurrentUser/').then(response => {
+        this.currentUser = response.data.username
       })
       },
+
+      //add tags to card, add list to card, add list item to list 
+
 }
 </script>
 

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import CustomUser, Subject, SubjectCategory, LearningBoard, LearningBoardCard
+from .models import CustomUser, Subject, SubjectCategory, LearningBoardWorkspace, LearningBoard, LearningBoardCard
 from .models import LearningBoardCardList, LearningBoardCardListItem, LearningBoardCardTag
 from .models import CommunicationArea, Channel, Post
 
@@ -46,6 +46,15 @@ class PostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
         fields = ['id', 'channel_id', 'author', 'author_username', 'author_role', 'content', 'created_at']
+
+class LearningBoardWorkspaceSerializer(serializers.ModelSerializer):
+    user = serializers.PrimaryKeyRelatedField(read_only=True)
+    username = serializers.CharField(source='user.username', read_only=True)
+    
+    class Meta:
+        model = LearningBoardWorkspace
+        fields = ('id', 'name', 'user', 'username')
+       
 
 class LearningBoardSerializer(serializers.ModelSerializer):                
     class Meta:

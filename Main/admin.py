@@ -9,23 +9,20 @@ class CustomUserAdmin(UserAdmin):
     model = CustomUser
 
 class CustomUserAdmin(UserAdmin):
+    list_display = ('username', 'email', 'first_name', 'last_name', 'is_staff', 'role')
     fieldsets = UserAdmin.fieldsets + (
         ('Custom fields', {
             'fields': ('user_information', 'role', 'subjects', 'profile_image')
         }),
         ('Insight Assessments', {
             'fields': (
-                'insight_verbal_memory_level', 
-                'insight_non_verbal_memory_level', 'insight_visual_perception_level', 
-                'insight_numeracy_level', 'insight_literacy_level'
+                'verbal_memory_level', 
+                'non_verbal_memory_level', 'visual_perception_level', 
+                'numeracy_level', 'literacy_level', 'executive_function_level', 'visual_information_processing_speed_level', 
+                'verbal_reasoning_level'
+
             )
         }),
-        ('Teacher Observations', {
-            'fields': (
-                'executive_function_level', 'visual_information_processing_speed_level', 
-                'verbal_reasoning_level'
-            )
-        })
     )
 
     list_display = ('username', 'email', 'first_name', 'last_name', 'is_staff')
@@ -40,7 +37,6 @@ class ChannelAdmin(admin.ModelAdmin):
 class PostAdmin(admin.ModelAdmin):
     list_display = ('channel', 'author', 'content', 'created_at')
 
-    
 admin.site.register(CustomUser, CustomUserAdmin)
 admin.site.register(Subject)
 admin.site.register(SubjectCategory)
