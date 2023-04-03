@@ -13,7 +13,8 @@ class CustomUserSerializer(serializers.ModelSerializer):
                   ,'non_verbal_memory_level', 'visual_perception_level',
                   'visual_information_processing_speed_level',
                   'numeracy_level', 'literacy_level', 'executive_function_level',
-                  'verbal_reasoning_level'
+                  'verbal_reasoning_level', 'debate_contribution_target',
+                  'vocabulary_sheet_group'
                   )
     
     def get_profile_image_url(self, obj):

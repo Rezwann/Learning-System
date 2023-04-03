@@ -11,6 +11,41 @@ from .serializers import CustomUserSerializer, SubjectSerializer, SubjectCategor
 from .serializers import LearningBoardCardListSerializer, LearningBoardCardListItemSerializer
 from .serializers import LearningBoardCardListItemSerializer, LearningBoardCardTagSerializer
 from .serializers import CommunicationAreaSerializer, ChannelSerializer, PostSerializer, LearningBoardWorkspaceSerializer
+import math
+import sklearn
+from sklearn.tree import DecisionTreeClassifier
+import numpy as np
+
+# Define the decision tree model
+model = DecisionTreeClassifier(random_state=42, max_depth=3)
+
+# Define the vocabulary groups and their corresponding labels
+vocabulary_groups = {
+    'Very Low': 0,
+    'Low': 1,
+    'Medium': 2,
+    'High': 3,
+    'Very High': 4
+}
+
+# Define the decision tree rules based on the input features
+rules = [
+    {'feature': 'VM', 'threshold': 30},
+    {'feature': 'NVM', 'threshold': 30},
+    {'feature': 'L', 'threshold': 30},
+    {'feature': 'EF', 'threshold': 30},
+]
+
+# Convert the input features to a 2D array
+X = np.array([[VM, NVM, L, EF]])
+
+# Predict the vocabulary group using the decision tree model
+predicted_group = model.fit(X, [0]).predict(X)[0]
+
+# Assign the predicted vocabulary group to the corresponding label
+vocab_group = list(vocabulary_groups.keys())[list(vocabulary_groups.values()).index(predicted_group)]
+
+
 
 @api_view(['GET'])
 def get_custom_users(request):
@@ -20,15 +55,58 @@ def get_custom_users(request):
 
 @api_view(['POST'])
 def get_user_neurobackground(request):
-    username = request.data.get('studentname')
-    user = CustomUser.objects.get(username=username)
+    try:
+        username = request.data.get('studentname')
+        user = CustomUser.objects.get(username=username)
+        serializer = CustomUserSerializer(user)
+        return Response(serializer.data)
+    except CustomUser.DoesNotExist:
+        return Response({'error': 'User does not exist.'})
+    except Exception as e:
+        return Response({'error': str(e)})
+
+@api_view(['POST'])
+def update_student_neuro_background(request):
+    VM = float(request.data.get('VM'))
+    NVM = float(request.data.get('NVM'))
+    VP = float(request.data.get('VP'))
+    VIPS = float(request.data.get('VIPS'))
+    N = float(request.data.get('N'))
+    L = float(request.data.get('L'))
+    EF =  float(request.data.get('EF'))
+    VR = float(request.data.get('VR'))
+
+    # debate
+    base_target = 5.0     
+    addition_for_base_target = ((VM*0.2)+(NVM*0.05)+(VP*0.1)+(VIPS*0.1)+(N*0.05)+(L*0.15)
+    +(EF*0.15) + (VR*0.3))    
+    final_debate_target = base_target + (base_target*(2*(addition_for_base_target/100.0)))
+    final_debate_target_rounded = math.ceil(final_debate_target)
+    print(final_debate_target_rounded)
+    
+    # vocabulary sheet group
+    
+    VM, NVM, L, EF, 
+                
+        
+    studentname = request.data.get('studentname')
+    user = CustomUser.objects.get(username=studentname)    
+    user.verbal_memory_level = VM
+    user.non_verbal_memory_level = NVM
+    user.visual_perception_level = VP
+    user.visual_information_processing_speed_level = VIPS
+    user.numeracy_level = N
+    user.literacy_level = L
+    user.executive_function_level = EF
+    user.verbal_reasoning_level = VR    
+    user.debate_contribution_target = final_debate_target_rounded
+    user.save()
     serializer = CustomUserSerializer(user)
     return Response(serializer.data)
 
 @api_view(['GET'])
 def get_subjects(request):
     user = request.user
-    # Get all subjects where the user is in the users field or subject_leader field
     subjects = Subject.objects.filter(Q(users=user) | Q(subject_leader=user))
     serializer = SubjectSerializer(subjects, many=True)
     return Response(serializer.data)

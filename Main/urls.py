@@ -33,4 +33,6 @@ urlpatterns = [
 
 # Teacher    
     path('getMyTeachingSubjects/', views.get_my_teaching_subjects),
+    path('updateStudentNeuroBackground/', views.update_student_neuro_background),
+
 ]

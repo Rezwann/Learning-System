@@ -21,8 +21,19 @@ class CustomUser(AbstractUser):
     numeracy_level = models.FloatField(default=50.0, validators=[MinValueValidator(1.0), MaxValueValidator(100.0)])
     literacy_level = models.FloatField(default=50.0, validators=[MinValueValidator(1.0), MaxValueValidator(100.0)])
     executive_function_level = models.FloatField(default=50.0, validators=[MinValueValidator(1.0), MaxValueValidator(100.0)])
-    verbal_reasoning_level = models.FloatField(default=50.0, validators=[MinValueValidator(1.0), MaxValueValidator(100.0)])
+    verbal_reasoning_level = models.FloatField(default=50.0, validators=[MinValueValidator(1.0), MaxValueValidator(100.0)])    
     
+    debate_contribution_target = models.FloatField(default=5)    
+    VOCABULARY_CHOICES = (
+        ('Very Low', 'Very Low'),
+        ('Low', 'Low'),
+        ('Medium', 'Medium'),
+        ('High', 'High'),
+        ('Very High', 'Very High'),
+    )
+    
+    vocabulary_sheet_group = models.CharField( choices=VOCABULARY_CHOICES, default='Medium') 
+       
     def save(self, *args, **kwargs):
         is_new = not self.pk
         super().save(*args, **kwargs)
