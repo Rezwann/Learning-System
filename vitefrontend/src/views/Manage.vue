@@ -119,7 +119,7 @@ export default {
     async updateStudentNeuroBackground(){
       await axios.post('api/v1/LP/updateStudentNeuroBackground/', {studentname:this.selectedStudent, VM:this.selectedVM, NVM:this.selectedNVM,
       VP: this.selectedVP, VIPS: this.selectedVIPS, N: this.selectedN, 
-      L: this.selectedL, EF: this.selectedEF, VR: this.selectedVR, DEBATE_TARGET: this.selectedStudentDebateTarget })
+      L: this.selectedL, EF: this.selectedEF, VR: this.selectedVR, DEBATE_TARGET: this.selectedStudentDebateTarget, VG: this.selectedStudentVocabularyGroup })
           .then(response => {
           })
           const studentName = this.selectedStudent

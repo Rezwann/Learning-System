@@ -12,48 +12,18 @@ from .serializers import LearningBoardCardListSerializer, LearningBoardCardListI
 from .serializers import LearningBoardCardListItemSerializer, LearningBoardCardTagSerializer
 from .serializers import CommunicationAreaSerializer, ChannelSerializer, PostSerializer, LearningBoardWorkspaceSerializer
 import math
-import sklearn
-from sklearn.tree import DecisionTreeClassifier
-import numpy as np
-
-# Define the decision tree model
-model = DecisionTreeClassifier(random_state=42, max_depth=3)
-
-# Define the vocabulary groups and their corresponding labels
-vocabulary_groups = {
-    'Very Low': 0,
-    'Low': 1,
-    'Medium': 2,
-    'High': 3,
-    'Very High': 4
-}
-
-# Define the decision tree rules based on the input features
-rules = [
-    {'feature': 'VM', 'threshold': 30},
-    {'feature': 'NVM', 'threshold': 30},
-    {'feature': 'L', 'threshold': 30},
-    {'feature': 'EF', 'threshold': 30},
-]
-
-# Convert the input features to a 2D array
-X = np.array([[VM, NVM, L, EF]])
-
-# Predict the vocabulary group using the decision tree model
-predicted_group = model.fit(X, [0]).predict(X)[0]
-
-# Assign the predicted vocabulary group to the corresponding label
-vocab_group = list(vocabulary_groups.keys())[list(vocabulary_groups.values()).index(predicted_group)]
-
-
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
+
 def get_custom_users(request):
     users = CustomUser.objects.all()
     serializer = CustomUserSerializer(users, many=True)
     return Response(serializer.data)
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
+
 def get_user_neurobackground(request):
     try:
         username = request.data.get('studentname')
@@ -66,6 +36,8 @@ def get_user_neurobackground(request):
         return Response({'error': str(e)})
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
+
 def update_student_neuro_background(request):
     VM = float(request.data.get('VM'))
     NVM = float(request.data.get('NVM'))
@@ -84,11 +56,20 @@ def update_student_neuro_background(request):
     final_debate_target_rounded = math.ceil(final_debate_target)
     print(final_debate_target_rounded)
     
-    # vocabulary sheet group
-    
-    VM, NVM, L, EF, 
-                
-        
+    # vocabulary sheet group  
+    final_group = "Medium"
+    avg = (VM + NVM + L + EF) / 4
+    if avg <= 20:
+        final_group = "Very Low"
+    elif avg <= 40:
+        final_group = "Low"
+    elif avg <= 60:
+        final_group = "Medium"
+    elif avg <= 80:
+        final_group = "High"
+    else:
+        final_group = "Very High"
+          
     studentname = request.data.get('studentname')
     user = CustomUser.objects.get(username=studentname)    
     user.verbal_memory_level = VM
@@ -100,11 +81,14 @@ def update_student_neuro_background(request):
     user.executive_function_level = EF
     user.verbal_reasoning_level = VR    
     user.debate_contribution_target = final_debate_target_rounded
+    user.vocabulary_sheet_group = final_group
     user.save()
     serializer = CustomUserSerializer(user)
     return Response(serializer.data)
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
+
 def get_subjects(request):
     user = request.user
     subjects = Subject.objects.filter(Q(users=user) | Q(subject_leader=user))
@@ -112,24 +96,32 @@ def get_subjects(request):
     return Response(serializer.data)
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
+
 def get_subject_categories(request):
     subject_categories = SubjectCategory.objects.all()
     serializer = SubjectCategorySerializer(subject_categories, many=True)
     return Response(serializer.data)
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
+
 def get_communication_areas(request):
     communication_areas = CommunicationArea.objects.all()
     serializer = CommunicationAreaSerializer(communication_areas, many=True)
     return Response(serializer.data)
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
+
 def get_channels(request):
     channels = Channel.objects.all()
     serializer = ChannelSerializer(channels, many=True)
     return Response(serializer.data)
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
+
 def get_posts(request):
     cid = request.data.get('num')
     posts = Post.objects.filter(channel_id=cid)
@@ -137,6 +129,8 @@ def get_posts(request):
     return Response(serializer.data)
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
+
 def add_channel_post(request):
     channel_passed = Channel.objects.get(id=request.data.get('num'))
     user = request.user    
@@ -151,6 +145,8 @@ def add_channel_post(request):
     return Response({'added:added'})
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
+
 def get_learning_workspace(request):
     user = request.user
     learning_workspace = LearningBoardWorkspace.objects.filter(user=user)
@@ -159,12 +155,17 @@ def get_learning_workspace(request):
 
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
+
 def get_learning_boards(request):
     user_workspace = request.user.learningboardworkspace
     learning_boards = LearningBoard.objects.filter(workspace=user_workspace)
     serializer = LearningBoardSerializer(learning_boards, many=True)
     return Response(serializer.data)
+
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
+
 def get_learning_boards_cards(request):
     user_workspace = LearningBoardWorkspace.objects.get(user=request.user)
     learning_boards = LearningBoard.objects.filter(workspace=user_workspace)
@@ -173,6 +174,8 @@ def get_learning_boards_cards(request):
     return Response(serializer.data)
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
+
 def get_learning_boards_cards_tags(request):
     user_workspace = request.user.learningboardworkspace
     learning_boards_cards_tags = LearningBoardCardTag.objects.filter(related_card__learning_board__workspace=user_workspace)
@@ -180,6 +183,8 @@ def get_learning_boards_cards_tags(request):
     return Response(serializer.data)
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
+
 def get_learning_boards_cards_lists(request):
     user_workspace = LearningBoardWorkspace.objects.get(user=request.user)
     learning_boards = LearningBoard.objects.filter(workspace=user_workspace)
@@ -188,6 +193,8 @@ def get_learning_boards_cards_lists(request):
     return Response(serializer.data)
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
+
 def get_learning_boards_cards_lists_items(request):
     user_workspace = LearningBoardWorkspace.objects.get(user=request.user)
     learning_boards = LearningBoard.objects.filter(workspace=user_workspace)
@@ -196,6 +203,8 @@ def get_learning_boards_cards_lists_items(request):
     return Response(serializer.data)
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
+
 def add_learning_board(request):
     user_workspace = request.user.learningboardworkspace
     new_board = LearningBoard.objects.create(
@@ -208,6 +217,8 @@ def add_learning_board(request):
 
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
+
 def delete_learning_board(request):
     learningboard_id = request.data.get('num')
     learningboard = LearningBoard.objects.get(id=learningboard_id)
@@ -216,6 +227,7 @@ def delete_learning_board(request):
     return Response({'deleted:deleted'})
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def delete_learning_board_card(request):
     learningboardcard_id = request.data.get('num')
     learningboardcard = LearningBoardCard.objects.get(id=learningboardcard_id)
@@ -224,6 +236,7 @@ def delete_learning_board_card(request):
     return Response({'deleted:deleted'})
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def add_learning_board_card(request):
     learningboard_id = request.data.get('num')
     new_card_name = request.data.get('name')
@@ -241,6 +254,7 @@ def add_learning_board_card(request):
     return Response(serializer.data)
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def get_current_user(request):
     if request.user.is_authenticated:
         username = request.user.username

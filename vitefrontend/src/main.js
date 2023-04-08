@@ -2,7 +2,7 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import { createRouter, createWebHistory } from 'vue-router'
 import Home from './views/Home.vue'
-import About from './views/About.vue'
+import StudentProfile from './views/StudentProfile.vue'
 import Overview from './views/Overview.vue'
 import Workspace from './views/Workspace.vue'
 import Logout from './views/Logout.vue'
@@ -25,11 +25,6 @@ const router = createRouter({
             component: Home
         },
         {
-            path: '/about',
-            name: 'About',
-            component: About
-        },
-        {
             path: '/register',
             name: 'Register',
             component: Register
@@ -38,6 +33,14 @@ const router = createRouter({
             path: '/login',
             name: 'Login',
             component: Login
+        },
+        {
+            path: '/studentprofile',
+            name: 'StudentProfile',
+            component: StudentProfile,
+            meta: {
+                requireAuthentication: true
+            }
         },
         {
             path: '/overview',

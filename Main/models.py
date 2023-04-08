@@ -32,7 +32,18 @@ class CustomUser(AbstractUser):
         ('Very High', 'Very High'),
     )
     
-    vocabulary_sheet_group = models.CharField( choices=VOCABULARY_CHOICES, default='Medium') 
+    vocabulary_sheet_group = models.CharField(max_length=20, choices=VOCABULARY_CHOICES, default='M') 
+
+    ENG_TYPES = (
+        ('Looking to participate', 'Looking to participate'),        
+        ('Looking for discussion or group work', 'Looking for discussion or group work'),
+        ('Looking to only listen in class', 'Looking to only listen in class'),
+        ('Looking to uniquely contribute in class', 'Looking to uniquely contribute in class'),
+        ('Looking to enagage in physical or hands-on activities', 'Looking to enagage in physical or hands-on activities'),
+        ('Looking for occasional breaks or opportunities for quiet time', 'Looking for occasional breaks or opportunities for quiet time'),
+    )
+       
+    desired_engagement_type = models.CharField(max_length=250, choices=ENG_TYPES, default='Looking to participate') 
        
     def save(self, *args, **kwargs):
         is_new = not self.pk
@@ -195,6 +206,11 @@ class LearningBoardWorkspace(models.Model):
 
     def __str__(self):
         return self.name
+    
+board_role = (
+        ('Student', 'Student'),
+        ('Teacher', 'Teacher'),
+)    
 
 class LearningBoard(models.Model):                
     name = models.CharField(max_length=300,  default='Learning Board Name')
@@ -202,6 +218,7 @@ class LearningBoard(models.Model):
     cards = models.ManyToManyField('LearningBoardCard', related_name='cards', blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     workspace = models.ForeignKey('LearningBoardWorkspace', on_delete=models.CASCADE)
+    board_type = models.CharField(max_length=40, choices=board_role, default='Student')
 
     def __str__(self):
         return self.name

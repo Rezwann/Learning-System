@@ -18,12 +18,6 @@
         >
           Home
         </button>
-        <button
-          class="nav-item nav-link btn btn-light mx-2"
-          @click="$router.push('/about')"
-        >
-          About
-        </button>
         <template v-if="$store.state.isAuthenticated">
           <button
             class="nav-item nav-link btn btn-light mx-2"
@@ -31,6 +25,12 @@
           >
             Overview
           </button>
+          <button
+          class="nav-item nav-link btn btn-light mx-2"
+          @click="$router.push('/studentprofile')"
+        >
+          Profile
+        </button>
           <button
             class="nav-item nav-link btn btn-light mx-2"
             @click="$router.push('/workspace')"
@@ -104,7 +104,7 @@
       </li>      
     </ul>
     <ul v-else>
-      <li>This may well be an important day, but no information has been added</li>      
+      <li>This may be an important day, but no information has been added</li>      
     </ul>
   </div>
   <div

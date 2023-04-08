@@ -60,13 +60,12 @@ class LearningBoardWorkspaceSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = LearningBoardWorkspace
-        fields = ('id', 'name', 'user', 'username')
-       
+        fields = ('id', 'name', 'user', 'username')       
 
 class LearningBoardSerializer(serializers.ModelSerializer):                
     class Meta:
         model = LearningBoard
-        fields = ('id', 'name', 'short_description', 'cards', 'created_at')
+        fields = ('id', 'name', 'short_description', 'cards', 'created_at', 'board_type')
 
 class LearningBoardCardTagSerializer(serializers.ModelSerializer):                
     class Meta:

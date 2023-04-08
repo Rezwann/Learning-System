@@ -41,7 +41,7 @@
     <div class="container-fluid p-2 bg-indigo-400 mt-3 mb-4">
 <div class="shadow-sm scroll-row" style="display: flex;">
         <div v-for="board in LearningBoards" :key ="board.id" style="flex-grow: 1;" class="mx-1">
-        <div style="width: 25vw;" class="shadow-sm alert alert-warning scrollable rounded mt-2">
+          <div :class="{'shadow-sm alert alert-warning scrollable rounded mt-2': board.board_type === 'Student', 'shadow-sm alert alert-success scrollable rounded mt-2': board.board_type !== 'Student'}" style="width: 25vw;">
             <div class="d-grid gap-2 d-md-flex justify-content-md-end">
             <button class="btn btn-sm btn-warning mb-2" @click="deleteBoard(board.id)">Delete Board</button>            
         </div>
