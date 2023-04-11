@@ -129,15 +129,6 @@ class Subject(models.Model):
     def __str__(self):
         return f"{self.name}, {self.subject_code}, {self.year_group}"        
 
-class SubjectLearningOutcome(models.Model):
-    name = models.CharField(max_length=255)
-    description = models.TextField(max_length=500)
-    subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
-    
-    def __str__(self):
-        return self.name
-
-# Subject Communication Area
 class CommunicationArea(models.Model):
     related_subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
     name = models.CharField(max_length=255, default='', blank=True)
@@ -152,7 +143,6 @@ class CommunicationArea(models.Model):
     def __str__(self):
         return f"{self.related_subject}, {self.name}"
 
-# Communication channel    
 class Channel(models.Model):
     communication_area = models.ForeignKey(CommunicationArea, on_delete=models.CASCADE)
     name = models.CharField(max_length=100, default='Channel Name')
@@ -167,39 +157,6 @@ class Post(models.Model):
     content = models.TextField('Post Content', max_length=300, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
-# Overview - subject task
-class LearningTask(models.Model):
-    channel = models.ForeignKey(Channel, on_delete=models.CASCADE)
-    name = models.CharField(max_length=100, default='Quiz Name')
-    description = models.TextField('Quiz Description', max_length=300, default='Quiz Description', blank=True)
-    created_by = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="creators")
-    intended_for = models.ManyToManyField(CustomUser)
-    created_at = models.DateTimeField(auto_now_add=True)
-    progress = models.FloatField(default=0)
-    completed = models.BooleanField(default=False)
-
-    def update_progress(self, user):
-        attempted_subtasks = UserResponse.objects.filter(learning_subtask__learning_task=self, user=user).count()
-        total_subtasks = self.learningsubtask_set.count()
-        self.progress = attempted_subtasks / total_subtasks * 100
-        if self.progress == 100:
-            self.completed = True
-        self.save()
-    
-class LearningSubTask(models.Model):    
-    learning_task = models.ForeignKey(LearningTask, on_delete=models.CASCADE)    
-    question = models.TextField(max_length=100, default='Question')
-    hint = models.TextField(blank=True)
-    points = models.PositiveSmallIntegerField()
-    subtask_solution = models.TextField(max_length=100, default='Subtask solution')
-
-class UserResponse(models.Model):
-    learning_subtask = models.ForeignKey(LearningTask, on_delete=models.CASCADE)
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="responses")
-    response = models.TextField()
-    submitted_at = models.DateTimeField(auto_now_add=True)
-
-# Learning Workspace
 class LearningBoardWorkspace(models.Model):
     name = models.CharField(max_length=300, default='Learning Workspace')
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)

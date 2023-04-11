@@ -211,10 +211,10 @@ def add_learning_board(request):
         name=request.data.get('name'),
         short_description=request.data.get('short_description'),
         workspace=user_workspace,
+        board_type = request.user.role
     )
     serializer = LearningBoardSerializer(new_board)
     return Response(serializer.data)
-
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])

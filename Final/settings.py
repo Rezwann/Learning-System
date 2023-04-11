@@ -5,17 +5,9 @@ Django settings for Final project.
 import datetime
 from pathlib import Path
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-5su5g%&qwqqejo+j-_(d=0@qb!m)x7e^q@ois7pgh*xt#8*f*^'
-
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 ALLOWED_HOSTS = []
@@ -39,12 +31,18 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_extensions',
     'djoser',
     'corsheaders',
     'rest_framework.authtoken',    
     'rest_framework',
     'Main'
 ]
+
+GRAPH_MODELS ={
+    'all_applications': True,
+    'graph_models': True,
+     }
 
 AUTH_USER_MODEL = 'Main.CustomUser'
 

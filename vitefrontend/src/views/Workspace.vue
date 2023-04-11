@@ -165,6 +165,7 @@
         errors:[],
         id: 0,
         currentUser:'',
+        currentUserRole: '',
       }
     },
     methods: {        
@@ -249,10 +250,11 @@
       }),
       await axios.get('/api/v1/LP/getCurrentUser/').then(response => {
         this.currentUser = response.data.username
+        this.currentUserRole = response.data
       })
       },
 
-      //add tags to card, add list to card, add list item to list 
+      //need to add/remove list to card, add/remove list item to list 
 
 }
 </script>
