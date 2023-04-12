@@ -3,7 +3,7 @@ from django.contrib.auth.admin import UserAdmin
 from .models import CustomUser, Subject, SubjectCategory, LearningBoard, LearningBoardCard
 from .models import LearningBoardCardList, LearningBoardCardListItem, LearningBoardCardTag
 from .models import CommunicationArea, Channel, Post
-from .models import  LearningBoardWorkspace
+from .models import  LearningBoardWorkspace, EngagementInstance
 
 class CustomUserAdmin(UserAdmin):
     model = CustomUser
@@ -14,13 +14,12 @@ class CustomUserAdmin(UserAdmin):
         ('Custom fields', {
             'fields': ('user_information', 'role', 'subjects', 'profile_image')
         }),
-        ('Insight Assessments', {
+        ('All', {
             'fields': (
                 'verbal_memory_level', 
                 'non_verbal_memory_level', 'visual_perception_level', 
                 'numeracy_level', 'literacy_level', 'executive_function_level', 'visual_information_processing_speed_level', 
-                'verbal_reasoning_level', 'debate_contribution_target', 'vocabulary_sheet_group'
-
+                'verbal_reasoning_level', 'debate_contribution_target', 'vocabulary_sheet_group', 'desired_engagement_type'                
             )
         }),
     )
@@ -49,3 +48,4 @@ admin.site.register(LearningBoardCardListItem)
 admin.site.register(CommunicationArea, CommunicationAreaAdmin)
 admin.site.register(Channel, ChannelAdmin)
 admin.site.register(Post, PostAdmin)
+admin.site.register(EngagementInstance)

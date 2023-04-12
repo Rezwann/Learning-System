@@ -3,6 +3,7 @@ import string
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.core.exceptions import ValidationError
 
 class CustomUser(AbstractUser):
     user_information = models.TextField('User Information', max_length=300, default='', blank=True)
@@ -50,9 +51,22 @@ class CustomUser(AbstractUser):
         super().save(*args, **kwargs)
         if is_new:
             LearningBoardWorkspace.objects.create(user=self, name=f"{self.username}'s Workspace")
-            
+            EngagementInstance.objects.create(user=self, chosen_type=self.desired_engagement_type)
+
+    @classmethod
+    def validate_desired_engagement_type(cls, desired_engagement_type):
+        if not any(desired_engagement_type == eng_type[0] for eng_type in cls.ENG_TYPES):
+            raise ValidationError('Invalid engagement type choice.')
+
     def __str__(self):
         return self.username    
+
+class EngagementInstance(models.Model):    
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    chosen_type = models.CharField(max_length=250, default='Looking to participate') 
+    time_chosen = models.DateTimeField(auto_now_add=True)    
+    def __str__(self):
+        return self.chosen_type
 
 class SubjectCategory(models.Model):
     CATEGORY_CHOICES = (

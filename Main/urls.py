@@ -22,14 +22,15 @@ urlpatterns = [
     path('getLearningBoardsCardsLists/', views.get_learning_boards_cards_lists),
     path('getLearningBoardsCardsListsItems/', views.get_learning_boards_cards_lists_items),
 
-    path('addLearningBoard/', views.add_learning_board),
-    
+    path('addLearningBoard/', views.add_learning_board),    
     path('deleteLearningBoard/', views.delete_learning_board),
     path('deleteLearningBoardCard/', views.delete_learning_board_card),
     path('addLearningBoardCard/', views.add_learning_board_card),
 
 # User API's    
     path('getCurrentUser/', views.get_current_user),
+    path('getSingleUser/', views.get_single_user),
+    path('postEngagementInstance/',views.post_engagement_instance),
 
 # Teacher    
     path('getMyTeachingSubjects/', views.get_my_teaching_subjects),

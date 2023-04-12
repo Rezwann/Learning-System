@@ -5,9 +5,7 @@
       <h4 class="mx-4 mt-2 text-white me-auto">Rezwan: Learning Platform 🙂</h4>
             <div class="navbar-nav ml-auto mx-4 mb-1 mt-1">
               
-              <!-- Button trigger offcanvas -->
               <button class="btn btn-success nav-item nav-link text-white mx-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">Accessibility</button>
-              <!-- Button trigger modal -->
               <button type="button" class="btn btn-success nav-item nav-link text-white mx-2" data-bs-toggle="modal" data-bs-target="#exampleModal">
           View Key Dates
           </button>
@@ -25,12 +23,13 @@
           >
             Overview
           </button>
+          <template v-if="currentUserRole === 'Student'">
           <button
           class="nav-item nav-link btn btn-light mx-2"
           @click="$router.push('/studentprofile')"
         >
-          Profile
-        </button>
+          Student Profile
+        </button></template>
           <button
             class="nav-item nav-link btn btn-light mx-2"
             @click="$router.push('/workspace')"

@@ -2,10 +2,18 @@ from rest_framework import serializers
 from .models import CustomUser, Subject, SubjectCategory, LearningBoardWorkspace, LearningBoard, LearningBoardCard
 from .models import LearningBoardCardList, LearningBoardCardListItem, LearningBoardCardTag
 from .models import CommunicationArea, Channel, Post
+from .models import EngagementInstance
+
+class EngagementInstanceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EngagementInstance
+        fields = ('id', 'user', 'chosen_type', 'time_chosen')
+
 
 class CustomUserSerializer(serializers.ModelSerializer):
     profile_image_url = serializers.SerializerMethodField()
-    
+    ENG_TYPES = CustomUser.ENG_TYPES
+
     class Meta:
         model = CustomUser
         fields = ('id', 'username', 'user_information', 'role', 'subjects', 
@@ -14,8 +22,8 @@ class CustomUserSerializer(serializers.ModelSerializer):
                   'visual_information_processing_speed_level',
                   'numeracy_level', 'literacy_level', 'executive_function_level',
                   'verbal_reasoning_level', 'debate_contribution_target',
-                  'vocabulary_sheet_group'
-                  )
+                  'vocabulary_sheet_group', 'desired_engagement_type',                  
+                  'ENG_TYPES')
     
     def get_profile_image_url(self, obj):
         if obj.profile_image:

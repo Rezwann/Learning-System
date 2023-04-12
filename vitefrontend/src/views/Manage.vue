@@ -31,6 +31,7 @@
   </div>
   <div class="col-md-6">
     <h4>Update {{selectedStudent}}'s Levels</h4>
+    {{selectedStudentCurrentEngagementType}}
     <div id="updatingcogvalues" class="card p-3">
       <p>{{CDs[0]}}: {{selectedVM}}</p>   
       <input type="range" class="form-range" min="1" max="100" step="1" v-model="selectedVM">
@@ -84,17 +85,20 @@ export default {
       selectedStudent: '',
       selectedStudentList: [],
       selectedStudentNeuroBackground:[],
+      selectedID:0,
       selectedVM:0, selectedNVM: 0, selectedVP:0, selectedVIPS: 0,
       selectedN:0, selectedL: 0, selectedEF: 0, selectedVR: 0,
       selectedStudentDebateTarget: 0,
       selectedStudentVocabularyGroup:'',
       CDs: CDs,
       options:{},
-      series:[]
+      series:[],
+      EngagementChoices:[],
+      selectedStudentCurrentEngagementType:'',
+      info:[]
     }
   },
-  async mounted() {
-  
+  async mounted() {  
     await axios.get('/api/v1/LP/getCurrentUser/').then(response => {
       this.currentUser = response.data.username
     })
@@ -108,6 +112,10 @@ export default {
       this.students = response.data
       this.filtered = this.students.filter(student => student.role === 'Student');
     })    
+
+    axios.get('/api/v1/LP/getSingleUser/').then(response => {
+        this.EngagementChoices = response.data.ENG_TYPES.map(choice => choice[1])
+      })    
   },
   watch: {
     selectedStudent: {
@@ -123,17 +131,19 @@ export default {
           .then(response => {
           })
           const studentName = this.selectedStudent
+
           await this.resetSelectedStudent();
           await this.chooseSelectedStudent(studentName)
+          this.selectedStudent = studentName
     },
+    
     async resetSelectedStudent() {
     this.selectedStudent = ''
     },
     async chooseSelectedStudent(name){
       this.selectedStudent = name
     },
-    async GenerateNeuroInsight(option = 'default') { 
-      console.log(this.selectedStudentList)
+    async GenerateNeuroInsight(option = 'default') {       
       if (option = 'default'){
       await axios.post('/api/v1/LP/getUserNeurobackground/', {studentname:this.selectedStudent})
           .then(response => {
@@ -147,14 +157,15 @@ export default {
             this.selectedEF = this.selectedStudentNeuroBackground.executive_function_level
             this.selectedVR = this.selectedStudentNeuroBackground.verbal_reasoning_level            
             this.selectedStudentDebateTarget = this.selectedStudentNeuroBackground.debate_contribution_target
-            this.selectedStudentVocabularyGroup = this.selectedStudentNeuroBackground.vocabulary_sheet_group
-
-          })   
-        }
+            this.selectedStudentVocabularyGroup = this.selectedStudentNeuroBackground.vocabulary_sheet_group            
+            this.selectedStudentCurrentEngagementType = this.selectedStudentNeuroBackground.desired_engagement_type 
+          })  
+        }        
         else {
           await axios.post('/api/v1/LP/getUserNeurobackground/', {studentname:option})
           .then(response => {
             this.selectedStudentNeuroBackground = response.data
+            this.selectedID = this.this.selectedStudentNeuroBackground.id
             this.selectedVM = this.selectedStudentNeuroBackground.verbal_memory_level
             this.selectedNVM = this.selectedStudentNeuroBackground.non_verbal_memory_level
             this.selectedVP = this.selectedStudentNeuroBackground.visual_perception_level
@@ -164,9 +175,9 @@ export default {
             this.selectedEF = this.selectedStudentNeuroBackground.executive_function_level
             this.selectedVR = this.selectedStudentNeuroBackground.verbal_reasoning_level            
             this.selectedStudentDebateTarget = this.selectedStudentNeuroBackground.debate_contribution_target
-          })   
+            this.selectedStudentCurrentEngagementType = this.selectedStudentNeuroBackground.desired_engagement_type
+          })
         }
-
       this.options = {
         chart: {
     type: 'bar',
