@@ -18,7 +18,6 @@ urlpatterns = [
     path('getLearningWorkspace/', views.get_learning_workspace),
     path('getLearningBoards/', views.get_learning_boards),
     path('getLearningBoardsCards/', views.get_learning_boards_cards),
-    path('getLearningBoardsCardsTags/', views.get_learning_boards_cards_tags),
     path('getLearningBoardsCardsLists/', views.get_learning_boards_cards_lists),
     path('getLearningBoardsCardsListsItems/', views.get_learning_boards_cards_lists_items),
 
@@ -36,5 +35,6 @@ urlpatterns = [
 # Teacher    
     path('getMyTeachingSubjects/', views.get_my_teaching_subjects),
     path('updateStudentNeuroBackground/', views.update_student_neuro_background),
+    path('addLearningBoardToStudent/', views.add_learning_board_to_student),    
 
 ]

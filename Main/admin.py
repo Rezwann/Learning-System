@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from .models import CustomUser, Subject, SubjectCategory, LearningBoard, LearningBoardCard
-from .models import LearningBoardCardList, LearningBoardCardListItem, LearningBoardCardTag
+from .models import LearningBoardCardList, LearningBoardCardListItem
 from .models import CommunicationArea, Channel, Post
 from .models import  LearningBoardWorkspace, EngagementInstance
 
@@ -26,7 +26,6 @@ class CustomUserAdmin(UserAdmin):
 
     list_display = ('username', 'email', 'first_name', 'last_name', 'is_staff')
 
-
 class CommunicationAreaAdmin(admin.ModelAdmin):
     list_display = ('related_subject',)
 
@@ -42,7 +41,6 @@ admin.site.register(SubjectCategory)
 admin.site.register(LearningBoardWorkspace)
 admin.site.register(LearningBoard)
 admin.site.register(LearningBoardCard)
-admin.site.register(LearningBoardCardTag)
 admin.site.register(LearningBoardCardList)
 admin.site.register(LearningBoardCardListItem)
 admin.site.register(CommunicationArea, CommunicationAreaAdmin)

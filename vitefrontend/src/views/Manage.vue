@@ -57,7 +57,7 @@
   <h5 class="card-subtitle text-muted"> {{selectedStudentCurrentEngagementType}}</h5>
 </div>
   <h5 class="card-title">{{selectedStudent}}'s Desired Engagement Type History:</h5>
-  <div class="card shadow-sm alert alert-success">
+  <div class="card shadow-sm alert alert-success mt-2">
         <div class="scrollable-b">
           <div v-if="selectedStudentEngagementInstances.length === 0">
   <h4 class="justify-content-center">{{selectedStudent}} has not previously set an engagement preference</h4>
@@ -78,14 +78,35 @@
 <div v-else>
   <h6 class="card-subtitle text-muted">Not enough instances. Once {{selectedStudent}} has selected their preference for engagement type at least 5 times, you will be able to see their preference in a visualization below</h6>
 </div>
-
   </div>
-</div>
 
-  <hr>
-  <h4 class="alert-heading">Add to Student's Individual Learning Workspace</h4>
-  <p>.</p>
-  <hr>
+  <div class="card mt-3 p-3 mx-auto" style="width:80vw;">
+  <h4 class="alert-heading mt-2">Add to {{selectedStudent}}'s Individual Workspace</h4>
+
+  <form @submit.prevent="submitNewBoard">
+    <div class="row">
+  <h5 class="card-text">Add a board (for example, a task)</h5>
+  <div class="col-4 mb-3">
+    <label class="mb-1">Name</label>
+    <input type="text" name="name" class="form-control" v-model="addBoardForm.name" placeholder="Name">
+  </div>
+  <div class="col-4 mb-3">
+    <label class="mb-1">Short Description</label>
+    <input
+      type="text"
+      name="short_description"
+      class="form-control"
+      v-model="addBoardForm.short_description" placeholder="Short Description"
+    />
+  </div>
+  <div class="col-4 mt-4 mb-3">
+    <button class="btn btn-danger">Add Board</button>
+  </div>
+  <span class="text-center error" v-if="errorMessage">{{ errorMessage }}</span>
+</div>
+  </form>
+</div>
+</div>
 
 </div>
 </div>
@@ -129,7 +150,12 @@ export default {
       optionsEngagement:{},
       seriesEngagement:[],
       enoughInstances: false,
-      engagementCounts:[]
+      engagementCounts:[],
+      addBoardForm: {
+            name:'',
+            short_description:''
+        },
+      errorMessage:'',
     }
   },
   async mounted() {  
@@ -174,9 +200,25 @@ export default {
             const elapsed = moment.duration(currentDate.diff(createdAt)).humanize()
                     return `${date} (${elapsed} ago)`
         },
-
+        async submitNewBoard(){
+            if (this.addBoardForm.name && this.addBoardForm.short_description){
+            await axios.post('api/v1/LP/addLearningBoardToStudent/',{boardinfo: this.addBoardForm, studentname:this.selectedStudent})
+            .then(response => {
+            }).catch(error =>{
+                if(error.response){
+                    for (const property in error.response.data){
+                        this.errors.push(`${property}: ${error.response.data[property]}`)
+                    }
+                }
+            })
+            this.errorMessage = '';
+            this.addBoardForm = {};
+            alert("Board added")
+            } else {
+                this.errorMessage = 'Both fields are required';
+              }
+        },
     async showEngagementVisualisation(){
-
           this.optionsEngagement = {
         chart: { type: 'area',
     stacked: true,    
@@ -223,7 +265,7 @@ export default {
 
           await this.resetSelectedStudent();
           await this.chooseSelectedStudent(studentName)
-          this.selectedStudent = studentName
+          await this.showEngagementVisualisation()
     },
     
     async resetSelectedStudent() {

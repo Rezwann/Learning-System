@@ -3,12 +3,12 @@ from rest_framework.decorators import api_view, permission_classes
 from django.http import JsonResponse
 from django.db.models import Q
 from .models import CustomUser, Subject, SubjectCategory, LearningBoard, LearningBoardWorkspace, LearningBoardCard
-from .models import LearningBoardCardList, LearningBoardCardListItem, LearningBoardCardTag
+from .models import LearningBoardCardList, LearningBoardCardListItem
 from .models import CommunicationArea, Channel, Post, EngagementInstance
 from rest_framework.permissions import IsAuthenticated
 from .serializers import CustomUserSerializer, SubjectSerializer, SubjectCategorySerializer, LearningBoardSerializer, LearningBoardCardSerializer
 from .serializers import LearningBoardCardListSerializer, LearningBoardCardListItemSerializer
-from .serializers import LearningBoardCardListItemSerializer, LearningBoardCardTagSerializer
+from .serializers import LearningBoardCardListItemSerializer
 from .serializers import CommunicationAreaSerializer, ChannelSerializer, PostSerializer, LearningBoardWorkspaceSerializer
 from .serializers import EngagementInstanceSerializer
 from django.shortcuts import get_object_or_404
@@ -202,14 +202,6 @@ def get_learning_boards_cards(request):
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-def get_learning_boards_cards_tags(request):
-    user_workspace = request.user.learningboardworkspace
-    learning_boards_cards_tags = LearningBoardCardTag.objects.filter(related_card__learning_board__workspace=user_workspace)
-    serializer = LearningBoardCardTagSerializer(learning_boards_cards_tags, many=True)
-    return Response(serializer.data)
-
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
 def get_learning_boards_cards_lists(request):
     user_workspace = LearningBoardWorkspace.objects.get(user=request.user)
     learning_boards = LearningBoard.objects.filter(workspace=user_workspace)
@@ -224,6 +216,24 @@ def get_learning_boards_cards_lists_items(request):
     learning_boards = LearningBoard.objects.filter(workspace=user_workspace)
     learning_boards_cards_lists_items = LearningBoardCardListItem.objects.filter(learning_board_card_list__learning_board_card__learning_board__in=learning_boards)
     serializer = LearningBoardCardListItemSerializer(learning_boards_cards_lists_items, many=True)
+    return Response(serializer.data)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def add_learning_board_to_student(request):
+    studentname = request.data.get('studentname')
+    boardinfo = request.data.get('boardinfo')
+    name = boardinfo.get('name')
+    short_description = boardinfo.get('short_description')
+    studentuser = CustomUser.objects.get(username=studentname)    
+    studentuser_workspace = studentuser.learningboardworkspace
+    new_board = LearningBoard.objects.create(
+        name=name,
+        short_description=short_description,
+        workspace=studentuser_workspace,
+        board_type = request.user.role
+    )
+    serializer = LearningBoardSerializer(new_board)
     return Response(serializer.data)
 
 @api_view(['POST'])

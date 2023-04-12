@@ -68,6 +68,25 @@ class EngagementInstance(models.Model):
     def __str__(self):
         return self.chosen_type
 
+class EHCP_View(models.Model):
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
+    student_views = models.TextField('EHCP Views', max_length=300, default="Student's Views from EHCP'", blank=True)
+    teacher_comments = models.ManyToManyField('EHCP_TeacherComment', related_name='ehcp_views', blank=True)
+
+class EHCP_Interest(models.Model):
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
+    student_interests = models.TextField('EHCP Interests', max_length=300, default="Student's Interests from EHCP'", blank=True)
+    teacher_comments = models.ManyToManyField('EHCP_TeacherComment', related_name='ehcp_interests', blank=True)
+
+class EHCP_Aspiration(models.Model):
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
+    student_aspirations = models.TextField('EHCP Aspirations', max_length=300, default="Student's Aspirations from EHCP'", blank=True)
+    teacher_comments = models.ManyToManyField('EHCP_TeacherComment', related_name='ehcp_aspirations', blank=True)
+
+class EHCP_TeacherComment(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    comment = models.TextField('Teacher Comment', max_length=300, default='', blank=True)
+
 class SubjectCategory(models.Model):
     CATEGORY_CHOICES = (
         ('Modern Foreign Languages', 'Modern Foreign Languages'),
@@ -199,16 +218,9 @@ class LearningBoardCard(models.Model):
     name = models.CharField(max_length=300, default='Learning Board Card Name')
     short_description = models.TextField('Card Description', max_length=300, default='Learning Board Card Description', blank=True)
     lists = models.ManyToManyField('LearningBoardCardList', related_name='lists', blank=True)
-    tags = models.ManyToManyField('LearningBoardCardTag', related_name='cards', blank=True)
     def __str__(self):
         return self.name
     
-class LearningBoardCardTag(models.Model):
-    related_card = models.ForeignKey(LearningBoardCard, on_delete=models.CASCADE)
-    name = models.CharField(max_length=50, default='Tag Name')
-    
-    def __str__(self):
-        return self.name
 
 class LearningBoardCardList(models.Model):
     learning_board_card = models.ForeignKey(LearningBoardCard, on_delete=models.CASCADE, blank=True)

@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import CustomUser, Subject, SubjectCategory, LearningBoardWorkspace, LearningBoard, LearningBoardCard
-from .models import LearningBoardCardList, LearningBoardCardListItem, LearningBoardCardTag
+from .models import LearningBoardCardList, LearningBoardCardListItem
 from .models import CommunicationArea, Channel, Post
 from .models import EngagementInstance
 
@@ -76,11 +76,6 @@ class LearningBoardSerializer(serializers.ModelSerializer):
     class Meta:
         model = LearningBoard
         fields = ('id', 'name', 'short_description', 'cards', 'created_at', 'board_type')
-
-class LearningBoardCardTagSerializer(serializers.ModelSerializer):                
-    class Meta:
-        model = LearningBoardCardTag
-        fields = ('id','name', 'related_card_id')
         
 class LearningBoardCardSerializer(serializers.ModelSerializer):
     learning_board_id = serializers.SerializerMethodField()
@@ -88,7 +83,7 @@ class LearningBoardCardSerializer(serializers.ModelSerializer):
     class Meta:
         model = LearningBoardCard
         fields = ('id', 'learning_board_id','name', 'short_description', 
-                  'lists','tags')
+                  'lists',)
     
     def get_learning_board_id(self, obj):
         return obj.learning_board.id

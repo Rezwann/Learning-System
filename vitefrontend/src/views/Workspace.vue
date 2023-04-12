@@ -12,6 +12,7 @@
   <form @submit.prevent="submitNewBoard();">
     <div class="row">
   <h5 class="card-text">Add a board</h5>
+  
   <div class="col-4 mb-3">
     <label class="mb-1">Name</label>
     <input type="text" name="name" class="form-control" v-model="addBoardForm.name" placeholder="Name">
@@ -31,6 +32,8 @@
   <span class="text-center error" v-if="errorMessage">{{ errorMessage }}</span>
 </div>
   </form>
+  <h6><em>Note: Green Learning boards = added by teacher, Yellow Learning boards = student</em></h6>
+
 </div>
         </div>
       </div>
@@ -61,7 +64,7 @@
                     <div class="card-body">
                       <div v-for="list in LearningBoardsCardsLists">
                         <template v-if="list.learning_board_card_id == card.id">                            
-  <div class="card shadow-sm alert alert-success">
+  <div class="card shadow-sm alert alert-primary">
     <div class="card-body">
       <h6>{{ list.name }}</h6>
       <p>{{list.short_description}}</p>
@@ -110,15 +113,14 @@
   </div>    
 </template>
 
-
 <script>
   import axios from 'axios'
   import moment from 'moment'
   export default {
     name: 'Workspace',
     data() {
-        errorMessage: ''
       return {
+        errorMessage:'',
         currentBoardForm: null,
         newCard: {
         board_id: null,
@@ -134,7 +136,6 @@
         LearningBoardsCards: [],
         LearningBoardsCardsLists: [],
         LearningBoardsCardsListsItems: [],
-        LearningBoardsCardsTags:[],
         errors:[],
         id: 0,
         currentUser:'',
@@ -199,8 +200,7 @@
           await axios.get('api/v1/LP/getLearningBoardsCards/').then(response => {
             this.LearningBoardsCards = response.data
           })
-        }
-
+        },
     },
     async mounted() {
       await axios.get('api/v1/LP/getLearningWorkspace/').then(response => {
@@ -212,9 +212,6 @@
       await axios.get('api/v1/LP/getLearningBoardsCards/').then(response => {
         this.LearningBoardsCards = response.data
       }),
-      await axios.get('api/v1/LP/getLearningBoardsCardsTags/').then(response => {
-        this.LearningBoardsCardsTags = response.data
-      })
       await axios.get('api/v1/LP/getLearningBoardsCardsLists/').then(response => {
         this.LearningBoardsCardsLists = response.data
       }),
@@ -226,9 +223,6 @@
         this.currentUserRole = response.data
       })
       },
-
-      //need to add/remove list to card, add/remove list item to list 
-
 }
 </script>
 
