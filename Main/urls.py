@@ -31,6 +31,7 @@ urlpatterns = [
     path('getCurrentUser/', views.get_current_user),
     path('getSingleUser/', views.get_single_user),
     path('postEngagementInstance/',views.post_engagement_instance),
+    path('getEngagementInstances/',views.get_engagement_instances),
 
 # Teacher    
     path('getMyTeachingSubjects/', views.get_my_teaching_subjects),

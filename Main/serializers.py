@@ -4,12 +4,6 @@ from .models import LearningBoardCardList, LearningBoardCardListItem, LearningBo
 from .models import CommunicationArea, Channel, Post
 from .models import EngagementInstance
 
-class EngagementInstanceSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = EngagementInstance
-        fields = ('id', 'user', 'chosen_type', 'time_chosen')
-
-
 class CustomUserSerializer(serializers.ModelSerializer):
     profile_image_url = serializers.SerializerMethodField()
     ENG_TYPES = CustomUser.ENG_TYPES
@@ -29,6 +23,14 @@ class CustomUserSerializer(serializers.ModelSerializer):
         if obj.profile_image:
             return obj.profile_image.url
         return None
+
+class EngagementInstanceSerializer(serializers.ModelSerializer):
+    user = CustomUserSerializer(read_only=True)
+    username = serializers.CharField(source='user.username', read_only=True)
+
+    class Meta:
+        model = EngagementInstance
+        fields = ('id','user', 'username', 'chosen_type', 'time_chosen')
 
 class SubjectSerializer(serializers.ModelSerializer):
     category_name = serializers.CharField(source='category.name')

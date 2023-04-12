@@ -3,7 +3,6 @@
       <div class="mb-4"></div>
     <div><h1 class="text-center mb-4">Manage Teaching</h1></div>
     <div class="alert alert-danger" role="alert">
-
       <div class="row">
   <div class="col-md-4">
     <h4 class="alert-heading">Search for a student</h4>
@@ -31,7 +30,6 @@
   </div>
   <div class="col-md-6">
     <h4>Update {{selectedStudent}}'s Levels</h4>
-    {{selectedStudentCurrentEngagementType}}
     <div id="updatingcogvalues" class="card p-3">
       <p>{{CDs[0]}}: {{selectedVM}}</p>   
       <input type="range" class="form-range" min="1" max="100" step="1" v-model="selectedVM">
@@ -52,6 +50,36 @@
       <button @click="updateStudentNeuroBackground" class="btn btn-danger mt-3">Update Levels</button>
     </div>
   </div>
+  <div class="container-sm card mt-3 p-3">
+  <h4>{{selectedStudent}}'s Desired Engagement Type</h4>
+  <div class="d-flex flex-wrap align-items-center">
+  <h5 class="card-title">{{selectedStudent}}'s Currently Set Desired Engagement Type:&nbsp;</h5>
+  <h5 class="card-subtitle text-muted"> {{selectedStudentCurrentEngagementType}}</h5>
+</div>
+  <h5 class="card-title">{{selectedStudent}}'s Desired Engagement Type History:</h5>
+  <div class="card shadow-sm alert alert-warning">
+        <div class="scrollable-b">
+          <div v-if="selectedStudentEngagementInstances.length === 0">
+  <h4 class="justify-content-center">{{selectedStudent}} has not previously set an engagement preference</h4>
+</div>
+  <div v-for="instance in selectedStudentEngagementInstances" :key="instance.id">
+    <div class="mx-3">
+      <div class="col-12 row mt-2">
+          <div class="card shadow-xxl alert alert-primary" style="height: 8vh;">
+    <p>Chosen Type: {{ instance.chosen_type }} | Time Chosen: {{timeElapsed(instance.time_chosen)}}</p></div>
+</div>      </div>
+</div>
+  </div>
+</div>
+<h5 class="card-title">{{selectedStudent}}'s Desired Engagement Type Visualisation:</h5>
+<div v-if="selectedStudentEngagementInstances.length >= 5">
+  <apexchart type="area" :options="optionsEngagement" :series="seriesEngagement" height="350" />
+</div>
+<div v-else>
+  <h6 class="card-subtitle text-muted">Not enough instances. Once {{selectedStudent}} has selected their preference for engagement type at least 5 times, you will be able to see their preference in a visualization below</h6>
+</div>
+
+  </div>
 </div>
 
   <hr>
@@ -64,8 +92,9 @@
 </template>
 
 <script>
-import VueApexCharts from 'vue3-apexcharts'
+import VueApexCharts from 'vue3-apexcharts';
 import axios from 'axios';
+import moment from 'moment';
 
 const CDs = [           
       "Verbal Memory", "Non Verbal Memory", "Visual Perception",
@@ -95,13 +124,19 @@ export default {
       series:[],
       EngagementChoices:[],
       selectedStudentCurrentEngagementType:'',
-      info:[]
+      EngagementInstances:[],
+      selectedStudentEngagementInstances:[],
+      optionsEngagement:{},
+      seriesEngagement:[],
+      enoughInstances: false,
+      engagementCounts:[]
     }
   },
   async mounted() {  
     await axios.get('/api/v1/LP/getCurrentUser/').then(response => {
       this.currentUser = response.data.username
     })
+    
   },
   created(){
     axios.get('/api/v1/LP/getCurrentUser/').then(response => {
@@ -122,8 +157,66 @@ export default {
       handler: 'GenerateNeuroInsight',
       immediate: true,
     },
+    selectedStudentEngagementInstances: function(newVal) {
+      if (newVal.length >= 5) {
+        this.enoughInstances = true;
+        this.showEngagementVisualisation();
+      } else {
+        this.enoughInstances = false;
+      }
+    }
   },
   methods: {   
+    timeElapsed(created_at) {
+            const currentDate = moment()
+            const createdAt = moment(created_at)
+            const date = createdAt.format('MMM D, YYYY [at] h:mm A')
+            const elapsed = moment.duration(currentDate.diff(createdAt)).humanize()
+                    return `${date} (${elapsed} ago)`
+        },
+
+    async showEngagementVisualisation(){
+      console.log(this.selectedStudentEngagementInstances)
+      console.log(this.EngagementChoices)
+          this.optionsEngagement = {
+        chart: { type: 'area',
+    height: 450,
+    stacked: true,    
+    toolbar: {
+      show: false
+    },
+  },
+  title: {
+    text: this.selectedStudent,
+    align: 'center'
+  },
+  plotOptions: {
+    bar: {
+      horizontal: true,
+    },
+  },
+  dataLabels: {
+    enabled: false
+  },
+  xaxis: {
+    categories: this.EngagementChoices,
+  },
+      };
+
+      this.seriesEngagement = [
+        {
+          name: 'Count',
+          data: [this.selectedStudentEngagementInstances.filter(item => item.chosen_type === this.EngagementChoices[0]).length,
+      this.selectedStudentEngagementInstances.filter(item => item.chosen_type === this.EngagementChoices[1]).length,
+      this.selectedStudentEngagementInstances.filter(item => item.chosen_type === this.EngagementChoices[2]).length,
+      this.selectedStudentEngagementInstances.filter(item => item.chosen_type === this.EngagementChoices[3]).length,
+      this.selectedStudentEngagementInstances.filter(item => item.chosen_type === this.EngagementChoices[4]).length,
+      this.selectedStudentEngagementInstances.filter(item => item.chosen_type === this.EngagementChoices[5]).length
+]
+        }
+      ];
+    },
+
     async updateStudentNeuroBackground(){
       await axios.post('api/v1/LP/updateStudentNeuroBackground/', {studentname:this.selectedStudent, VM:this.selectedVM, NVM:this.selectedNVM,
       VP: this.selectedVP, VIPS: this.selectedVIPS, N: this.selectedN, 
@@ -160,6 +253,20 @@ export default {
             this.selectedStudentVocabularyGroup = this.selectedStudentNeuroBackground.vocabulary_sheet_group            
             this.selectedStudentCurrentEngagementType = this.selectedStudentNeuroBackground.desired_engagement_type 
           })  
+
+          await axios.get('/api/v1/LP/getEngagementInstances/').then(response => {
+  this.EngagementInstances = response.data;
+  this.selectedStudentEngagementInstances = this.EngagementInstances
+    .filter(instance => instance.username === this.selectedStudent)
+    .map(instance => ({
+      id: instance.id,
+      username: instance.username,
+      chosen_type: instance.chosen_type,
+      time_chosen: instance.time_chosen
+    }))
+    .sort((a, b) => new Date(b.time_chosen) - new Date(a.time_chosen));
+});
+          
         }        
         else {
           await axios.post('/api/v1/LP/getUserNeurobackground/', {studentname:option})
@@ -177,6 +284,18 @@ export default {
             this.selectedStudentDebateTarget = this.selectedStudentNeuroBackground.debate_contribution_target
             this.selectedStudentCurrentEngagementType = this.selectedStudentNeuroBackground.desired_engagement_type
           })
+
+          await axios.get('/api/v1/LP/getEngagementInstances/').then(response => {
+            this.EngagementInstances = response.data;
+            this.selectedStudentEngagementInstances = this.EngagementInstances
+            .filter(instance => instance.username === this.selectedStudent)
+            .map(instance => ({
+            id: instance.id,
+            username: instance.username,
+            chosen_type: instance.chosen_type,
+            time_chosen: instance.time_chosen
+            }));
+          });
         }
       this.options = {
         chart: {
@@ -223,4 +342,28 @@ export default {
 </script>  
 
 <style>
+  .scrollable-b {
+  overflow-y: scroll;
+  max-height: 20vh; 
+}
+
+.scrollable-b::-webkit-scrollbar {
+    border-radius: 10rem;
+    background-color: #f1f1f19a;
+    width: 0.75rem;
+}
+
+.scrollable-b::-webkit-scrollbar-thumb {
+  border-radius: 1rem;
+  margin: 1rem;
+  width: 0.75rem;
+  background-color: rgb(0, 74, 158);
+}
+
+.scrollable-b::-webkit-scrollbar-thumb:hover {
+  border-radius: 1rem;
+  margin: 1rem;
+  width: 0.75rem;
+  background-color: rgb(2, 108, 222);
+}
 </style>

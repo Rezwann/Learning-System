@@ -39,6 +39,11 @@ def get_single_user(request):
     else:
         return JsonResponse({'error': 'User is not authenticated'})
 
+@api_view(['GET'])
+def get_engagement_instances(request):
+    engagement_instances = EngagementInstance.objects.all()
+    serializer = EngagementInstanceSerializer(engagement_instances, many=True)
+    return Response(serializer.data)
 
 @api_view(['POST'])
 def post_engagement_instance(request):
