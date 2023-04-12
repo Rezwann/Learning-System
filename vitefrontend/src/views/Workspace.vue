@@ -58,32 +58,6 @@
         </div>        
                     <h6 class="card-title">{{card.name}}</h6>
                   <p class="card-text">{{card.short_description}}</p>
-
-<!-- only show see tags if card has tags -->
- <div id="tag-related" class="d-flex align-items-center">
-                   <template v-if="LearningBoardsCardsTags.some(tag => tag.related_card_id == card.id)">
-  <p><button class="btn btn-primary btn-sm" type="button" data-bs-toggle="collapse" v-bind:data-bs-target="'#tags' + card.id" aria-expanded="false" v-bind:aria-controls="'tags' + card.id">Tags</button></p>
-</template>
-
-<div class="collapse" v-bind:id="'tags' + card.id">
-      <div class="row align-items">
-        <h6 class="mx-2 mb-3">          
-          <template v-for="tag in LearningBoardsCardsTags">
-            <template v-if="tag.related_card_id == card.id">
-              <span class="fw-semibold badge text-bg-success mx-1 mt-1">🏷️ {{tag.name}}</span>
-            </template>
-          </template>
-
-          <div class="input-group input-group-sm mb-3 mt-2">
-  <div class="input-group">
-    <span class="input-group-text fw-semibold text-bg-primary mx-1 mt-1">🏷️<input type="text" class="form-control fw-semibold mx-1 mt-1" v-model="newTag" placeholder="Add a tag">
-    <button class="btn btn-primary btn-sm" @click="addNewTag(board.id)"><b>+</b></button></span>
-  </div>
-</div>
-        </h6>
-      </div>
-    </div>
-  </div>
                     <div class="card-body">
                       <div v-for="list in LearningBoardsCardsLists">
                         <template v-if="list.learning_board_card_id == card.id">                            
@@ -126,9 +100,8 @@
 </form>
 
 <button class="btn btn-sm btn-primary my-2" @click="currentBoardForm = currentBoardForm === board.id ? null : board.id">
-  {{ currentBoardForm === board.id ? 'Hide' : 'Show' }} Form
+  {{ currentBoardForm === board.id ? 'Hide' : 'Show' }} Add Card Form
 </button>
-
 
         </div>
     </div>

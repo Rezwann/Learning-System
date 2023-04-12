@@ -2,7 +2,7 @@
     <div class="container-xxl">
       <div class="mb-4"></div>
     <div><h1 class="text-center mb-4">Manage Teaching</h1></div>
-    <div class="alert alert-danger" role="alert">
+    <div class="alert alert-danger">
       <div class="row">
   <div class="col-md-4">
     <h4 class="alert-heading">Search for a student</h4>
@@ -50,14 +50,14 @@
       <button @click="updateStudentNeuroBackground" class="btn btn-danger mt-3">Update Levels</button>
     </div>
   </div>
-  <div class="container-sm card mt-3 p-3">
+  <div class="card mt-3 p-3 mx-auto" style="width:80vw;">
   <h4>{{selectedStudent}}'s Desired Engagement Type</h4>
   <div class="d-flex flex-wrap align-items-center">
   <h5 class="card-title">{{selectedStudent}}'s Currently Set Desired Engagement Type:&nbsp;</h5>
   <h5 class="card-subtitle text-muted"> {{selectedStudentCurrentEngagementType}}</h5>
 </div>
   <h5 class="card-title">{{selectedStudent}}'s Desired Engagement Type History:</h5>
-  <div class="card shadow-sm alert alert-warning">
+  <div class="card shadow-sm alert alert-success">
         <div class="scrollable-b">
           <div v-if="selectedStudentEngagementInstances.length === 0">
   <h4 class="justify-content-center">{{selectedStudent}} has not previously set an engagement preference</h4>
@@ -65,7 +65,7 @@
   <div v-for="instance in selectedStudentEngagementInstances" :key="instance.id">
     <div class="mx-3">
       <div class="col-12 row mt-2">
-          <div class="card shadow-xxl alert alert-primary" style="height: 8vh;">
+          <div class="card shadow-xxl alert alert-warning" style="height: 8vh;">
     <p>Chosen Type: {{ instance.chosen_type }} | Time Chosen: {{timeElapsed(instance.time_chosen)}}</p></div>
 </div>      </div>
 </div>
@@ -73,7 +73,7 @@
 </div>
 <h5 class="card-title">{{selectedStudent}}'s Desired Engagement Type Visualisation:</h5>
 <div v-if="selectedStudentEngagementInstances.length >= 5">
-  <apexchart type="area" :options="optionsEngagement" :series="seriesEngagement" height="350" />
+  <apexchart type="area" :options="optionsEngagement" :series="seriesEngagement" height="350"/>
 </div>
 <div v-else>
   <h6 class="card-subtitle text-muted">Not enough instances. Once {{selectedStudent}} has selected their preference for engagement type at least 5 times, you will be able to see their preference in a visualization below</h6>
@@ -176,11 +176,9 @@ export default {
         },
 
     async showEngagementVisualisation(){
-      console.log(this.selectedStudentEngagementInstances)
-      console.log(this.EngagementChoices)
+
           this.optionsEngagement = {
         chart: { type: 'area',
-    height: 450,
     stacked: true,    
     toolbar: {
       show: false
@@ -190,16 +188,14 @@ export default {
     text: this.selectedStudent,
     align: 'center'
   },
-  plotOptions: {
-    bar: {
-      horizontal: true,
-    },
-  },
+
   dataLabels: {
     enabled: false
   },
   xaxis: {
-    categories: this.EngagementChoices,
+    categories: this.EngagementChoices, 
+    labels: {
+  }   
   },
       };
 
