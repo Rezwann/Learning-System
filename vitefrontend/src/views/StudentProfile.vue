@@ -45,7 +45,7 @@
   <h5 class="card-subtitle text-muted mt-2">{{ ehcpInfo.student_interests }}</h5>
   <h5 class="card-subtitle text-muted mt-2">{{ ehcpInfo.student_aspirations }}</h5>
   <h5 class="alert alert-success mt-3">
-    {{ ehcpInfo.teacher_comments.length > 0 ? ehcpInfo.teacher_comments : 'No teacher comments' }}
+    {{ ehcpInfo.teacher_comments.length > 0 ? ehcpInfo.teacher_comments : 'No teacher comments' }}    
   </h5>
 </div></div>
 
@@ -95,7 +95,7 @@ export default {
       })
       axios.get('/api/v1/LP/getAllEHCP/').then(response => {
         this.allInformationEHCP = Object.values(response.data).map(ehcp => {
-        return {
+          return {
         student_views: ehcp.student_views,
         student_interests: ehcp.student_interests,
         student_aspirations: ehcp.student_aspirations,

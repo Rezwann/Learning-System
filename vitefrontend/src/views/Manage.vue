@@ -110,9 +110,19 @@
 <div class="card mt-3 p-3 mx-auto" style="width:80vw;">
   <h4 class="alert-heading mt-2">EHCP</h4>
 <div v-bind="!selectedStudentHasEHCP == true">  
+  <div class="accordion alert alert-primary mt-2" id="pastEHCP">
+    <div class="accordion-item mt-3">
+    <h2 class="accordion-header" id="headingOne">
+      <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+        View Current EHCP Version concerning {{selectedStudent}} (with or without teacher comments)
+      </button>
+    </h2>
 
-  <div v-for="(ehcpInfo, index) in allSelectedStudentInformationEHCP" :key="index">
-      <h4 class="alert-heading">Section {{ index + 1 }} - {{ Object.keys(ehcpInfo)[index].toUpperCase().replace('_', ' ') }}</h4>
+    <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#pastEHCP">
+      <div class="accordion-body">
+
+        <div v-for="(ehcpInfo, index) in allSelectedStudentInformationEHCP" :key="index">
+          <h4 class="alert-heading mt-2">Section {{ index + 1 }} - {{ Object.keys(ehcpInfo)[index].toUpperCase().replace('_', ' ') }}</h4>
   <h5 class="card-subtitle text-muted mt-2">{{ ehcpInfo.student_views }}</h5>
   <h5 class="card-subtitle text-muted mt-2">{{ ehcpInfo.student_interests }}</h5>
   <h5 class="card-subtitle text-muted mt-2">{{ ehcpInfo.student_aspirations }}</h5>
@@ -120,37 +130,77 @@
     {{ ehcpInfo.teacher_comments.length > 0 ? ehcpInfo.teacher_comments : 'No teacher comments' }}
   </h5>
 </div>
-
-
-  <h6 class="card-subtitle text-muted">You can fill in the form below to setup or update {{selectedStudent}}'s EHCP information. This will appear in {{selectedStudent}}'s profile once completed.'</h6>  
+      </div>
+    </div>
+  </div>
+</div>
+  <h6 class="card-subtitle text-muted mt-2">You can fill in the form below to setup or update {{selectedStudent}}'s EHCP information. This will appear in {{selectedStudent}}'s profile once completed. You may use the 'clear' button above to update current EHCP version. Lengthy checks are made to ensure proper update of student's EHCP after any form is used or comments are made.</h6>
 </div>
 
 <form @submit.prevent="setupEHCP();">
-    <div class="row">
+    <div class="row mt-3">
   <div class="col-4 mb-3">
     <label class="mb-1">Set EHCP Views ({{selectedStudent}}'s views)</label>
-    <input type="text" name="EHCPview" class="form-control" v-model="setEHCPview" placeholder="Enter views of the student here">
+    <textarea type="text" name="EHCPview" class="form-control" v-model="setEHCPview" placeholder="Enter views of the student here"></textarea>
   </div>
   <div class="col-4 mb-3">
     <label class="mb-1">Set EHCP Interests ({{selectedStudent}}'s interests)</label>
-    <input
+    <textarea
       type="text"
       name="short_description"
-      class="form-control"
+      class="form-control" rows="3"
       v-model="setEHCPinterest" placeholder="Enter interests of the student here"
-    />
+    ></textarea>
   </div>
   <div class="col-4 mb-3">
     <label class="mb-1">Set EHCP Aspirations ({{selectedStudent}}'s aspirations)</label>
-    <input
+    <textarea
       type="text"
       name="short_description"
       class="form-control"
       v-model="setEHCPaspiration" placeholder="Enter aspirations of the student here"
-    />
+    ></textarea>
   </div>
-  <div class="col-4 mt-4 mb-3">
-    <button class="btn btn-warning">Setup/Update {{selectedStudent}}'s EHCP</button>
+  <div class="d-flex justify-content-center">
+    <button class="btn btn-danger">Setup/Update {{selectedStudent}}'s EHCP</button>
+  </div>
+  <span class="text-center error" v-if="errorMessage">{{ errorMessage }}</span>
+</div>
+  </form>
+
+  <form @submit.prevent="addCommentEHCP();">
+    <div class="row mt-3 d-flex justify-content-center">
+  <div class="col-4 mb-3">
+    <label class="mb-1">Set EHCP Section to comment on </label>
+    <select
+        v-model="setEHCPSection"
+        class="form-select form-select-lg mb-3"
+        aria-label=".form-select"
+      >
+        <option selected disabled value="">Select EHCP Section</option>
+        <option value="views">
+          {{selectedStudent}}'s views
+        </option>
+        <option value="interests">
+          {{selectedStudent}}'s interests
+        </option>
+        <option value="aspirations">
+          {{selectedStudent}}'s aspirations
+        </option>
+      </select>
+  </div>
+
+  <div class="col-4 mb-3">
+    <label class="mb-1">Enter a Comment for this section</label>
+    <textarea
+      type="text"
+      name="short_description"
+      class="form-control" rows="3"
+      v-model="setEHCPComment" placeholder="Enter a comment about this section"
+    ></textarea>
+  </div>  
+  <div class="d-flex justify-content-center">
+    <button class="btn btn-danger">Submit comment to {{selectedStudent}}'s EHCP</button>
   </div>
   <span class="text-center error" v-if="errorMessage">{{ errorMessage }}</span>
 </div>
@@ -214,7 +264,9 @@ export default {
       setEHCPinterest:'',
       setEHCPaspiration:'',
       allSelectedStudentInformationEHCP:[],
-      showEHCP: false
+      showEHCP: false,
+      setEHCPSection:'',
+      setEHCPComment:''
     }
   },
   async mounted() {  
@@ -273,8 +325,28 @@ export default {
             this.setEHCPview = ''
             } else {
                 this.errorMessage = 'All three EHCP fields are required';
-              }
+              }              
         },
+    async addCommentEHCP(){
+        if (this.setEHCPSection && this.setEHCPComment){
+        await axios.post('api/v1/LP/addCommentEHCP/',         
+        {studentname:this.selectedStudent, ehcpSection: this.setEHCPSection,
+      ehcpComment: this.setEHCPComment })
+        .then(response => {
+        }).catch(error =>{
+            if(error.response){
+                for (const property in error.response.data){
+                    this.errors.push(`${property}: ${error.response.data[property]}`)
+                }
+            }
+        })
+        this.errorMessage = '';
+        this.setEHCPSection = ''
+        this.setEHCPComment = ''
+        } else {
+            this.errorMessage = 'Both fields are required';
+          }              
+    },
 
     timeElapsed(created_at) {
             const currentDate = moment()

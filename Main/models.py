@@ -78,7 +78,7 @@ class EngagementInstance(models.Model):
 
 class EHCP_View(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
-    student_views = models.TextField('EHCP Views', max_length=300, default="Student's Views from EHCP'", blank=True)
+    student_views = models.TextField('EHCP Views', max_length=300, default="Student's Views from EHCP - not setup yet", blank=True)
     teacher_comments = models.ManyToManyField('EHCP_TeacherComment', related_name='ehcp_views', blank=True)
  
     class Meta:
@@ -89,7 +89,7 @@ class EHCP_View(models.Model):
 
 class EHCP_Interest(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
-    student_interests = models.TextField('EHCP Interests', max_length=300, default="Student's Interests from EHCP'", blank=True)
+    student_interests = models.TextField('EHCP Interests', max_length=300, default="Student's Interests from EHCP - not setup yet", blank=True)
     teacher_comments = models.ManyToManyField('EHCP_TeacherComment', related_name='ehcp_interests', blank=True)
 
     class Meta:
@@ -100,7 +100,7 @@ class EHCP_Interest(models.Model):
  
 class EHCP_Aspiration(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
-    student_aspirations = models.TextField('EHCP Aspirations', max_length=300, default="Student's Aspirations from EHCP'", blank=True)
+    student_aspirations = models.TextField('EHCP Aspirations', max_length=300, default="Student's Aspirations from EHCP - not setup yet", blank=True)
     teacher_comments = models.ManyToManyField('EHCP_TeacherComment', related_name='ehcp_aspirations', blank=True)
 
     class Meta:

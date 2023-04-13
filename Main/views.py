@@ -5,14 +5,14 @@ from django.db.models import Q
 from .models import CustomUser, Subject, SubjectCategory, LearningBoard, LearningBoardWorkspace, LearningBoardCard
 from .models import LearningBoardCardList, LearningBoardCardListItem
 from .models import CommunicationArea, Channel, Post, EngagementInstance
-from .models import EHCP_View, EHCP_Interest, EHCP_Aspiration
+from .models import EHCP_View, EHCP_Interest, EHCP_Aspiration, EHCP_TeacherComment
 from rest_framework.permissions import IsAuthenticated
 from .serializers import CustomUserSerializer, SubjectSerializer, SubjectCategorySerializer, LearningBoardSerializer, LearningBoardCardSerializer
 from .serializers import LearningBoardCardListSerializer, LearningBoardCardListItemSerializer
 from .serializers import LearningBoardCardListItemSerializer
 from .serializers import CommunicationAreaSerializer, ChannelSerializer, PostSerializer, LearningBoardWorkspaceSerializer
 from .serializers import EngagementInstanceSerializer
-from .serializers import EHCP_ViewSerializer, EHCP_InterestSerializer, EHCP_AspirationSerializer
+from .serializers import EHCP_ViewSerializer, EHCP_InterestSerializer, EHCP_AspirationSerializer, EHCP_TeacherCommentSerializer
 
 from django.shortcuts import get_object_or_404
 import math
@@ -77,7 +77,36 @@ def get_student_EHCP(request):
             'ehcp_interest': ehcp_interest_serializer.data,
             'ehcp_aspiration': ehcp_aspiration_serializer.data
         })
+        
+@api_view(['POST'])
+def add_comment_EHCP(request):
+    if request.user.is_authenticated:
+        name = request.data.get('studentname')
+        comment = request.data.get('ehcpComment')
+        commentForSection = request.data.get('ehcpSection')
+        student = CustomUser.objects.get(username=name)
+        teacher = CustomUser.objects.get(username=request.user.username)        
+        ehcp_view = EHCP_View.objects.get(user=student)        
+        ehcp_interest = EHCP_Interest.objects.get(user=student)                
+        ehcp_aspiration = EHCP_Aspiration.objects.get(user=student)                
 
+        teacher_comment = EHCP_TeacherComment.objects.create(user=teacher, comment=comment)
+
+        if commentForSection == 'views':
+            ehcp_view = EHCP_View.objects.get(user=student)
+            ehcp_view.teacher_comments.add(teacher_comment)
+        elif commentForSection == 'interests':
+            ehcp_interest = EHCP_Interest.objects.get(user=student)
+            ehcp_interest.teacher_comments.add(teacher_comment)
+        elif commentForSection == 'aspirations':
+            ehcp_aspiration = EHCP_Aspiration.objects.get(user=student)
+            ehcp_aspiration.teacher_comments.add(teacher_comment)
+
+        serializer = EHCP_TeacherCommentSerializer(teacher_comment)
+        return Response(serializer.data)
+    else:
+        return JsonResponse({'error': 'error'})
+                                
 @api_view(['POST'])
 def setEHCP(request):          
     studentname = request.data.get('studentname')

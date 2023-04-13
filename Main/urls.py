@@ -39,5 +39,5 @@ urlpatterns = [
     path('addLearningBoardToStudent/', views.add_learning_board_to_student),    
     path('setEHCP/',views.setEHCP),
     path('getStudentEHCP/',views.get_student_EHCP),
-
+    path('addCommentEHCP/',views.add_comment_EHCP),
 ]
