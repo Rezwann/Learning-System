@@ -36,21 +36,32 @@
       <button type="button" class="p-2 btn-close" @click="showAlert = false"></button>
     </div>
     <div class="container-md mt-3 card p-3">
-    <h4 class="alert-heading">EHCP</h4>
+    <h4 class="alert-heading">Your EHCP</h4>
 
     <div v-if="hasEHCP===true">
-    <div v-for="(ehcpInfo, index) in allInformationEHCP" :key="index">
-      <h4 class="alert-heading">Section {{ index + 1 }} - {{ Object.keys(ehcpInfo)[index].toUpperCase().replace('_', ' ') }}</h4>
+      <div v-for="(ehcpInfo, index) in allInformationEHCP" :key="index">
+  <h4 class="alert-heading">Section {{ index + 1 }} - {{ Object.keys(ehcpInfo)[index].toUpperCase().replace('_', ' ') }}</h4>
   <h5 class="card-subtitle text-muted mt-2">{{ ehcpInfo.student_views }}</h5>
   <h5 class="card-subtitle text-muted mt-2">{{ ehcpInfo.student_interests }}</h5>
   <h5 class="card-subtitle text-muted mt-2">{{ ehcpInfo.student_aspirations }}</h5>
-  <h5 class="alert alert-success mt-3">
-    {{ ehcpInfo.teacher_comments.length > 0 ? ehcpInfo.teacher_comments : 'No teacher comments' }}    
-  </h5>
+  <div class="card shadow-sm alert alert-success mt-2">
+        <div class="scrollable-b">
+  <div v-if="ehcpInfo.teacher_comments.length > 0">
+    <div v-for="(comment, i) in ehcpInfo.teacher_comments" :key="i">
+      <h5 class="alert alert-primary card mt-2">
+        <strong>{{ comment.user }} (Teacher):</strong> {{ comment.comment }}<small class="text-muted mt-2">{{ timeElapsed(comment.created_at) }}</small>
+      </h5>
+    </div>
+  </div>
+  <h5 class="alert alert-warning mt-3" v-else>No teacher comments</h5>
+</div>
 </div></div>
-
+    </div>
 <div v-else>{{currentUser}}, you do not have a EHCP. You may need to speak to a teacher about this.</div>
 </div>
+
+
+
 
     </div>
   </div>
@@ -58,6 +69,7 @@
 
 <script>
 import axios from 'axios'
+import moment from 'moment'
 
 export default {
   name: 'StudentProfile',
@@ -75,6 +87,13 @@ export default {
     }
   },
   methods:{
+    timeElapsed(created_at) {
+            const currentDate = moment()
+            const createdAt = moment(created_at)
+            const date = createdAt.format('MMM D, YYYY [at] h:mm A')
+            const elapsed = moment.duration(currentDate.diff(createdAt)).humanize()
+                    return `${date} (${elapsed} ago)`
+        },
     async submitNewEngagementInstance(){
     await axios.post('/api/v1/LP/postEngagementInstance/', {chosentype:this.selectedEngagementType}).then(response => {        
       this.showAlert = true;
@@ -117,3 +136,31 @@ export default {
       }}}
   }
 </script>
+
+<style>
+  .scrollable-b {
+  overflow-y: scroll;
+  max-height: 20vh; 
+}
+
+.scrollable-b::-webkit-scrollbar {
+    border-radius: 10rem;
+    background-color: #f1f1f19a;
+    width: 0.75rem;
+}
+
+.scrollable-b::-webkit-scrollbar-thumb {
+  border-radius: 1rem;
+  margin: 1rem;
+  width: 0.75rem;
+  background-color: rgb(0, 74, 158);
+}
+
+.scrollable-b::-webkit-scrollbar-thumb:hover {
+  border-radius: 1rem;
+  margin: 1rem;
+  width: 0.75rem;
+  background-color: rgb(2, 108, 222);
+}
+
+</style>

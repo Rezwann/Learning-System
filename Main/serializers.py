@@ -75,7 +75,7 @@ class EHCP_TeacherCommentSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = EHCP_TeacherComment
-        fields = ('id', 'user', 'comment')
+        fields = ('id', 'user', 'comment','created_at')
 
 
 class SubjectSerializer(serializers.ModelSerializer):

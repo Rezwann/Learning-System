@@ -122,14 +122,22 @@
       <div class="accordion-body">
 
         <div v-for="(ehcpInfo, index) in allSelectedStudentInformationEHCP" :key="index">
-          <h4 class="alert-heading mt-2">Section {{ index + 1 }} - {{ Object.keys(ehcpInfo)[index].toUpperCase().replace('_', ' ') }}</h4>
+  <h4 class="alert-heading">Section {{ index + 1 }} - {{ Object.keys(ehcpInfo)[index].toUpperCase().replace('_', ' ') }}</h4>
   <h5 class="card-subtitle text-muted mt-2">{{ ehcpInfo.student_views }}</h5>
   <h5 class="card-subtitle text-muted mt-2">{{ ehcpInfo.student_interests }}</h5>
   <h5 class="card-subtitle text-muted mt-2">{{ ehcpInfo.student_aspirations }}</h5>
-  <h5 class="alert alert-success mt-3">
-    {{ ehcpInfo.teacher_comments.length > 0 ? ehcpInfo.teacher_comments : 'No teacher comments' }}
-  </h5>
+  <div class="card shadow-sm alert alert-success mt-2">
+        <div class="scrollable-b">
+  <div v-if="ehcpInfo.teacher_comments.length > 0">
+    <div v-for="(comment, i) in ehcpInfo.teacher_comments" :key="i">
+      <h5 class="alert alert-primary card mt-2">
+        <strong>{{ comment.user }} (Teacher):</strong> {{ comment.comment }}<small class="text-muted mt-2">{{ timeElapsed(comment.created_at) }}</small>
+      </h5>
+    </div>
+  </div>
+  <h5 class="alert alert-warning mt-3" v-else>No teacher comments</h5>
 </div>
+</div></div>
       </div>
     </div>
   </div>
@@ -209,6 +217,8 @@
 </div>
 
 </div>
+
+
 
 </div>
 </div>

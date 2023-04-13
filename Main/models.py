@@ -112,7 +112,7 @@ class EHCP_Aspiration(models.Model):
 class EHCP_TeacherComment(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     comment = models.TextField('Teacher Comment', max_length=300, default='', blank=True)
-
+    created_at = models.DateTimeField(auto_now_add=True)
     class Meta:
         verbose_name_plural = "EHCP Teacher Comments"
         
