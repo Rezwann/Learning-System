@@ -81,17 +81,21 @@ class EHCP_TeacherCommentSerializer(serializers.ModelSerializer):
 class SubjectSerializer(serializers.ModelSerializer):
     category_name = serializers.CharField(source='category.name')
     subject_leader_email = serializers.CharField(source='subject_leader.email')
+    YEAR_CHOICES = Subject.YEAR_CHOICES
+    SUBJECT_CHOICES = Subject.SUBJECT_CHOICES
 
     class Meta:
         model = Subject
         fields = ('id', 'name', 'details', 'category', 'category_name', 'year_group', 
                   'subject_leader_name', 'subject_leader', 'subject_leader_email',
-                  'subject_code')
+                  'subject_code', 'YEAR_CHOICES', 'SUBJECT_CHOICES')
 
 class SubjectCategorySerializer(serializers.ModelSerializer):
+    CATEGORY_CHOICES = SubjectCategory.CATEGORY_CHOICES
+
     class Meta:
         model = SubjectCategory
-        fields = ('id', 'name')
+        fields = ('id', 'name', 'CATEGORY_CHOICES')
         
 class CommunicationAreaSerializer(serializers.ModelSerializer):
     class Meta:

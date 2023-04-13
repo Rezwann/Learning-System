@@ -1,11 +1,11 @@
 <template>
     <div class="container-xxl">
       <div class="mb-4"></div>
-    <div><h1 class="text-center mb-4">Manage Teaching</h1></div>
+    <div><h1 class="text-center mb-4">Manage Teaching (Individual students)</h1></div>
     <div class="alert alert-danger">
       <div class="row">
-  <div class="col-md-4">
-    <h4 class="alert-heading">Search for a student</h4>
+  <div class="col-md-8">
+    <h4 class="alert-heading">Search for a student (Manage an individual student's learning)</h4>
   </div>
   <div class="col-md-9 mb-3">
     <div class="d-flex">
@@ -218,8 +218,6 @@
 
 </div>
 
-
-
 </div>
 </div>
 </template>
@@ -242,7 +240,8 @@ export default {
   data() {
     return {
       errorMessage:'',
-      currentUser:'',    
+      currentUser:'', 
+      currentUserRole:'',   
       students: [],
       filtered:[],
       selectedStudent: '',
@@ -282,6 +281,7 @@ export default {
   async mounted() {  
     await axios.get('/api/v1/LP/getCurrentUser/').then(response => {
       this.currentUser = response.data.username
+      this.currentUserRole = response.data.role
     })
     
   },
@@ -556,13 +556,8 @@ export default {
       this.series = [
         {
           name: 'Level',
-          data: [this.selectedVM,
-          this.selectedNVM,
-          this.selectedVP,
-          this.selectedVIPS,
-          this.selectedN,
-          this.selectedL,
-          this.selectedEF,
+          data: [this.selectedVM, this.selectedNVM, this.selectedVP, this.selectedVIPS,
+          this.selectedN, this.selectedL, this.selectedEF,
           this.selectedVR]
         }
       ];

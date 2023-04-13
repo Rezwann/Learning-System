@@ -58,6 +58,7 @@ class CustomUser(AbstractUser):
             EHCP_Aspiration.objects.create(user=self)
             EHCP_View.objects.create(user=self)
             
+            
     def __str__(self):
         return self.name
 
@@ -138,33 +139,21 @@ class SubjectCategory(models.Model):
         
 class Subject(models.Model):
     SUBJECT_CHOICES = (
-        ("Science","Science"),
-        ("English","English"),
-        ("Mathematics","Mathematics"),
-        ("French","French"),
-        ("German","German"),
-        ("Spanish","Spanish"),
-        ("Mandarin","Mandarin"),
-        ("Japanese","Japanese"),
-        ("History","History"),
-        ("Geography","Geography"),
-        ("Economics","Economics"),
-        ("Psychology","Psychology"),
-        ("Sociology","Sociology"),
-        ("Music","Music"),
-        ("Drama","Drama"),
-        ("Dance","Dance"),
-        ("Computing","Computing"),
-        ("Business","Business"),
+        ("Science","Science"), ("English","English"),
+        ("Mathematics","Mathematics"), ("French","French"),
+        ("German","German"), ("Spanish","Spanish"),
+        ("Mandarin","Mandarin"), ("Japanese","Japanese"),
+        ("History","History"), ("Geography","Geography"),
+        ("Economics","Economics"), ("Psychology","Psychology"),
+        ("Sociology","Sociology"), ("Music","Music"),
+        ("Drama","Drama"), ("Dance","Dance"),
+        ("Computing","Computing"), ("Business","Business"),
     )
     
     YEAR_CHOICES = (
-        ('Year 7', 'Year 7'),
-        ('Year 8', 'Year 8'),
-        ('Year 9', 'Year 9'),
-        ('Year 10', 'Year 10'),
+        ('Year 7', 'Year 7'), ('Year 8', 'Year 8'),
+        ('Year 9', 'Year 9'), ('Year 10', 'Year 10'),
         ('Year 11', 'Year 11'),
-
     )
             
     name = models.CharField(max_length=50, choices=SUBJECT_CHOICES, default='Computing')

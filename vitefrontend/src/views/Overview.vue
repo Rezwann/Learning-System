@@ -1,7 +1,18 @@
 <template>
     <div class="mb-4"></div>
     <div><h1 class="text-center mb-4">{{currentUser}}'s Overview</h1></div>
-      
+
+  <div v-if="currentUserRole == 'Teacher'">
+    <div class="card mt-3 p-3 mx-auto alert alert-warning" style="width:80vw;">
+  <h6 class="card-subtitle text-muted text-center"> As you have {{currentUserRole}} role, you may create subject areas. 
+    These will be visible below with additional management options. You can search for a student in 'Manage Teaching' to add individual students to your created subject areas and for more specific learning management options.</h6>
+  </div>  
+
+<h4 class="text-center mb-4">create a subject</h4>
+
+
+  </div>
+
     <div>
       <ul class=" col d-flex justify-content-center mb-4 mt-2 mx-2 list-group list-group-horizontal">
 
@@ -139,6 +150,7 @@
     data() {
       return {
         currentUser:'',
+        currentUserRole:'',
         users: [],
         subjectAreas: [],
         subjects: [],
@@ -185,6 +197,7 @@
       
       await axios.get('/api/v1/LP/getCurrentUser/').then(response => {
         this.currentUser = response.data.username
+        this.currentUserRole = response.data.role
       })
     },
     created(){

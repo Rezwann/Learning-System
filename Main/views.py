@@ -224,6 +224,10 @@ def get_subjects(request):
     serializer = SubjectSerializer(subjects, many=True)
     return Response(serializer.data)
 
+   
+ 
+    
+
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_subject_categories(request):
@@ -237,6 +241,8 @@ def get_communication_areas(request):
     communication_areas = CommunicationArea.objects.all()
     serializer = CommunicationAreaSerializer(communication_areas, many=True)
     return Response(serializer.data)
+
+
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
