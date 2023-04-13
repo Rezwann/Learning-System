@@ -3,6 +3,7 @@ from .models import CustomUser, Subject, SubjectCategory, LearningBoardWorkspace
 from .models import LearningBoardCardList, LearningBoardCardListItem
 from .models import CommunicationArea, Channel, Post
 from .models import EngagementInstance
+from .models import EHCP_View, EHCP_Interest, EHCP_Aspiration, EHCP_TeacherComment
 
 class CustomUserSerializer(serializers.ModelSerializer):
     profile_image_url = serializers.SerializerMethodField()
@@ -11,7 +12,7 @@ class CustomUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
         fields = ('id', 'username', 'user_information', 'role', 'subjects', 
-                  'profile_image', 'profile_image_url','verbal_memory_level'
+                  'profile_image', 'profile_image_url','hasEHCP','verbal_memory_level'
                   ,'non_verbal_memory_level', 'visual_perception_level',
                   'visual_information_processing_speed_level',
                   'numeracy_level', 'literacy_level', 'executive_function_level',
@@ -31,6 +32,26 @@ class EngagementInstanceSerializer(serializers.ModelSerializer):
     class Meta:
         model = EngagementInstance
         fields = ('id','user', 'username', 'chosen_type', 'time_chosen')
+
+class EHCP_ViewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EHCP_View
+        fields = ('id', 'user', 'student_views', 'teacher_comments')
+
+class EHCP_InterestSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EHCP_Interest
+        fields = ('id', 'user', 'student_interests', 'teacher_comments')
+
+class EHCP_AspirationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EHCP_Aspiration
+        fields = ('id', 'user', 'student_aspirations', 'teacher_comments')
+
+class EHCP_TeacherCommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EHCP_TeacherComment
+        fields = ('id', 'user', 'comment')
 
 class SubjectSerializer(serializers.ModelSerializer):
     category_name = serializers.CharField(source='category.name')

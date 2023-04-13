@@ -14,7 +14,9 @@ class CustomUser(AbstractUser):
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='Student')
     subjects = models.ManyToManyField('Subject')
     profile_image = models.ImageField(upload_to='profile_images', default="profile_images/icon.png", blank=True, null=True)
-
+    
+    hasEHCP = models.BooleanField(default=False)
+    
     verbal_memory_level = models.FloatField(default=50.0, validators=[MinValueValidator(1.0), MaxValueValidator(100.0)])
     non_verbal_memory_level = models.FloatField(default=50.0, validators=[MinValueValidator(1.0), MaxValueValidator(100.0)])
     visual_perception_level = models.FloatField(default=50.0, validators=[MinValueValidator(1.0), MaxValueValidator(100.0)])
@@ -52,6 +54,12 @@ class CustomUser(AbstractUser):
         if is_new:
             LearningBoardWorkspace.objects.create(user=self, name=f"{self.username}'s Workspace")
             EngagementInstance.objects.create(user=self, chosen_type=self.desired_engagement_type)
+            EHCP_Interest.objects.create(user=self)
+            EHCP_Aspiration.objects.create(user=self)
+            EHCP_View.objects.create(user=self)
+            
+    def __str__(self):
+        return self.name
 
     @classmethod
     def validate_desired_engagement_type(cls, desired_engagement_type):
@@ -72,21 +80,45 @@ class EHCP_View(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
     student_views = models.TextField('EHCP Views', max_length=300, default="Student's Views from EHCP'", blank=True)
     teacher_comments = models.ManyToManyField('EHCP_TeacherComment', related_name='ehcp_views', blank=True)
+ 
+    class Meta:
+        verbose_name_plural = "EHCP Views"
+    
+    def __str__(self):
+        return f"{self.user}, {self.student_views}" 
 
 class EHCP_Interest(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
     student_interests = models.TextField('EHCP Interests', max_length=300, default="Student's Interests from EHCP'", blank=True)
     teacher_comments = models.ManyToManyField('EHCP_TeacherComment', related_name='ehcp_interests', blank=True)
 
+    class Meta:
+        verbose_name_plural = "EHCP Interests"
+ 
+    def __str__(self):
+        return f"{self.user}, {self.student_interests}"
+ 
 class EHCP_Aspiration(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
     student_aspirations = models.TextField('EHCP Aspirations', max_length=300, default="Student's Aspirations from EHCP'", blank=True)
     teacher_comments = models.ManyToManyField('EHCP_TeacherComment', related_name='ehcp_aspirations', blank=True)
 
+    class Meta:
+        verbose_name_plural = "EHCP Aspirations"
+        
+    def __str__(self):
+        return f"{self.user}, {self.student_aspirations}"        
+
 class EHCP_TeacherComment(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     comment = models.TextField('Teacher Comment', max_length=300, default='', blank=True)
 
+    class Meta:
+        verbose_name_plural = "EHCP Teacher Comments"
+        
+    def __str__(self):
+        return f"{self.user}, {self.comment}"        
+        
 class SubjectCategory(models.Model):
     CATEGORY_CHOICES = (
         ('Modern Foreign Languages', 'Modern Foreign Languages'),

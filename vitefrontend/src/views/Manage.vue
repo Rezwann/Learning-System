@@ -106,6 +106,58 @@
 </div>
   </form>
 </div>
+
+<div class="card mt-3 p-3 mx-auto" style="width:80vw;">
+  <h4 class="alert-heading mt-2">EHCP</h4>
+<div v-bind="!selectedStudentHasEHCP == true">  
+
+  <div v-for="(ehcpInfo, index) in allSelectedStudentInformationEHCP" :key="index">
+      <h4 class="alert-heading">Section {{ index + 1 }} - {{ Object.keys(ehcpInfo)[index].toUpperCase().replace('_', ' ') }}</h4>
+  <h5 class="card-subtitle text-muted mt-2">{{ ehcpInfo.student_views }}</h5>
+  <h5 class="card-subtitle text-muted mt-2">{{ ehcpInfo.student_interests }}</h5>
+  <h5 class="card-subtitle text-muted mt-2">{{ ehcpInfo.student_aspirations }}</h5>
+  <h5 class="alert alert-success mt-3">
+    {{ ehcpInfo.teacher_comments.length > 0 ? ehcpInfo.teacher_comments : 'No teacher comments' }}
+  </h5>
+</div>
+
+
+  <h6 class="card-subtitle text-muted">You can fill in the form below to setup or update {{selectedStudent}}'s EHCP information. This will appear in {{selectedStudent}}'s profile once completed.'</h6>  
+</div>
+
+<form @submit.prevent="setupEHCP();">
+    <div class="row">
+  <div class="col-4 mb-3">
+    <label class="mb-1">Set EHCP Views ({{selectedStudent}}'s views)</label>
+    <input type="text" name="EHCPview" class="form-control" v-model="setEHCPview" placeholder="Enter views of the student here">
+  </div>
+  <div class="col-4 mb-3">
+    <label class="mb-1">Set EHCP Interests ({{selectedStudent}}'s interests)</label>
+    <input
+      type="text"
+      name="short_description"
+      class="form-control"
+      v-model="setEHCPinterest" placeholder="Enter interests of the student here"
+    />
+  </div>
+  <div class="col-4 mb-3">
+    <label class="mb-1">Set EHCP Aspirations ({{selectedStudent}}'s aspirations)</label>
+    <input
+      type="text"
+      name="short_description"
+      class="form-control"
+      v-model="setEHCPaspiration" placeholder="Enter aspirations of the student here"
+    />
+  </div>
+  <div class="col-4 mt-4 mb-3">
+    <button class="btn btn-warning">Setup/Update {{selectedStudent}}'s EHCP</button>
+  </div>
+  <span class="text-center error" v-if="errorMessage">{{ errorMessage }}</span>
+</div>
+  </form>
+
+</div>
+
 </div>
 
 </div>
@@ -129,6 +181,7 @@ export default {
   },
   data() {
     return {
+      errorMessage:'',
       currentUser:'',    
       students: [],
       filtered:[],
@@ -140,6 +193,7 @@ export default {
       selectedN:0, selectedL: 0, selectedEF: 0, selectedVR: 0,
       selectedStudentDebateTarget: 0,
       selectedStudentVocabularyGroup:'',
+      selectedStudentHasEHCP: false,
       CDs: CDs,
       options:{},
       series:[],
@@ -156,6 +210,11 @@ export default {
             short_description:''
         },
       errorMessage:'',
+      setEHCPview:'',
+      setEHCPinterest:'',
+      setEHCPaspiration:'',
+      allSelectedStudentInformationEHCP:[],
+      showEHCP: false
     }
   },
   async mounted() {  
@@ -181,7 +240,7 @@ export default {
   watch: {
     selectedStudent: {
       handler: 'GenerateNeuroInsight',
-      immediate: true,
+      immediate: true,      
     },
     selectedStudentEngagementInstances: function(newVal) {
       if (newVal.length >= 5) {
@@ -193,6 +252,30 @@ export default {
     }
   },
   methods: {   
+    async setupEHCP(){
+            if (this.setEHCPinterest && this.setEHCPaspiration && this.setEHCPview){
+            await axios.post('api/v1/LP/setEHCP/', 
+            
+            {studentname:this.selectedStudent, ehcpInterest: this.setEHCPinterest,
+              ehcpAspiration: this.setEHCPaspiration, ehcpView: this.setEHCPview            
+            })
+            .then(response => {
+            }).catch(error =>{
+                if(error.response){
+                    for (const property in error.response.data){
+                        this.errors.push(`${property}: ${error.response.data[property]}`)
+                    }
+                }
+            })
+            this.errorMessage = '';
+            this.setEHCPinterest = ''
+            this.setEHCPaspiration = ''
+            this.setEHCPview = ''
+            } else {
+                this.errorMessage = 'All three EHCP fields are required';
+              }
+        },
+
     timeElapsed(created_at) {
             const currentDate = moment()
             const createdAt = moment(created_at)
@@ -200,6 +283,7 @@ export default {
             const elapsed = moment.duration(currentDate.diff(createdAt)).humanize()
                     return `${date} (${elapsed} ago)`
         },
+        
         async submitNewBoard(){
             if (this.addBoardForm.name && this.addBoardForm.short_description){
             await axios.post('api/v1/LP/addLearningBoardToStudent/',{boardinfo: this.addBoardForm, studentname:this.selectedStudent})
@@ -266,6 +350,7 @@ export default {
           await this.resetSelectedStudent();
           await this.chooseSelectedStudent(studentName)
           await this.showEngagementVisualisation()
+          await this.getStudentEHCP()
     },
     
     async resetSelectedStudent() {
@@ -290,6 +375,8 @@ export default {
             this.selectedStudentDebateTarget = this.selectedStudentNeuroBackground.debate_contribution_target
             this.selectedStudentVocabularyGroup = this.selectedStudentNeuroBackground.vocabulary_sheet_group            
             this.selectedStudentCurrentEngagementType = this.selectedStudentNeuroBackground.desired_engagement_type 
+            this.selectedStudentHasEHCP = this.selectedStudentNeuroBackground.hasEHCP 
+
           })  
 
           await axios.get('/api/v1/LP/getEngagementInstances/').then(response => {
@@ -304,7 +391,18 @@ export default {
     }))
     .sort((a, b) => new Date(b.time_chosen) - new Date(a.time_chosen));
 });
-          
+
+          await axios.post('/api/v1/LP/getStudentEHCP/',{name:this.selectedStudent}).then(response => {
+            this.allSelectedStudentInformationEHCP = Object.values(response.data).map(ehcp => {
+        return {
+        student_views: ehcp.student_views,
+        student_interests: ehcp.student_interests,
+        student_aspirations: ehcp.student_aspirations,
+        teacher_comments: ehcp.teacher_comments
+        };
+        });
+      });
+
         }        
         else {
           await axios.post('/api/v1/LP/getUserNeurobackground/', {studentname:option})
@@ -334,6 +432,18 @@ export default {
             time_chosen: instance.time_chosen
             }));
           });
+
+          await axios.post('/api/v1/LP/getStudentEHCP/',{name:option}).then(response => {
+            this.allSelectedStudentInformationEHCP = Object.values(response.data).map(ehcp => {
+        return {
+        student_views: ehcp.student_views,
+        student_interests: ehcp.student_interests,
+        student_aspirations: ehcp.student_aspirations,
+        teacher_comments: ehcp.teacher_comments
+        };
+        });
+      });
+
         }
       this.options = {
         chart: {

@@ -31,10 +31,13 @@ urlpatterns = [
     path('getSingleUser/', views.get_single_user),
     path('postEngagementInstance/',views.post_engagement_instance),
     path('getEngagementInstances/',views.get_engagement_instances),
+    path('getAllEHCP/', views.get_all_EHCP),
 
 # Teacher    
     path('getMyTeachingSubjects/', views.get_my_teaching_subjects),
     path('updateStudentNeuroBackground/', views.update_student_neuro_background),
     path('addLearningBoardToStudent/', views.add_learning_board_to_student),    
+    path('setEHCP/',views.setEHCP),
+    path('getStudentEHCP/',views.get_student_EHCP),
 
 ]

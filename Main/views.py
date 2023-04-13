@@ -5,12 +5,15 @@ from django.db.models import Q
 from .models import CustomUser, Subject, SubjectCategory, LearningBoard, LearningBoardWorkspace, LearningBoardCard
 from .models import LearningBoardCardList, LearningBoardCardListItem
 from .models import CommunicationArea, Channel, Post, EngagementInstance
+from .models import EHCP_View, EHCP_Interest, EHCP_Aspiration
 from rest_framework.permissions import IsAuthenticated
 from .serializers import CustomUserSerializer, SubjectSerializer, SubjectCategorySerializer, LearningBoardSerializer, LearningBoardCardSerializer
 from .serializers import LearningBoardCardListSerializer, LearningBoardCardListItemSerializer
 from .serializers import LearningBoardCardListItemSerializer
 from .serializers import CommunicationAreaSerializer, ChannelSerializer, PostSerializer, LearningBoardWorkspaceSerializer
 from .serializers import EngagementInstanceSerializer
+from .serializers import EHCP_ViewSerializer, EHCP_InterestSerializer, EHCP_AspirationSerializer
+
 from django.shortcuts import get_object_or_404
 import math
 
@@ -38,6 +41,68 @@ def get_single_user(request):
         return JsonResponse(serializer.data)
     else:
         return JsonResponse({'error': 'User is not authenticated'})
+
+@api_view(['GET'])
+def get_all_EHCP(request):
+    if request.user.is_authenticated:
+        user = request.user
+        ehcp_view = EHCP_View.objects.get(user=user)
+        ehcp_interest = EHCP_Interest.objects.get(user=user)
+        ehcp_aspiration = EHCP_Aspiration.objects.get(user=user)
+        
+        ehcp_view_serializer = EHCP_ViewSerializer(ehcp_view)
+        ehcp_interest_serializer = EHCP_InterestSerializer(ehcp_interest)
+        ehcp_aspiration_serializer = EHCP_AspirationSerializer(ehcp_aspiration)
+        
+        return Response({
+            'ehcp_view': ehcp_view_serializer.data,
+            'ehcp_interest': ehcp_interest_serializer.data,
+            'ehcp_aspiration': ehcp_aspiration_serializer.data
+        })
+
+@api_view(['POST'])
+def get_student_EHCP(request):
+    if request.user.is_authenticated:
+        name = request.data.get('name')
+        user = CustomUser.objects.get(username=name)            
+        ehcp_view = EHCP_View.objects.get(user=user)
+        ehcp_interest = EHCP_Interest.objects.get(user=user)
+        ehcp_aspiration = EHCP_Aspiration.objects.get(user=user)        
+        ehcp_view_serializer = EHCP_ViewSerializer(ehcp_view)
+        ehcp_interest_serializer = EHCP_InterestSerializer(ehcp_interest)
+        ehcp_aspiration_serializer = EHCP_AspirationSerializer(ehcp_aspiration)
+        
+        return Response({
+            'ehcp_view': ehcp_view_serializer.data,
+            'ehcp_interest': ehcp_interest_serializer.data,
+            'ehcp_aspiration': ehcp_aspiration_serializer.data
+        })
+
+@api_view(['POST'])
+def setEHCP(request):          
+    studentname = request.data.get('studentname')
+    ehcpInterest = request.data.get('ehcpInterest')
+    ehcpAspiration = request.data.get('ehcpAspiration')
+    ehcpView = request.data.get('ehcpView')
+
+    user = CustomUser.objects.get(username=studentname)    
+    user.hasEHCP = True    
+    user.save()        
+    
+    ehcp_view, created = EHCP_View.objects.get_or_create(user=user)
+    ehcp_view.student_views = ehcpView
+    ehcp_view.save()
+    
+    ehcp_aspiration, created = EHCP_Aspiration.objects.get_or_create(user=user)
+    ehcp_aspiration.student_aspirations = ehcpAspiration
+    ehcp_aspiration.save()
+    
+    ehcp_interest, created = EHCP_Interest.objects.get_or_create(user=user)
+    ehcp_interest.student_interests = ehcpInterest
+    ehcp_interest.save()
+    
+    serializer = CustomUserSerializer(user)
+    return Response(serializer.data)
 
 @api_view(['GET'])
 def get_engagement_instances(request):

@@ -4,6 +4,7 @@ from .models import CustomUser, Subject, SubjectCategory, LearningBoard, Learnin
 from .models import LearningBoardCardList, LearningBoardCardListItem
 from .models import CommunicationArea, Channel, Post
 from .models import  LearningBoardWorkspace, EngagementInstance
+from .models import EHCP_View, EHCP_Interest, EHCP_Aspiration, EHCP_TeacherComment
 
 class CustomUserAdmin(UserAdmin):
     model = CustomUser
@@ -16,7 +17,7 @@ class CustomUserAdmin(UserAdmin):
         }),
         ('All', {
             'fields': (
-                'verbal_memory_level', 
+                'hasEHCP','verbal_memory_level', 
                 'non_verbal_memory_level', 'visual_perception_level', 
                 'numeracy_level', 'literacy_level', 'executive_function_level', 'visual_information_processing_speed_level', 
                 'verbal_reasoning_level', 'debate_contribution_target', 'vocabulary_sheet_group', 'desired_engagement_type'                
@@ -47,3 +48,7 @@ admin.site.register(CommunicationArea, CommunicationAreaAdmin)
 admin.site.register(Channel, ChannelAdmin)
 admin.site.register(Post, PostAdmin)
 admin.site.register(EngagementInstance)
+admin.site.register(EHCP_View)
+admin.site.register(EHCP_Interest)
+admin.site.register(EHCP_Aspiration)
+admin.site.register(EHCP_TeacherComment)
