@@ -19,7 +19,7 @@ class CustomUserSerializer(serializers.ModelSerializer):
                   'numeracy_level', 'literacy_level', 'executive_function_level',
                   'verbal_reasoning_level', 'debate_contribution_target',
                   'vocabulary_sheet_group', 'desired_engagement_type',                  
-                  'ENG_TYPES')
+                  'ENG_TYPES','averageCD')
     
     def get_profile_image_url(self, obj):
         if obj.profile_image:
@@ -173,7 +173,6 @@ class LearningBoardCardListSerializer(serializers.ModelSerializer):
         
     def get_learning_board_card_id(self, obj):
         return obj.learning_board_card.id
-
 
 class LearningBoardCardListItemSerializer(serializers.ModelSerializer):                
     learning_board_card_list_id = serializers.SerializerMethodField()

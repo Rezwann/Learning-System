@@ -19,7 +19,7 @@ class CustomUserAdmin(UserAdmin):
         }),
         ('All', {
             'fields': (
-                'hasEHCP','verbal_memory_level', 
+                'averageCD','hasEHCP','verbal_memory_level', 
                 'non_verbal_memory_level', 'visual_perception_level', 
                 'numeracy_level', 'literacy_level', 'executive_function_level', 'visual_information_processing_speed_level', 
                 'verbal_reasoning_level', 'debate_contribution_target', 'vocabulary_sheet_group', 'desired_engagement_type'                

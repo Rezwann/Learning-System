@@ -27,7 +27,8 @@ class CustomUser(AbstractUser):
     literacy_level = models.FloatField(default=50.0, validators=[MinValueValidator(1.0), MaxValueValidator(100.0)])
     executive_function_level = models.FloatField(default=50.0, validators=[MinValueValidator(1.0), MaxValueValidator(100.0)])
     verbal_reasoning_level = models.FloatField(default=50.0, validators=[MinValueValidator(1.0), MaxValueValidator(100.0)])    
-    
+    averageCD = models.FloatField(default=50.0, validators=[MinValueValidator(1.0), MaxValueValidator(100.0)])
+
     debate_contribution_target = models.FloatField(default=5)    
     VOCABULARY_CHOICES = (
         ('Very Low', 'Very Low'),
@@ -51,6 +52,12 @@ class CustomUser(AbstractUser):
     desired_engagement_type = models.CharField(max_length=250, choices=ENG_TYPES, default='Looking to participate') 
        
     def save(self, *args, **kwargs):
+        cd_values = [self.verbal_memory_level, self.non_verbal_memory_level, 
+        self.visual_perception_level, self.visual_information_processing_speed_level, 
+        self.numeracy_level, self.literacy_level, 
+        self.executive_function_level, self.verbal_reasoning_level]
+        average_cd = sum(cd_values) / len(cd_values)
+        self.averageCD = round(average_cd)        
         is_new = not self.pk
         super().save(*args, **kwargs)
         if is_new:
@@ -197,7 +204,9 @@ class Subject(models.Model):
             self.subject_leader_name = self.subject_leader.username.capitalize()
 
         if not self.subject_leader_name[0].isupper():
-            self.subject_leader_name = self.subject_leader_name.capitalize()            
+            self.subject_leader_name = self.subject_leader_name.capitalize()  
+            
+        if not self.details:                      
             self.details = f"Class of {self.name} - ({self.year_group})"
 
         super().save(*args, **kwargs)

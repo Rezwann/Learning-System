@@ -125,10 +125,13 @@
           <h5 class="text-center mb-4 text-muted">Pesonal Target Contribution: Students will see a target based on their CD values (see 'Manage Teaching')</h5>
         <div class="card alert alert-warning">Here will be a progress bar showing how far away they are for each subject!</div>        
         </div>
-        
+        <div v-if="currentUserRole = 'Student'" class="progress">
+  <div class="progress-bar bg-success" role="progressbar" aria-label="Success example" style="width: 65%" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100"></div>
+</div>        
       </div>
           <h4 class="mt-3 text-center mb-4">Sides:</h4>
-          <div class="card mt-3 p-3">
+          <div class="d-flex justify-content-center">
+          <div class="card mt-3 p-3" style="width: 60vw;">
   <div v-for="side in area.sides" :key="side.id">
     <div class="card mt-3 p-3">
       <h5>{{ side.side_name }}</h5>
@@ -141,6 +144,7 @@
       </ul>
     </div>
   </div>
+</div>
 </div>
         </div>
       </div>
@@ -310,6 +314,8 @@
     created(){
       axios.get('/api/v1/LP/getCurrentUser/').then(response => {
         this.currentUser = response.data.username
+        this.currentUserRole = response.data.role
+
       })
       axios.get('/api/v1/LP/getGeneralSubjectInformation/').then(response => {
       const choices = response.data;

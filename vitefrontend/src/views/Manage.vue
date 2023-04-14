@@ -26,26 +26,32 @@
       <h5>Impact on Learning Activity Fragments:</h5>
       <h6>Learning Activity Debate Total Contribution Target (CDs considered): {{selectedStudentDebateTarget}}</h6>
       <h6>Learning Activity Vocabulary Sheet Group (CDs considered): {{selectedStudentVocabularyGroup}}</h6>
+      <h6>Average CDs (Communication Channel Access): {{selectedStudentAverageCD}}</h6>
+      <h6 class="text-muted">Communication Channel Access (specific support system):</h6>
+      <li class="text-muted">Average CDs: 25 🦈,</li>        
+      <li class="text-muted">Average CDs: 50 🦈🐅</li>
+      <li class="text-muted">Average CDs: 75 🦈🐅🦒</li>
+      <li class="text-muted">Average CDs above: 🦈🐅🦒🐧</li>        
     </div>
   </div>
   <div class="col-md-6">
     <h4>Update {{selectedStudent}}'s Levels</h4>
-    <div id="updatingcogvalues" class="card p-3">
-      <p>{{CDs[0]}}: {{selectedVM}}</p>   
+    <div id="updatingcogvalues" class="card p-3" style="height: 82.5vh">
+      <p class="mt-3">{{CDs[0]}}: {{selectedVM}}</p>   
       <input type="range" class="form-range" min="1" max="100" step="1" v-model="selectedVM">
-      <p>{{CDs[1]}}: {{selectedNVM}}</p> 
+      <p class="mt-3">{{CDs[1]}}: {{selectedNVM}}</p> 
       <input type="range" class="form-range" min="1" max="100" step="1" v-model="selectedNVM">
-      <p>{{CDs[2]}}: {{selectedVP}}</p> 
+      <p class="mt-3">{{CDs[2]}}: {{selectedVP}}</p> 
       <input type="range" class="form-range" min="1" max="100" step="1" v-model="selectedVP">
-      <p>{{CDs[3]}}: {{selectedVIPS}}</p> 
+      <p class="mt-3">{{CDs[3]}}: {{selectedVIPS}}</p> 
       <input type="range" class="form-range" min="1" max="100" step="1" v-model="selectedVIPS">
-      <p>{{CDs[4]}}: {{selectedN}}</p> 
+      <p class="mt-3">{{CDs[4]}}: {{selectedN}}</p> 
       <input type="range" class="form-range" min="1" max="100" step="1" v-model="selectedN">
-      <p>{{CDs[5]}}: {{selectedL}}</p> 
+      <p class="mt-3">{{CDs[5]}}: {{selectedL}}</p> 
       <input type="range" class="form-range" min="1" max="100" step="1" v-model="selectedL">
-      <p>{{CDs[6]}}: {{selectedEF}}</p> 
+      <p class="mt-3">{{CDs[6]}}: {{selectedEF}}</p> 
       <input type="range" class="form-range" min="1" max="100" step="1" v-model="selectedEF">
-      <p>{{CDs[7]}}: {{selectedVR}}</p> 
+      <p class="mt-3">{{CDs[7]}}: {{selectedVR}}</p> 
       <input type="range" class="form-range" min="1" max="100" step="1" v-model="selectedVR">
       <button @click="updateStudentNeuroBackground" class="btn btn-danger mt-3">Update Levels</button>
     </div>
@@ -252,6 +258,7 @@ export default {
       selectedN:0, selectedL: 0, selectedEF: 0, selectedVR: 0,
       selectedStudentDebateTarget: 0,
       selectedStudentVocabularyGroup:'',
+      selectedStudentAverageCD:0,
       selectedStudentHasEHCP: false,
       CDs: CDs,
       options:{},
@@ -458,6 +465,7 @@ export default {
             this.selectedStudentVocabularyGroup = this.selectedStudentNeuroBackground.vocabulary_sheet_group            
             this.selectedStudentCurrentEngagementType = this.selectedStudentNeuroBackground.desired_engagement_type 
             this.selectedStudentHasEHCP = this.selectedStudentNeuroBackground.hasEHCP 
+            this.selectedStudentAverageCD = this.selectedStudentNeuroBackground.averageCD
 
           })  
 
@@ -501,6 +509,9 @@ export default {
             this.selectedVR = this.selectedStudentNeuroBackground.verbal_reasoning_level            
             this.selectedStudentDebateTarget = this.selectedStudentNeuroBackground.debate_contribution_target
             this.selectedStudentCurrentEngagementType = this.selectedStudentNeuroBackground.desired_engagement_type
+            this.selectedStudentAverageCD = this.selectedStudentNeuroBackground.averageCD
+            this.selectedStudentVocabularyGroup = this.selectedStudentNeuroBackground.vocabulary_sheet_group            
+
           })
 
           await axios.get('/api/v1/LP/getEngagementInstances/').then(response => {
