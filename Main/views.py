@@ -6,6 +6,7 @@ from .models import CustomUser, Subject, SubjectCategory, LearningBoard, Learnin
 from .models import LearningBoardCardList, LearningBoardCardListItem
 from .models import CommunicationArea, Channel, Post, EngagementInstance
 from .models import EHCP_View, EHCP_Interest, EHCP_Aspiration, EHCP_TeacherComment
+from .models import DebatingArea, DebateSide, DebatingContribution, Opinion
 from rest_framework.permissions import IsAuthenticated
 from .serializers import CustomUserSerializer, SubjectSerializer, SubjectCategorySerializer, LearningBoardSerializer, LearningBoardCardSerializer
 from .serializers import LearningBoardCardListSerializer, LearningBoardCardListItemSerializer
@@ -13,6 +14,7 @@ from .serializers import LearningBoardCardListItemSerializer
 from .serializers import CommunicationAreaSerializer, ChannelSerializer, PostSerializer, LearningBoardWorkspaceSerializer
 from .serializers import EngagementInstanceSerializer
 from .serializers import EHCP_ViewSerializer, EHCP_InterestSerializer, EHCP_AspirationSerializer, EHCP_TeacherCommentSerializer
+from .serializers import DebatingAreaSerializer, DebateSideSerializer, DebatingContributionSerializer, OpinionSerializer
 
 from django.shortcuts import get_object_or_404
 import math
@@ -224,7 +226,6 @@ def get_subjects(request):
     serializer = SubjectSerializer(subjects, many=True)
     return Response(serializer.data)
 
-
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_subject_general_info(request):
@@ -257,12 +258,25 @@ def get_subject_categories(request):
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
+def get_debating_areas(request):
+    debating_areas = DebatingArea.objects.all()
+    serializer = DebatingAreaSerializer(debating_areas, many=True)
+    debate_sides = [side for area in serializer.data for side in area['sides']]
+    opinions = [opinion for area in serializer.data for side in area['sides'] for opinion in side['opinions']]
+    data = {
+        'debating_areas': serializer.data,
+        'debate_sides': debate_sides,
+        'opinions': opinions
+    }
+    return Response(data)
+
+    
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def get_communication_areas(request):
     communication_areas = CommunicationArea.objects.all()
     serializer = CommunicationAreaSerializer(communication_areas, many=True)
     return Response(serializer.data)
-
-
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])

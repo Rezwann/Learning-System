@@ -3,7 +3,8 @@ from .models import CustomUser, Subject, SubjectCategory, LearningBoardWorkspace
 from .models import LearningBoardCardList, LearningBoardCardListItem
 from .models import CommunicationArea, Channel, Post
 from .models import EngagementInstance
-from .models import EHCP_View, EHCP_Interest, EHCP_Aspiration, EHCP_TeacherComment
+from .models import EHCP_View, EHCP_Interest, EHCP_Aspiration, EHCP_TeacherComment, DebatingArea
+from .models import DebateSide, DebatingContribution, Opinion
 
 class CustomUserSerializer(serializers.ModelSerializer):
     profile_image_url = serializers.SerializerMethodField()
@@ -96,7 +97,31 @@ class SubjectCategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = SubjectCategory
         fields = ('id', 'name', 'CATEGORY_CHOICES')
-        
+
+class OpinionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Opinion
+        fields = '__all__'
+
+class DebateSideSerializer(serializers.ModelSerializer):
+    opinions = OpinionSerializer(many=True, read_only=True)
+    
+    class Meta:
+        model = DebateSide
+        fields = ('id', 'debating_area', 'side_name', 'opinions')
+                            
+class DebatingAreaSerializer(serializers.ModelSerializer):
+    sides = DebateSideSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = DebatingArea
+        fields = ('id', 'related_subject', 'name', 'debate_question', 'sides')
+                        
+class DebatingContributionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DebatingContribution
+        fields = '__all__'
+                
 class CommunicationAreaSerializer(serializers.ModelSerializer):
     class Meta:
         model = CommunicationArea

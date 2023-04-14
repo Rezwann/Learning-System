@@ -13,6 +13,7 @@ urlpatterns = [
     path('getCommunicationChannels/', views.get_channels),    
     path('getCommunicationChannelPosts/', views.get_posts),
     path('addCommunicationChannelPost/', views.add_channel_post),
+    path('getDebatingAreas/', views.get_debating_areas),
 
 # Learning Board API's  
     path('getLearningWorkspace/', views.get_learning_workspace),

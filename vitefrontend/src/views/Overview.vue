@@ -89,10 +89,12 @@
               ⭐ {{subject.name}} ({{subject.subject_code}}) - {{subject.category_name}}
             </button>
           </h2>
+
+
           <div v-bind:id="'accordion-item-' + subject.id" class="accordion-collapse collapse" data-bs-parent="#main-accordion" v-bind:aria-labelledby="'accordion-item-' + subject.id">
 
             <div class="accordion-body">
-              <div class="alert alert-success">
+              <div class="alert alert-primary">
   <div class="row">
     <div class="col-6">
       <p><strong>Details: </strong>{{subject.details}}</p>
@@ -107,11 +109,46 @@
     </div>
     <div class="col-6">
       <p><strong>Subject Leader Contact Email: </strong>{{subject.subject_leader_email}}</p>
-    </div>
-
-    
+    </div>    
   </div>
 </div>              
+
+<div class="alert alert-success">
+  <div class="row">
+    <div class="">
+      <div v-for="area in debatingAreas" :key="area.id">
+        <div v-if="area.related_subject === subject.id">
+          <h3 class="text-center mb-4">{{ area.name }}</h3>
+          <h1 class="text-center mb-4"><strong>Debate question: </strong>{{ area.debate_question }}</h1>
+      <div class="card mt-3 p-3 mx-auto" style="width:40vw;">
+        <div v-if="currentUserRole = 'Teacher'">
+          <h5 class="text-center mb-4 text-muted">Pesonal Target Contribution: Students will see a target based on their CD values (see 'Manage Teaching')</h5>
+        <div class="card alert alert-warning">Here will be a progress bar showing how far away they are for each subject!</div>        
+        </div>
+        
+      </div>
+          <h4 class="mt-3 text-center mb-4">Sides:</h4>
+          <div class="card mt-3 p-3">
+  <div v-for="side in area.sides" :key="side.id">
+    <div class="card mt-3 p-3">
+      <h5>{{ side.side_name }}</h5>
+      <p><strong>Opinions:</strong></p>
+      <ul>
+        <li v-for="opinion in side.opinions" :key="opinion.id">
+          {{ opinion.text }} ({{ opinion.thumbs_up }} thumbs up, {{ opinion.thumbs_down }} thumbs down)
+        </li>
+        <li v-if="side.opinions.length === 0">No opinion has been added to this side yet!</li>
+      </ul>
+    </div>
+  </div>
+</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 
 <div class="d-flex justify-content-center">
   <button class="btn btn-dark" style="background-color: var(--dark-gray);" data-bs-toggle="collapse" data-bs-target="#collapseExample" @click="toggleCommunicationArea">
@@ -125,7 +162,7 @@
 <div class="collapse" id="collapseExample">
   <div class="card card-body mt-3" style="outline: none;">
         <div class="row ms-1">
-  <div class="col-4 rounded scrollable-g" style="height: 30vh; background-color: var(--dark-purple);">
+  <div class="col-4 rounded scrollable-g" style="height: 45vh; background-color: var(--dark-purple);">
     <nav class="flex-column mt-4">
       <nav class="nav flex-column mx-2">
         <div v-for="Area in communicationArea.communicationAreas">
@@ -224,7 +261,10 @@
         subjectAreasForCreating:[]
         },
         subjectChoices:[],
-        yearChoices:[]
+        yearChoices:[],
+        debatingAreas:[],
+        debatingSides:[],
+        debatingOpinions:[]
       }
     },
     async mounted() {
@@ -258,6 +298,14 @@
         this.currentUser = response.data.username
         this.currentUserRole = response.data.role
       })
+
+      await axios.get('/api/v1/LP/getDebatingAreas/').then(response => {
+        const { debating_areas, debate_sides, opinions } = response.data;
+        this.debatingAreas = debating_areas;
+        this.debatingSides = debate_sides;
+        this.debatingOpinions = opinions;
+        });
+      
     },
     created(){
       axios.get('/api/v1/LP/getCurrentUser/').then(response => {

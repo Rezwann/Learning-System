@@ -3,8 +3,10 @@ from django.contrib.auth.admin import UserAdmin
 from .models import CustomUser, Subject, SubjectCategory, LearningBoard, LearningBoardCard
 from .models import LearningBoardCardList, LearningBoardCardListItem
 from .models import CommunicationArea, Channel, Post
-from .models import  LearningBoardWorkspace, EngagementInstance
+from .models import  LearningBoardWorkspace, EngagementInstance, DebatingArea
 from .models import EHCP_View, EHCP_Interest, EHCP_Aspiration, EHCP_TeacherComment
+from .models import DebatingArea, DebateSide, DebatingContribution, Opinion
+
 
 class CustomUserAdmin(UserAdmin):
     model = CustomUser
@@ -52,3 +54,7 @@ admin.site.register(EHCP_View)
 admin.site.register(EHCP_Interest)
 admin.site.register(EHCP_Aspiration)
 admin.site.register(EHCP_TeacherComment)
+admin.site.register(DebatingArea)
+admin.site.register(DebateSide)
+admin.site.register(DebatingContribution)
+admin.site.register(Opinion)

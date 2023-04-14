@@ -198,28 +198,70 @@ class Subject(models.Model):
 
         if not self.subject_leader_name[0].isupper():
             self.subject_leader_name = self.subject_leader_name.capitalize()            
-        self.details = f"Class of {self.name} - ({self.year_group})"
+            self.details = f"Class of {self.name} - ({self.year_group})"
+
         super().save(*args, **kwargs)
+
         CommunicationArea.objects.create(related_subject=self)
         DebatingArea.objects.create(related_subject=self)
         
     def __str__(self):
         return f"{self.name}, {self.subject_code}, {self.year_group}"        
 
-# Subject-speciifc Debating Activity - add automatically
+# Subject-speciifc Debating Activity
 
 class DebatingArea(models.Model):
     related_subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
     name = models.CharField(max_length=255, default='', blank=True)
-    
+    debate_question = models.CharField(max_length=255, default='', blank=True)
+
     def save(self, *args, **kwargs):
         if not self.name:
             self.name = f"{self.related_subject.name} - {self.related_subject.subject_code} Debating Area"
+        if not self.debate_question:
+            self.debate_question = f"Is the subject {self.related_subject.name} reaching enough people in the world? 🌍"
+
         super().save(*args, **kwargs)
+        
+        DebateSide.objects.create(debating_area=self, side_name='Side - Yes')
+        DebateSide.objects.create(debating_area=self, side_name='Side - Nope')
+        DebateSide.objects.create(debating_area=self, side_name='Side - Unsure')
         
     def __str__(self):
         return f"{self.related_subject}, {self.name}, Debating Area"
 
+class DebateSide(models.Model):
+    debating_area = models.ForeignKey(DebatingArea, on_delete=models.CASCADE, 
+    related_name='sides')
+    side_name = models.CharField(max_length=255)
+
+    def __str__(self):
+        return f"{self.side_name}, {self.debating_area}"
+
+class DebatingContribution(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    debating_area = models.ForeignKey(DebatingArea, on_delete=models.CASCADE)
+    amount_contributed = models.FloatField(default=0)
+
+class Opinion(models.Model):
+    debate_side = models.ForeignKey(DebateSide, on_delete=models.CASCADE, related_name='opinions')
+    text = models.TextField()
+    thumbs_up = models.PositiveIntegerField(default=0)
+    thumbs_down = models.PositiveIntegerField(default=0)
+    author = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        contribution, created = DebatingContribution.objects.get_or_create(
+            user=self.author,
+            debating_area=self.debate_side.debating_area
+        )
+        contribution.amount_contributed += 1
+        contribution.save()
+
+    def __str__(self):
+        return f"{self.debate_side}, opinion - {self.text}"
 
 # Overview - Communication Area
 
@@ -233,6 +275,10 @@ class CommunicationArea(models.Model):
         super().save(*args, **kwargs)
         if not self.channel_set.filter(name='Main Channel').exists():        
             Channel.objects.create(communication_area=self, name=f"{self.related_subject.name} ({self.related_subject.subject_code}) - Main Channel", short_description = 'Main Channel Description')
+            Channel.objects.create(communication_area=self, name=f"{self.related_subject.name} ({self.related_subject.subject_code}) - 🐧", short_description = '🐧 Channel Description')
+            Channel.objects.create(communication_area=self, name=f"{self.related_subject.name} ({self.related_subject.subject_code}) - 🦒", short_description = '🦒 Channel Description')
+            Channel.objects.create(communication_area=self, name=f"{self.related_subject.name} ({self.related_subject.subject_code}) - 🐅", short_description = '🐅 Channel Description')
+            Channel.objects.create(communication_area=self, name=f"{self.related_subject.name} ({self.related_subject.subject_code}) - 🦈", short_description = '🦈 Channel Description')
 
     def __str__(self):
         return f"{self.related_subject}, {self.name}"
