@@ -85,11 +85,12 @@ class SubjectSerializer(serializers.ModelSerializer):
     YEAR_CHOICES = Subject.YEAR_CHOICES
     SUBJECT_CHOICES = Subject.SUBJECT_CHOICES
 
+
     class Meta:
         model = Subject
         fields = ('id', 'name', 'details', 'category', 'category_name', 'year_group', 
                   'subject_leader_name', 'subject_leader', 'subject_leader_email',
-                  'subject_code', 'YEAR_CHOICES', 'SUBJECT_CHOICES')
+                  'subject_code', 'YEAR_CHOICES', 'SUBJECT_CHOICES',)
 
 class SubjectCategorySerializer(serializers.ModelSerializer):
     CATEGORY_CHOICES = SubjectCategory.CATEGORY_CHOICES

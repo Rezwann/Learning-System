@@ -127,11 +127,11 @@
           <h3 class="text-center mb-4">{{ area.name }}</h3>
           <h1 class="text-center mb-4"><strong>Debate question: </strong>{{ area.debate_question }}</h1>
       <div class="card mt-3 p-3 mx-auto" style="width:40vw;">
-        <div v-if="currentUserRole = 'Teacher'">
+        <div v-if="currentUserRole == 'Teacher'">
           <h5 class="text-center mb-4 text-muted">Pesonal Target Contribution: Students will see a target based on their CD values (see 'Manage Teaching')</h5>
         <div class="card alert alert-warning">Here will be a progress bar showing how far away they are for each subject!</div>        
         </div>
-        <div v-if="currentUserRole = 'Student'" class="progress">
+        <div v-if="currentUserRole == 'Student'" class="progress">
   <div class="progress-bar bg-success" role="progressbar" aria-label="Success example" style="width: 65%" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100"></div>
 </div>        
       </div>
@@ -157,8 +157,6 @@
     </div>
   </div>
 </div>
-
-
 
 <div class="d-flex justify-content-center">
   <button class="btn btn-dark mt-3" style="background-color: var(--dark-gray);" data-bs-toggle="collapse" data-bs-target="#collapseExample" @click="toggleCommunicationArea">
@@ -283,14 +281,6 @@
       await axios.get('api/v1/LP/getCustomUsers/').then(response => {
       this.users = response.data
     })
-
-      await axios.get('api/v1/LP/getCustomUsers/').then(response => {
-      })
-
-      await axios.get('api/v1/LP/subjectCategories/').then(response => {
-          this.subjectAreas = response.data;
-          this.subjectAreasForCreating = response.data[0].CATEGORY_CHOICES.map(choice => choice[0]).flat();
-      });
   
       await axios.get('/api/v1/LP').then(response => {
         this.subjects = response.data
@@ -306,11 +296,6 @@
         
       })
       
-      await axios.get('/api/v1/LP/getCurrentUser/').then(response => {
-        this.currentUser = response.data.username
-        this.currentUserRole = response.data.role
-      })
-
       await axios.get('/api/v1/LP/getDebatingAreas/').then(response => {
         const { debating_areas, debate_sides, opinions } = response.data;
         this.debatingAreas = debating_areas;
@@ -320,17 +305,21 @@
       
     },
     created(){
+      axios.get('api/v1/LP/subjectCategories/').then(response => {
+          this.subjectAreas = response.data;
+          this.subjectAreasForCreating = response.data[0].CATEGORY_CHOICES.map(choice => choice[0]).flat();
+      });
+
       axios.get('/api/v1/LP/getCurrentUser/').then(response => {
         this.currentUser = response.data.username
         this.currentUserRole = response.data.role
+      });
 
-      })
       axios.get('/api/v1/LP/getGeneralSubjectInformation/').then(response => {
       const choices = response.data;
       this.subjectChoices = Object.fromEntries(Object.entries(choices.subject_choices).map(([key, value]) => [key, value]));
       this.yearChoices = Object.fromEntries(Object.entries(choices.year_choices).map(([key, value]) => [key, value]));
       });
-
     },
     methods: {  
       async createSubjectForOverview(){
