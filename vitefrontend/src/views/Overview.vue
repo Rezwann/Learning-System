@@ -113,7 +113,13 @@
   </div>
 </div>              
 
-<div class="alert alert-success">
+<div class="d-flex justify-content-center">
+  <button class="btn btn-dark mb-3" style="background-color: var(--dark-green);" data-bs-toggle="collapse" data-bs-target="#debateCollapse">
+    Show/Hide Debating Area for {{subject.name }} ({{subject.subject_code}})
+  </button>
+</div>
+
+<div class="alert alert-success collapse" id="debateCollapse">
   <div class="row">
     <div class="">
       <div v-for="area in debatingAreas" :key="area.id">
@@ -155,7 +161,7 @@
 
 
 <div class="d-flex justify-content-center">
-  <button class="btn btn-dark" style="background-color: var(--dark-gray);" data-bs-toggle="collapse" data-bs-target="#collapseExample" @click="toggleCommunicationArea">
+  <button class="btn btn-dark mt-3" style="background-color: var(--dark-gray);" data-bs-toggle="collapse" data-bs-target="#collapseExample" @click="toggleCommunicationArea">
     {{ communicationArea.showCommunicationArea ? 'Hide Communication Area' : 'Show Communication Area' }} for {{subject.name}} ({{subject.subject_code}})
   </button>
 </div>
@@ -225,6 +231,8 @@
 </div>
 </div>
 </div>
+
+
 </div>
           </div>
         </div>
@@ -418,6 +426,7 @@
     --light-gray: #4b009b;
     --dark-gray: #6800d7;
     --dark-purple: #2d005d;
+    --dark-green: rgb(0, 158, 13);
   }
 
 
