@@ -7,7 +7,6 @@
 <h6 class="card-subtitle text-muted text-center"> As you have {{currentUserRole}} role, you may create subject areas. 
   These will be visible below with additional management options. You can search for a student in 'Manage Teaching' to add individual students to your created subject areas and for more specific learning management options.</h6>
 </div>  
-
 <div class="card mt-3 p-3 alert alert-warning mx-auto" style="width:80vw;">
 <h4 class="text-center mb-4">Create a Subject Area</h4>
 <form @submit.prevent="createSubjectForOverview();">
@@ -126,56 +125,9 @@
 </div>
 </div>
 
-<div class="d-flex justify-content-center">
-<button class="btn btn-dark mt-3 mb-3" style="background-color: var(--dark-green);" data-bs-toggle="collapse" data-bs-target="#debateCollapse">
-  Show/Hide Debating Area for {{subject.name }} ({{subject.subject_code}})
-</button>
-</div>
-
-<div class="alert alert-success collapse" id="debateCollapse">
-<div class="row">
-    <div v-for="area in debatingAreas" :key="area.id">
-
-      <div v-if="area.related_subject === subject.id">
-        <h3 class="text-center mb-4">{{ area.name }}</h3>
-        <h1 class="text-center mb-4"><strong>Debate question: </strong>{{ area.debate_question }}</h1>
-    <div class="card mt-3 p-3 mx-auto" style="width:60vw;">
-      <div v-if="currentUserRole == 'Teacher'">
-        <h5 class="text-center mb-4 text-muted">Pesonal Target Contribution: Students will see a target based on their CD values (see 'Manage Teaching')</h5>
-      <div class="card alert alert-warning">Here will be a progress bar showing how far away students are for each subject.</div>        
-      </div>
-<div v-if="currentUserRole == 'Student'">
-<h4 class="text-center mb-4 text-muted">Your Personal Assigned Target (amount to contribute to debate): {{debateTarget}} </h4>
-<div class="progress">
-<div class="progress-bar bg-success" role="progressbar" aria-label="Success example" style="width: 65%" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100"></div>
-</div>
-</div>
-    </div>
-        <h4 class="mt-3 text-center mb-4">Sides:</h4>
-        <div class="d-flex justify-content-center">
-        <div class="card mt-3 p-3" style="width: 60vw;">
-<div v-for="side in area.sides" :key="side.id">
-  <div class="card mt-3 p-3">
-    <h5>{{ side.side_name }}</h5>
-    <p><strong>Opinions:</strong></p>
-<div class="card mt-2 p-2 alert alert-danger">
-    <ul>
-      <li v-for="opinion in side.opinions" :key="opinion.id">
-        {{ opinion.text }} -           {{ opinion.author }} - {{timeElapsed(opinion.created_at)}}
-      </li>
-      <li v-if="side.opinions.length === 0">No opinion has been added to this side yet!</li>
-    </ul></div>
-  </div>
-</div>
-</div>
-</div>
-      </div>
-    </div>
-</div>
-</div>
 
 <div class="d-flex justify-content-center">
-<button class="btn btn-dark mt-3" style="background-color: var(--dark-gray);" data-bs-toggle="collapse" data-bs-target="#collapseExample" @click="toggleCommunicationArea">
+<button class="btn btn-dark mt-3" style="background-color: var(--dark-gray); width: 35vw;" data-bs-toggle="collapse" data-bs-target="#collapseExample" @click="toggleCommunicationArea">
   {{ communicationArea.showCommunicationArea ? 'Hide Communication Area' : 'Show Communication Area' }} for {{subject.name}} ({{subject.subject_code}})
 </button>
 </div>
@@ -189,9 +141,10 @@
 <div class="col-4 rounded scrollable-g" style="height: 45vh; background-color: var(--dark-purple);">
   <nav class="flex-column mt-4">
     <nav class="nav flex-column mx-2">
-      <div v-for="Area in communicationArea.communicationAreas">
-<div v-if="Area.related_subject_id == subject.id">
-  
+
+      <div v-for="Area in communicationArea.communicationAreas">   
+      
+        <div v-if="Area.related_subject_id == subject.id">
   <h6 class="text-white font-weight-bold">{{Area.name}}</h6>
   <a class="nav-link text-white font-weight-bold rounded mt-2" style="background-color: var(--dark-gray);">Channels</a>  
   <div v-for="channel in communicationArea.communicationChannels">
@@ -236,7 +189,7 @@
         <form @submit.prevent="addChannelPost()">
       <div class="form-group">
         <input v-model="communicationArea.channelPost" type="text" class="form-control" placeholder="Type a message...">
-        <button type="submit" class="btn btn-success mt-2">Send</button>
+        <button type="submit" class="text-white btn mt-2" style="background-color: var(--dark-blue)">Send</button>
       </div>
     </form>            
   </div>
@@ -245,6 +198,62 @@
 </div>
 </div>
 </div>
+
+<div class="d-flex justify-content-center">
+<button class="btn btn-dark mt-3 mb-3" style="background-color: var(--dark-green); width: 35vw;" data-bs-toggle="collapse" data-bs-target="#debateCollapse">
+  Show/Hide Debating Area for {{subject.name }} ({{subject.subject_code}})
+</button>
+</div>
+
+<div class="alert alert-success collapse" id="debateCollapse">
+<div class="row">
+    <div v-for="area in debatingAreas" :key="area.id">
+
+      <div v-if="area.related_subject === subject.id">
+        <h1 class="text-center mb-4"><strong>Debate question: </strong>{{ area.debate_question }}</h1>
+    <div class="card mt-3 p-3 mx-auto" style="width:60vw;">
+      <div v-if="currentUserRole == 'Teacher'">
+        <h5 class="text-center mb-4 text-muted">Pesonal Target Contribution: Students will see a target based on their CD values (see 'Manage Teaching')</h5>
+      <div class="card alert alert-warning text-center">Here will be a progress bar showing how far away students are for each subject.</div>        
+      </div>
+<div v-if="currentUserRole == 'Student'">
+<h4 class="text-center mb-4 text-muted">Your Personal Assigned Target (amount to contribute to debate): {{debateTarget}} </h4>
+<div class="progress">
+<div class="progress-bar bg-success" role="progressbar" aria-label="Success example" style="width: 65%" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100"></div>
+</div>
+</div>
+    </div>
+        <div class="d-flex justify-content-center">
+        <div class="card mt-3 p-3" style="width: 60vw;">
+<div v-for="side in area.sides" :key="side.id">
+  <div class="card mt-3 p-3">
+    <h5>Debate {{ side.side_name }}</h5>
+    <p><strong>Opinions:</strong></p>
+<div class="card mt-2 p-2 alert alert-info">
+    <ul>
+      <li v-for="opinion in side.opinions" :key="opinion.id">
+        {{ opinion.text }} -           {{ opinion.author }} - {{timeElapsed(opinion.created_at)}}
+      </li>
+      <li v-if="side.opinions.length === 0">No opinion has been added to this side yet!</li>
+    </ul></div>
+
+    <form @submit.prevent="">
+  <div class="form-group text-center">
+    <input type="text" class="form-control" placeholder="Type your opinion...">
+    <button type="submit" class="btn btn-success mt-2" disabled>Contribute to debate side</button>
+  </div>
+</form>
+
+
+  </div>
+</div>
+</div>
+</div>
+      </div>
+    </div>
+</div>
+</div>
+
 </div>
         </div>
       </div>
@@ -311,14 +320,8 @@ export default {
     
     await axios.get('/api/v1/LP/getDebatingAreas/').then(response => {
       const { debating_areas, debate_sides, opinions } = response.data;
-
-
       this.debatingAreas = debating_areas;
-      this.debatingAreas = this.debatingAreas.filter((item, index, self) => {
-          return index === self.findIndex((t) => (
-          t.name === item.name
-          ));
-      });
+
 
       });
       
@@ -406,6 +409,7 @@ export default {
     })
 
     await axios.get('/api/v1/LP/getCommunicationChannels/').then(response => {
+      this.communicationArea.communicationChannels = []
       this.communicationArea.communicationChannels = response.data
       
     })
@@ -436,6 +440,7 @@ background-color: #6800d7;
   --dark-gray: #6800d7;
   --dark-purple: #2d005d;
   --dark-green: rgb(0, 158, 13);
+  --dark-blue: #2361d4;
 }
 
 

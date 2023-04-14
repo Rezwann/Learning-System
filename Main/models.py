@@ -4,6 +4,7 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.core.exceptions import ValidationError
+from django.core.exceptions import ObjectDoesNotExist
 
 class CustomUser(AbstractUser):
     user_information = models.TextField('User Information', max_length=300, default='', blank=True)
@@ -211,8 +212,15 @@ class Subject(models.Model):
 
         super().save(*args, **kwargs)
 
-        CommunicationArea.objects.create(related_subject=self)
-        DebatingArea.objects.create(related_subject=self)
+        try:
+            CommunicationArea.objects.get(related_subject=self)
+        except ObjectDoesNotExist:
+            CommunicationArea.objects.create(related_subject=self)
+
+        try:
+            DebatingArea.objects.get(related_subject=self)
+        except ObjectDoesNotExist:
+            DebatingArea.objects.create(related_subject=self)
         
     def __str__(self):
         return f"{self.name}, {self.subject_code}, {self.year_group}"        
@@ -337,7 +345,6 @@ class LearningBoardCard(models.Model):
     def __str__(self):
         return self.name
     
-
 class LearningBoardCardList(models.Model):
     learning_board_card = models.ForeignKey(LearningBoardCard, on_delete=models.CASCADE, blank=True)
     name = models.CharField(max_length=50, default = 'Card List Name')
@@ -352,4 +359,3 @@ class LearningBoardCardListItem(models.Model):
     
     def __str__(self):
         return self.name
-    
