@@ -40,4 +40,7 @@ urlpatterns = [
     path('setEHCP/',views.setEHCP),
     path('getStudentEHCP/',views.get_student_EHCP),
     path('addCommentEHCP/',views.add_comment_EHCP),
+    path('getGeneralSubjectInformation/', views.get_subject_general_info),
+    path('createSubject/', views.create_subject)
+    
 ]

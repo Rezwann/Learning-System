@@ -224,10 +224,30 @@ def get_subjects(request):
     serializer = SubjectSerializer(subjects, many=True)
     return Response(serializer.data)
 
-   
- 
-    
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_subject_general_info(request):
+    if request.user.is_authenticated:        
+        subject_choices = dict(Subject.SUBJECT_CHOICES)
+        year_choices = dict(Subject.YEAR_CHOICES)
+    return Response({'subject_choices': subject_choices, 'year_choices': year_choices})
+    
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def create_subject(request):
+    user = request.user
+    name = request.data.get('subjectchoice')
+    categorychoice = request.data.get('categorychoice')
+    yearchoice = request.data.get('yearchoice')
+    category = SubjectCategory.objects.get(name=categorychoice)
+    subject = Subject(name=name, category=category, year_group=yearchoice, 
+    subject_leader=user)    
+    subject.save()    
+    subject.users.add(user)
+    serializer = SubjectSerializer(subject)
+    return Response(serializer.data)
+     
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_subject_categories(request):

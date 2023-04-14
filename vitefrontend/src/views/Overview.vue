@@ -8,9 +8,59 @@
     These will be visible below with additional management options. You can search for a student in 'Manage Teaching' to add individual students to your created subject areas and for more specific learning management options.</h6>
   </div>  
 
-<h4 class="text-center mb-4">create a subject</h4>
+  <div class="card mt-3 p-3 alert alert-warning mx-auto" style="width:80vw;">
+<h4 class="text-center mb-4">Create a Subject Area</h4>
+<form @submit.prevent="createSubjectForOverview();">
+    <div class="row">  
+      <div class="col-4 mb-3">
+    <label class="mb-1">Subject Choice</label>
+    <select
+        v-model="createSubject.subjectchoice"
+        class="form-select form-select mb-3"
+        aria-label=".form-select"
+      >
+        <option selected disabled value="">Select from subject choice</option>
+        <option v-for="choice in subjectChoices" :key="choice" :value="choice">
+          {{choice}}
+        </option>
+      </select>
+  </div>      
 
+  <div class="col-4 mb-3">
+    <label class="mb-1">Year Group</label>
+    <select
+        v-model="createSubject.yearchoice"
+        class="form-select form-select mb-3"
+        aria-label=".form-select"
+      >
+        <option selected disabled value="">Select from year groups</option>
+        <option v-for="choice in yearChoices" :key="choice" :value="choice">
+          {{choice}}
+        </option>
+      </select>
+  </div>  
 
+      <div class="col-4 mb-3">
+    <label class="mb-1">Subject Category</label>
+    <select
+        v-model="createSubject.categorychoice"
+        class="form-select form-select mb-3"
+        aria-label=".form-select"
+      >
+        <option selected disabled value="">Select from subject categories</option>
+        <option v-for="choice in subjectAreasForCreating" :key="choice" :value="choice">
+          {{choice}}
+        </option>
+      </select>
+  </div>
+
+  <div class="d-flex justify-content-center">
+    <button class="btn btn-success">Create Subject</button>
+  </div>
+  <span class="text-center error" v-if="errorMessage">{{ errorMessage }}</span>
+</div>
+  </form>
+</div>
   </div>
 
     <div>
@@ -102,7 +152,7 @@
       <h4>{{communicationArea.currentChannelName}}</h4>
       <div  class="scrollable-g mt-3" style="height: 40vh;">
         <div v-if="communicationArea.displayChannelClicked && communicationArea.currentChannelPosts.length === 0">
-          no content </div><div v-else><div v-if="communicationArea.currentChannelPosts.length === 0">browse</div>
+          This channel has no content, feel free to add! </div><div v-else><div v-if="communicationArea.currentChannelPosts.length === 0">Browse one of the channels on the left hand side</div>
 </div>
       <div v-for="post in communicationArea.currentChannelPosts">
       <div class="alert alert-secondary mx-2">
@@ -149,6 +199,7 @@
     name: 'Overview',
     data() {
       return {
+        errorMessage:'',
         currentUser:'',
         currentUserRole:'',
         users: [],
@@ -166,7 +217,14 @@
           currentChannelID: null,
           currentChannel: [],
           channelPost:''
-        }
+        },
+        createSubject: {
+        subjectchoice:'',
+        categorychoice:'', yearchoice:'',
+        subjectAreasForCreating:[]
+        },
+        subjectChoices:[],
+        yearChoices:[]
       }
     },
     async mounted() {
@@ -178,8 +236,9 @@
       })
 
       await axios.get('api/v1/LP/subjectCategories/').then(response => {
-        this.subjectAreas = response.data
-      })
+          this.subjectAreas = response.data;
+          this.subjectAreasForCreating = response.data[0].CATEGORY_CHOICES.map(choice => choice[0]).flat();
+      });
   
       await axios.get('/api/v1/LP').then(response => {
         this.subjects = response.data
@@ -204,9 +263,40 @@
       axios.get('/api/v1/LP/getCurrentUser/').then(response => {
         this.currentUser = response.data.username
       })
+      axios.get('/api/v1/LP/getGeneralSubjectInformation/').then(response => {
+      const choices = response.data;
+      this.subjectChoices = Object.fromEntries(Object.entries(choices.subject_choices).map(([key, value]) => [key, value]));
+      this.yearChoices = Object.fromEntries(Object.entries(choices.year_choices).map(([key, value]) => [key, value]));
+      });
 
     },
-    methods: {     
+    methods: {  
+      async createSubjectForOverview(){
+       if (this.createSubject.subjectchoice
+       && this.createSubject.categorychoice && this.createSubject.yearchoice){
+            await axios.post('api/v1/LP/createSubject/', this.createSubject)
+            .then(response => {
+            }).catch(error =>{
+                if(error.response){
+                    for (const property in error.response.data){
+                        this.errors.push(`${property}: ${error.response.data[property]}`)
+                    }
+                }
+            })
+            this.errorMessage = '';
+
+            } else {
+                this.errorMessage = 'All four fields are required';
+              }
+
+          await axios.get('/api/v1/LP').then(response => {
+           this.subjects = response.data
+           this.filteredSubjects = this.subjects
+           })
+
+          alert("Subject has been created")
+      },
+
       timeElapsed(created_at) {
             const currentDate = moment()
             const createdAt = moment(created_at)

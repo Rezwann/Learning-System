@@ -17,6 +17,8 @@ class CustomUser(AbstractUser):
     
     hasEHCP = models.BooleanField(default=False)
     
+    # Cognitive Domains
+    
     verbal_memory_level = models.FloatField(default=50.0, validators=[MinValueValidator(1.0), MaxValueValidator(100.0)])
     non_verbal_memory_level = models.FloatField(default=50.0, validators=[MinValueValidator(1.0), MaxValueValidator(100.0)])
     visual_perception_level = models.FloatField(default=50.0, validators=[MinValueValidator(1.0), MaxValueValidator(100.0)])
@@ -57,7 +59,7 @@ class CustomUser(AbstractUser):
             EHCP_Interest.objects.create(user=self)
             EHCP_Aspiration.objects.create(user=self)
             EHCP_View.objects.create(user=self)
-            
+            self.create_missing_categories()
             
     def __str__(self):
         return self.name
@@ -67,8 +69,24 @@ class CustomUser(AbstractUser):
         if not any(desired_engagement_type == eng_type[0] for eng_type in cls.ENG_TYPES):
             raise ValidationError('Invalid engagement type choice.')
 
+    @classmethod
+    def create_missing_categories(cls):
+            CATEGORY_CHOICES = (
+                ('Modern Foreign Languages', 'Modern Foreign Languages'),
+                ('Humanity', 'Humanity'),
+                ('Arts', 'Arts'),
+                ('Technical', 'Technical'),
+                ('Core', 'Core'),
+            )
+            existing_categories = set(category.name for category in SubjectCategory.objects.all())
+            for category_choice in CATEGORY_CHOICES:
+                if category_choice[0] not in existing_categories:
+                    SubjectCategory.objects.create(name=category_choice[0])
+
     def __str__(self):
         return self.username    
+
+# Engagement preference
 
 class EngagementInstance(models.Model):    
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
@@ -76,6 +94,8 @@ class EngagementInstance(models.Model):
     time_chosen = models.DateTimeField(auto_now_add=True)    
     def __str__(self):
         return self.chosen_type
+
+# EHCP
 
 class EHCP_View(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
@@ -119,6 +139,8 @@ class EHCP_TeacherComment(models.Model):
         
     def __str__(self):
         return f"{self.user}, {self.comment}"        
+        
+# Overview - Subjects
         
 class SubjectCategory(models.Model):
     CATEGORY_CHOICES = (
@@ -175,13 +197,31 @@ class Subject(models.Model):
             self.subject_leader_name = self.subject_leader.username.capitalize()
 
         if not self.subject_leader_name[0].isupper():
-            self.subject_leader_name = self.subject_leader_name.capitalize()
-            
+            self.subject_leader_name = self.subject_leader_name.capitalize()            
+        self.details = f"Class of {self.name} - ({self.year_group})"
         super().save(*args, **kwargs)
         CommunicationArea.objects.create(related_subject=self)
+        DebatingArea.objects.create(related_subject=self)
         
     def __str__(self):
         return f"{self.name}, {self.subject_code}, {self.year_group}"        
+
+# Subject-speciifc Debating Activity - add automatically
+
+class DebatingArea(models.Model):
+    related_subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
+    name = models.CharField(max_length=255, default='', blank=True)
+    
+    def save(self, *args, **kwargs):
+        if not self.name:
+            self.name = f"{self.related_subject.name} - {self.related_subject.subject_code} Debating Area"
+        super().save(*args, **kwargs)
+        
+    def __str__(self):
+        return f"{self.related_subject}, {self.name}, Debating Area"
+
+
+# Overview - Communication Area
 
 class CommunicationArea(models.Model):
     related_subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
@@ -210,6 +250,8 @@ class Post(models.Model):
     author = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     content = models.TextField('Post Content', max_length=300, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
+
+# Learning Workspace
 
 class LearningBoardWorkspace(models.Model):
     name = models.CharField(max_length=300, default='Learning Workspace')
