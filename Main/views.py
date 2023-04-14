@@ -29,8 +29,10 @@ def get_custom_users(request):
 def get_current_user(request):
     if request.user.is_authenticated:
         username = request.user.username
-        role = request.user.role      
-        return JsonResponse({'username': username, 'role':role
+        role = request.user.role
+        dct = request.user.debate_contribution_target
+        
+        return JsonResponse({'username': username, 'role':role, 'dct':dct
         })
     else:
         return JsonResponse({'error': 'User is not authenticated'})

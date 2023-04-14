@@ -186,7 +186,7 @@ class Subject(models.Model):
     )
             
     name = models.CharField(max_length=50, choices=SUBJECT_CHOICES, default='Computing')
-    details = models.CharField(max_length=300, default='')
+    details = models.CharField(max_length=300, default='', blank=True, null = True)
     
     category = models.ForeignKey(SubjectCategory, on_delete=models.CASCADE)
     year_group = models.CharField(max_length=50, choices=YEAR_CHOICES, default='Year_11')   
@@ -207,7 +207,7 @@ class Subject(models.Model):
             self.subject_leader_name = self.subject_leader_name.capitalize()  
             
         if not self.details:                      
-            self.details = f"Class of {self.name} - ({self.year_group})"
+            self.details = "Details"
 
         super().save(*args, **kwargs)
 
@@ -255,8 +255,6 @@ class DebatingContribution(models.Model):
 class Opinion(models.Model):
     debate_side = models.ForeignKey(DebateSide, on_delete=models.CASCADE, related_name='opinions')
     text = models.TextField()
-    thumbs_up = models.PositiveIntegerField(default=0)
-    thumbs_down = models.PositiveIntegerField(default=0)
     author = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
 

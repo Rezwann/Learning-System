@@ -84,13 +84,16 @@ class SubjectSerializer(serializers.ModelSerializer):
     subject_leader_email = serializers.CharField(source='subject_leader.email')
     YEAR_CHOICES = Subject.YEAR_CHOICES
     SUBJECT_CHOICES = Subject.SUBJECT_CHOICES
-
+    users = serializers.SerializerMethodField()
 
     class Meta:
         model = Subject
         fields = ('id', 'name', 'details', 'category', 'category_name', 'year_group', 
                   'subject_leader_name', 'subject_leader', 'subject_leader_email',
-                  'subject_code', 'YEAR_CHOICES', 'SUBJECT_CHOICES',)
+                  'subject_code', 'YEAR_CHOICES', 'SUBJECT_CHOICES','users')
+
+    def get_users(self, obj):
+        return [{'id': user.id, 'username': user.username, 'role': user.role} for user in obj.users.all()]
 
 class SubjectCategorySerializer(serializers.ModelSerializer):
     CATEGORY_CHOICES = SubjectCategory.CATEGORY_CHOICES
@@ -100,10 +103,15 @@ class SubjectCategorySerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'CATEGORY_CHOICES')
 
 class OpinionSerializer(serializers.ModelSerializer):
+    author = serializers.SerializerMethodField()
+
+    def get_author(self, obj):
+        return obj.author.username
+    
     class Meta:
         model = Opinion
-        fields = '__all__'
-
+        fields = ('id', 'debate_side','text', 'author', 'created_at')
+                
 class DebateSideSerializer(serializers.ModelSerializer):
     opinions = OpinionSerializer(many=True, read_only=True)
     
