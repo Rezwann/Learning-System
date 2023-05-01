@@ -28,14 +28,11 @@
       <h6>Learning Activity Vocabulary Sheet Group (CDs considered): {{selectedStudentVocabularyGroup}}</h6>
       <h6>Average CDs (Communication Channel Access): {{selectedStudentAverageCD}}</h6>
       <h6 class="text-muted">Communication Channel Access (specific support system):</h6>
-      <li class="text-muted">Average CDs: 25 🦈,</li>        
-      <li class="text-muted">Average CDs: 50 🦈🐅</li>
-      <li class="text-muted">Average CDs: 75 🦈🐅🦒</li>
-      <li class="text-muted">Average CDs above: 🦈🐅🦒🐧</li>        
+      <li class="text-muted">Average CDs: 25 🦈,</li><li class="text-muted">Average CDs: 50 🦈🐅</li>
+      <li class="text-muted">Average CDs: 75 🦈🐅🦒</li><li class="text-muted">Average CDs above: 🦈🐅🦒🐧</li>        
     </div>
   </div>
-  <div class="col-md-6">
-    <h4>Update {{selectedStudent}}'s Levels</h4>
+  <div class="col-md-6"><h4>Update {{selectedStudent}}'s Levels</h4>
     <div id="updatingcogvalues" class="card p-3" style="height: 82.5vh">
       <p class="mt-3">{{CDs[0]}}: {{selectedVM}}</p>   
       <input type="range" class="form-range" min="1" max="100" step="1" v-model="selectedVM">
@@ -56,6 +53,7 @@
       <button @click="updateStudentNeuroBackground" class="btn btn-danger mt-3">Update Levels</button>
     </div>
   </div>
+
   <div class="card mt-3 p-3 mx-auto" style="width:80vw;">
   <h4>{{selectedStudent}}'s Desired Engagement Type</h4>
   <div class="d-flex flex-wrap align-items-center">
@@ -68,13 +66,16 @@
           <div v-if="selectedStudentEngagementInstances.length === 0">
   <h4 class="justify-content-center">{{selectedStudent}} has not previously set an engagement preference</h4>
 </div>
-  <div v-for="instance in selectedStudentEngagementInstances" :key="instance.id">
+<div>
+<div v-for="instance in selectedStudentEngagementInstances" :key="instance.id">
     <div class="mx-3">
       <div class="col-12 row mt-2">
           <div class="card shadow-xxl alert alert-warning" style="height: 8vh;">
     <p>Chosen Type: {{ instance.chosen_type }} | Time Chosen: {{timeElapsed(instance.time_chosen)}}</p></div>
 </div>      </div>
 </div>
+</div>
+
   </div>
 </div>
 <h5 class="card-title">{{selectedStudent}}'s Desired Engagement Type Visualisation:</h5>
@@ -144,6 +145,11 @@
   <h5 class="alert alert-warning mt-3" v-else>No teacher comments</h5>
 </div>
 </div></div>
+
+
+
+
+
       </div>
     </div>
   </div>
@@ -323,8 +329,7 @@ export default {
   methods: {   
     async setupEHCP(){
             if (this.setEHCPinterest && this.setEHCPaspiration && this.setEHCPview){
-            await axios.post('api/v1/LP/setEHCP/', 
-            
+            await axios.post('api/v1/LP/setEHCP/',             
             {studentname:this.selectedStudent, ehcpInterest: this.setEHCPinterest,
               ehcpAspiration: this.setEHCPaspiration, ehcpView: this.setEHCPview            
             })
@@ -340,9 +345,7 @@ export default {
             this.setEHCPinterest = ''
             this.setEHCPaspiration = ''
             this.setEHCPview = ''
-            } else {
-                this.errorMessage = 'All three EHCP fields are required';
-              }              
+            } else { this.errorMessage = 'All three EHCP fields are required'; }              
         },
     async addCommentEHCP(){
         if (this.setEHCPSection && this.setEHCPComment){
@@ -353,25 +356,12 @@ export default {
         }).catch(error =>{
             if(error.response){
                 for (const property in error.response.data){
-                    this.errors.push(`${property}: ${error.response.data[property]}`)
-                }
-            }
+                    this.errors.push(`${property}: ${error.response.data[property]}`)}}
         })
         this.errorMessage = '';
         this.setEHCPSection = ''
         this.setEHCPComment = ''
-        } else {
-            this.errorMessage = 'Both fields are required';
-          }              
-    },
-
-    timeElapsed(created_at) {
-            const currentDate = moment()
-            const createdAt = moment(created_at)
-            const date = createdAt.format('MMM D, YYYY [at] h:mm A')
-            const elapsed = moment.duration(currentDate.diff(createdAt)).humanize()
-                    return `${date} (${elapsed} ago)`
-        },
+        } else { this.errorMessage = 'Both fields are required'; }  },
         
         async submitNewBoard(){
             if (this.addBoardForm.name && this.addBoardForm.short_description){
@@ -391,6 +381,14 @@ export default {
                 this.errorMessage = 'Both fields are required';
               }
         },
+
+        timeElapsed(created_at) {
+            const currentDate = moment()
+            const createdAt = moment(created_at)
+            const date = createdAt.format('MMM D, YYYY [at] h:mm A')
+            const elapsed = moment.duration(currentDate.diff(createdAt)).humanize()
+                    return `${date} (${elapsed} ago)`
+        },
     async showEngagementVisualisation(){
           this.optionsEngagement = {
         chart: { type: 'area',
@@ -403,7 +401,6 @@ export default {
     text: this.selectedStudent,
     align: 'center'
   },
-
   dataLabels: {
     enabled: false
   },
@@ -413,7 +410,6 @@ export default {
   }   
   },
       };
-
       this.seriesEngagement = [
         {
           name: 'Count',
@@ -563,14 +559,9 @@ export default {
     categories: CDs,
   },
       };
-
       this.series = [
-        {
-          name: 'Level',
-          data: [this.selectedVM, this.selectedNVM, this.selectedVP, this.selectedVIPS,
-          this.selectedN, this.selectedL, this.selectedEF,
-          this.selectedVR]
-        }
+        { name: 'Level', data: [this.selectedVM, this.selectedNVM, this.selectedVP, this.selectedVIPS,
+          this.selectedN, this.selectedL, this.selectedEF, this.selectedVR]}
       ];
         },    
         }

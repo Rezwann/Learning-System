@@ -19,21 +19,10 @@ axios.defaults.baseURL = 'http://127.0.0.1:8000'
 
 const router = createRouter({
     history: createWebHistory(),
-    routes: [{
-            path: '/',
-            name: 'Home',
-            component: Home
-        },
-        {
-            path: '/register',
-            name: 'Register',
-            component: Register
-        },
-        {
-            path: '/login',
-            name: 'Login',
-            component: Login
-        },
+    routes: [
+        { path: '/', name: 'Home', component: Home },
+        { path: '/register', name: 'Register', component: Register },
+        { path: '/login', name: 'Login', component: Login },
         {
             path: '/studentprofile',
             name: 'StudentProfile',
@@ -86,5 +75,4 @@ router.beforeEach((to, from, next) => {
 })
 
 createApp(App).use(store).use(router, axios).use(VCalendar, {}).mount('#app')
-
 import 'bootstrap/dist/js/bootstrap.js'

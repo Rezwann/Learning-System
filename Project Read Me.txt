@@ -1,0 +1,10 @@
+This project's front end code can be found in vitefrontend. Final and Main folders contain Django files (back end code). To run this project you should install the requirements.txt file (PIP install -r requirements.txt). Also, you will need to install the dependencies used for this project (npm install). These dependencies can be found in a file called package.json and package-lock.json
+
+Environment project was developed in:
+Anaconda Prompt (miniconda3) was used as terminal to run django backend code (going to Main folder and running manage.py runserver). Before this you can create an admin user (manage.py createsuperuser) to access a django admin page (http://127.0.0.1:8000/admin/). Here it will be possible to create users with teacher role and student role.
+
+To run backend code, a conda environment was first created and then used: conda create --name environment_name
+
+A normal terminal was used to run front end code (going to vitefrontend directory and doing npm run dev to access http://127.0.0.1:5173/). This will require dependencies to be installed.
+
+You may try to access django admin page with: username - admin and password - admin. You can also try: username - Harry and password - chicken500.

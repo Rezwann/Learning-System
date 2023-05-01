@@ -6,10 +6,8 @@
     <div class="alert alert-success" role="alert">
   <h4 class="alert-heading">Hello!</h4>
   <hr>
-  <h6 class="alert-heading">You must register an account or login.</h6>
-  <h6 class="alert-heading">Teacher users should be externally provided credentials.</h6>
-
-  <p class="mb-0">.</p>
+  <h6 class="alert-heading text-center">You may register an account or login. However, this platform assumes you have been provided credentials.</h6>
+  <p class="mb-0"></p>
 </div>
 </div>
 </template>

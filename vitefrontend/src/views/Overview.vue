@@ -13,10 +13,7 @@
   <div class="row">  
     <div class="col-4 mb-3">
   <label class="mb-1">Subject Choice</label>
-  <select
-      v-model="createSubject.subjectchoice"
-      class="form-select form-select mb-3"
-      aria-label=".form-select"
+  <select v-model="createSubject.subjectchoice" class="form-select form-select mb-3" aria-label=".form-select"
     >
       <option selected disabled value="">Select from subject choice</option>
       <option v-for="choice in subjectChoices" :key="choice" :value="choice">
@@ -27,35 +24,23 @@
 
 <div class="col-4 mb-3">
   <label class="mb-1">Year Group</label>
-  <select
-      v-model="createSubject.yearchoice"
-      class="form-select form-select mb-3"
-      aria-label=".form-select"
-    >
+  <select v-model="createSubject.yearchoice" class="form-select form-select mb-3" aria-label=".form-select">
       <option selected disabled value="">Select from year groups</option>
       <option v-for="choice in yearChoices" :key="choice" :value="choice">
         {{choice}}
       </option>
     </select>
 </div>  
-
     <div class="col-4 mb-3">
   <label class="mb-1">Subject Category</label>
-  <select
-      v-model="createSubject.categorychoice"
-      class="form-select form-select mb-3"
-      aria-label=".form-select"
-    >
+  <select v-model="createSubject.categorychoice" class="form-select form-select mb-3" aria-label=".form-select">
       <option selected disabled value="">Select from subject categories</option>
       <option v-for="choice in subjectAreasForCreating" :key="choice" :value="choice">
         {{choice}}
       </option>
     </select>
 </div>
-
-<div class="d-flex justify-content-center">
-  <button class="btn btn-success">Create Subject</button>
-</div>
+<div class="d-flex justify-content-center"><button class="btn btn-success">Create Subject</button></div>
 <span class="text-center error" v-if="errorMessage">{{ errorMessage }}</span>
 </div>
 </form>
@@ -64,13 +49,10 @@
 
   <div>
     <ul class=" col d-flex justify-content-center mb-4 mt-2 mx-2 list-group list-group-horizontal">
-
       <li class="btn list-group-item mx-1" :class="{'active': currentSubjectArea === ''}" @click="filterSubjects('')">All
           <span class="badge bg-secondary rounded-pill">{{subjects.length}}</span>
       </li>        
-
       <div v-for="area in subjectAreas">
-
           <li class="btn list-group-item mx-1" :class="{'active': area.name === currentSubjectArea}" @click="filterSubjects(area.name)">{{area.name}}
           </li> 
       </div>
@@ -88,8 +70,6 @@
             ⭐ {{subject.name}} ({{subject.subject_code}}) - {{subject.category_name}}
           </button>
         </h2>
-
-
         <div v-bind:id="'accordion-item-' + subject.id" class="accordion-collapse collapse" data-bs-parent="#main-accordion" v-bind:aria-labelledby="'accordion-item-' + subject.id">
 
           <div class="accordion-body">
@@ -141,9 +121,7 @@
 <div class="col-4 rounded scrollable-g" style="height: 45vh; background-color: var(--dark-purple);">
   <nav class="flex-column mt-4">
     <nav class="nav flex-column mx-2">
-
-      <div v-for="Area in communicationArea.communicationAreas">   
-      
+      <div v-for="Area in communicationArea.communicationAreas">         
         <div v-if="Area.related_subject_id == subject.id">
   <h6 class="text-white font-weight-bold">{{Area.name}}</h6>
   <a class="nav-link text-white font-weight-bold rounded mt-2" style="background-color: var(--dark-gray);">Channels</a>  
@@ -174,7 +152,6 @@
         <div v-for="user in users">
   <img v-if="post.author_username == user.username" class="img rounded mx-2" style="width: 4vw" :src="'http://127.0.0.1:8000'+ user.profile_image_url">
 </div>
-
         <div>
           <h6 class="p-2">{{post.author_username}} ({{ post.author_role }}) <span class="text-muted p-1"> - {{timeElapsed(post.created_at)}}</span></h6>
         </div>
@@ -183,7 +160,6 @@
     </div>
           </div></div>                
 </div>
-
   <div class="p-3 mt-2 rounded" style="background-color: var(--dark-purple);">
         <!-- Input field for posting messages -->
         <form @submit.prevent="addChannelPost()">
@@ -193,7 +169,6 @@
       </div>
     </form>            
   </div>
-
 </div>  
 </div>
 </div>
@@ -243,8 +218,6 @@
     <button type="submit" class="btn btn-success mt-2" disabled>Contribute to debate side</button>
   </div>
 </form>
-
-
   </div>
 </div>
 </div>
@@ -304,7 +277,7 @@ export default {
     this.users = response.data
   })
 
-    await axios.get('/api/v1/LP').then(response => {
+    await axios.get('/api/v1/LP').then(response => { // get_subjects
       this.subjects = response.data
       this.filteredSubjects = this.subjects
     })
@@ -382,18 +355,15 @@ export default {
       this.communicationArea.currentChannel = channel;
       this.communicationArea.currentChannelID = channel.id;
       this.communicationArea.displayChannelClicked = true;
-      this.communicationArea.currentChannelName = channel.name;
-      
+      this.communicationArea.currentChannelName = channel.name;      
       await axios.post('api/v1/LP/getCommunicationChannelPosts/', {num:channel.id})
         .then(response => {
-          this.communicationArea.currentChannelPosts = response.data
-    })        
+          this.communicationArea.currentChannelPosts = response.data })        
 },
   async addChannelPost(){
     if (this.communicationArea.currentChannelID){
       await axios.post('api/v1/LP/addCommunicationChannelPost/', {num:this.communicationArea.currentChannelID, content:this.communicationArea.channelPost})
-        .then(response => {
-    })     
+        .then(response => {})     
     this.displayChannel(this.communicationArea.currentChannel) 
     this.communicationArea.channelPost = '' 
     }  
@@ -405,14 +375,10 @@ export default {
       this.communicationArea.displayChannelClicked = false;
       this.communicationArea.currentChannelName = 'Browse a channel',
     await axios.get('/api/v1/LP/getCommunicationAreas/').then(response => {
-      this.communicationArea.communicationAreas = response.data
-    })
-
+      this.communicationArea.communicationAreas = response.data })
     await axios.get('/api/v1/LP/getCommunicationChannels/').then(response => {
       this.communicationArea.communicationChannels = []
-      this.communicationArea.communicationChannels = response.data
-      
-    })
+      this.communicationArea.communicationChannels = response.data })
   },
   toggleCommunicationArea() {
     this.communicationArea.showCommunicationArea = !this.communicationArea.showCommunicationArea;
@@ -436,9 +402,9 @@ background-color: #6800d7;
 }
 
 :root {
-  --light-gray: #4b009b;
-  --dark-gray: #6800d7;
-  --dark-purple: #2d005d;
+  --light-gray: #00469b;
+  --dark-gray: #5480af;
+  --dark-purple: #002f5d;
   --dark-green: rgb(0, 158, 13);
   --dark-blue: #2361d4;
 }

@@ -35,6 +35,10 @@
       Your engagement type has been updated. This will be reflected in the profile information your teacher has access to.
       <button type="button" class="p-2 btn-close" @click="showAlert = false"></button>
     </div>
+
+
+
+    
     <div class="container-md mt-3 card p-3">
     <h4 class="alert-heading">Your EHCP</h4>
 

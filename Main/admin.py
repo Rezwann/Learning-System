@@ -7,7 +7,6 @@ from .models import  LearningBoardWorkspace, EngagementInstance, DebatingArea
 from .models import EHCP_View, EHCP_Interest, EHCP_Aspiration, EHCP_TeacherComment
 from .models import DebatingArea, DebateSide, DebatingContribution, Opinion
 
-
 class CustomUserAdmin(UserAdmin):
     model = CustomUser
 
@@ -28,13 +27,10 @@ class CustomUserAdmin(UserAdmin):
     )
 
     list_display = ('username', 'email', 'first_name', 'last_name', 'is_staff')
-
 class CommunicationAreaAdmin(admin.ModelAdmin):
     list_display = ('related_subject',)
-
 class ChannelAdmin(admin.ModelAdmin):
     list_display = ('communication_area', 'name', 'short_description')
-
 class PostAdmin(admin.ModelAdmin):
     list_display = ('channel', 'author', 'content', 'created_at')
 

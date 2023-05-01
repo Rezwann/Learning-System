@@ -57,7 +57,7 @@
                 <div class="card mt-3 p-3 shadow-sm alert alert-info">
                   
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-            <button class="btn btn-sm btn-danger mx-1" @click="deleteCard(card.id)">Delete Card</button>            
+            <button class="btn btn-sm btn-danger mx-1 mb-3" @click="deleteCard(card.id)">Delete Card</button>            
         </div>        
                     <h6 class="card-title">{{card.name}}</h6>
                   <p class="card-text">{{card.short_description}}</p>
@@ -69,13 +69,16 @@
       <h6>{{ list.name }}</h6>
       <p>{{list.short_description}}</p>
     </div>
+    <div class="card shadow-sm alert alert-danger">
 
     <div v-for="item in LearningBoardsCardsListsItems">
       <div v-if="item.learning_board_card_list_id == list.id">
+        <div class="card alert alert-light">
         <li>{{item.name}}</li>
+</div>
       </div>                        
     </div>
-
+</div>
     <template v-if="!LearningBoardsCardsListsItems.some(item => item.learning_board_card_list_id == list.id)">
       <p>An item is yet to be added to this list</p>
     </template>
@@ -87,9 +90,9 @@
               </div>
             </div>
 
-            
   <form v-if="currentBoardForm === board.id" @submit.prevent="addCard(board.id);">
-  <div class="">
+    <span class="text-center error" v-if="errorCardMessage">{{ errorCardMessage }}</span>
+    <div class="">
     <label class="">Name</label>
     <input type="text" name="name" class="form-control" v-model="newCard.name" placeholder="Name">
   </div>
@@ -101,11 +104,10 @@
     <button class="btn btn-success" @click="currentBoardForm = board.id">Add Card</button>
   </div>
 </form>
-
+  
 <button class="btn btn-sm btn-primary my-2" @click="currentBoardForm = currentBoardForm === board.id ? null : board.id">
   {{ currentBoardForm === board.id ? 'Hide' : 'Show' }} Add Card Form
 </button>
-
         </div>
     </div>
       </div>
@@ -121,6 +123,7 @@
     data() {
       return {
         errorMessage:'',
+        errorCardMessage:'',
         currentBoardForm: null,
         newCard: {
         board_id: null,
@@ -157,49 +160,36 @@
             }).catch(error =>{
                 if(error.response){
                     for (const property in error.response.data){
-                        this.errors.push(`${property}: ${error.response.data[property]}`)
-                    }
-                }
-            })
+                        this.errors.push(`${property}: ${error.response.data[property]}`)}}})
             this.errorMessage = '';
             this.addBoardForm = {};
-            } else {
-                this.errorMessage = 'Both fields are required';
-              }
+            } else { this.errorMessage = 'Both fields are required'; }
 
             await axios.get('api/v1/LP/getLearningBoards/').then(response => {
-            this.LearningBoards = response.data
-            })
-        },
-        
+            this.LearningBoards = response.data })
+        },        
         async deleteBoard(id) { 
           await axios.post('api/v1/LP/deleteLearningBoard/', {num:id})
-          .then(response => {
-          })
-
+          .then(response => {})
           await axios.get('api/v1/LP/getLearningBoards/').then(response => {
-            this.LearningBoards = response.data
-          })
+            this.LearningBoards = response.data })
         },
         async deleteCard(id) { 
           await axios.post('api/v1/LP/deleteLearningBoardCard/', {num:id})
-          .then(response => {
-          })
-
+          .then(response => {})
           await axios.get('api/v1/LP/getLearningBoardsCards/').then(response => {
-            this.LearningBoardsCards = response.data
-          })
+            this.LearningBoardsCards = response.data })
         },
         async addCard(id) { 
-          await axios.post('api/v1/LP/addLearningBoardCard/', {num:id, name:this.newCard.name, description:this.newCard.description})
-          .then(response => {
-          })
 
+          if (this.newCard.name && this.newCard.description){
+          await axios.post('api/v1/LP/addLearningBoardCard/', {num:id, name:this.newCard.name, description:this.newCard.description})
+          .then(response => {})
           this.newCard = { name: '', description: '' };
           this.currentBoardForm = null;          
           await axios.get('api/v1/LP/getLearningBoardsCards/').then(response => {
-            this.LearningBoardsCards = response.data
-          })
+            this.LearningBoardsCards = response.data })
+            } else { this.errorCardMessage = 'Both fields are required'; }
         },
     },
     async mounted() {
@@ -252,7 +242,7 @@ max-width: 100%;
 
 .scrollable {
   overflow-y: scroll;
-  max-height: 65vh; 
+  max-height: 55vh; 
 
 }
 

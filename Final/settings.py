@@ -1,17 +1,9 @@
 import os
-"""
-Django settings for Final project.
-"""
-import datetime
 from pathlib import Path
-
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 SECRET_KEY = 'django-insecure-5su5g%&qwqqejo+j-_(d=0@qb!m)x7e^q@ois7pgh*xt#8*f*^'
 DEBUG = True
-
 ALLOWED_HOSTS = []
-
 CORS_ALLOWED_ORIGINS = [ "http://localhost:5173","http://127.0.0.1:5173",
                         "http://localhost:8000","http://127.0.0.1:8000"]
 
@@ -45,8 +37,6 @@ GRAPH_MODELS ={
      }
 
 AUTH_USER_MODEL = 'Main.CustomUser'
-
-
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
@@ -57,9 +47,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-
 ROOT_URLCONF = 'Final.urls'
-
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -77,14 +65,12 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'Final.wsgi.application'
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -103,13 +89,9 @@ AUTH_PASSWORD_VALIDATORS = [
 
 
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
 USE_TZ = True
-
 STATIC_URL = 'static/'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'static_cdn', 'media_root')

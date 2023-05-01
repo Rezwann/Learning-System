@@ -3,8 +3,7 @@
     <div v-bind:key="font" v-bind:style="{ fontFamily: font}">
     <div class="navbar navbar-expand navbar-light bg-indigo-800">
       <h4 class="mx-4 mt-2 text-white me-auto">Rezwan: Learning Platform 🙂</h4>
-            <div class="navbar-nav ml-auto mx-4 mb-1 mt-1">
-              
+            <div class="navbar-nav ml-auto mx-4 mb-1 mt-1">              
               <button class="btn btn-success nav-item nav-link text-white mx-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">Accessibility</button>
               <button type="button" class="btn btn-success nav-item nav-link text-white mx-2" data-bs-toggle="modal" data-bs-target="#exampleModal">
           View Key Dates
@@ -72,7 +71,6 @@
     <h6 class="ml-auto mx-3 mb-1 mt-1 text-white font-weight-bold" v-text="'Role: ' + currentUserRole"></h6>
   </div>
 </div>
-
 </template>
 
     <router-view>
@@ -89,7 +87,6 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-
         <div
     v-if='selectedDay'
     class='selected-day alert alert-info container-sm'>
@@ -119,7 +116,6 @@
     </ul>
   </div>
   <v-calendar is-expanded is-dark :attributes='attributes' @dayclick='dayClicked'></v-calendar>
-
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -137,9 +133,13 @@
   </div>
   <div class="offcanvas-body">
     <div>
-      <p>Some text as placeholder. In real life you can have the elements you have chosen. Like, text, images, lists, etc.</p>
-      <p><button class="btn btn-success text-white mx-2" v-on:click="changeSaturation">Toggle Dimmer</button></p>
-              <p><button class="btn btn-success text-white mx-2" @click="changeFont">Toggle Font Style</button></p>
+      <div class="my-2">
+  <button class="btn btn-success text-white mx-2" v-on:click="changeSaturation">Toggle Dimmer</button>
+</div>
+<div class="my-2">
+  <button class="btn btn-success text-white mx-2" @click="changeFont">Toggle Font Style</button>
+</div>
+
 <hr>
     </div>
   </div>  
@@ -214,13 +214,9 @@
       if (this.font !=='OpenDyslexic'){
       this.font = 'OpenDyslexic';
       }
-      else { 
-        this.font = this.defaultFont;
-      }
+      else { this.font = this.defaultFont; }
     },
-    dayClicked(day) {
-      this.selectedDay = day;
-    },
+    dayClicked(day) { this.selectedDay = day; },
     speakText(text) {
       if (text === '') {
         const speech = new SpeechSynthesisUtterance(this.guidanceText);
@@ -235,22 +231,14 @@
     beforeCreate() {
       this.$store.commit('initalizeStore')
       const token = this.$store.state.token
-  
-      if (token) {
-        axios.defaults.headers.common['Authorization'] = "Token " + token
-      } else {
-        axios.defaults.headers.common['Authorization'] = ""
-      }
-      
+      if (token) { axios.defaults.headers.common['Authorization'] = "Token " + token
+      } else { axios.defaults.headers.common['Authorization'] = "" }      
     }, 
     async mounted(){
       document.title = 'Rezwan: Learning Platform'
       const font = localStorage.getItem('font');
-        if (font) {
-          this.font = font;
-        } else {
-        this.font = this.defaultFont;
-      }
+        if (font) { this.font = font;
+        } else { this.font = this.defaultFont; }
     },
     watch: {
       font: {
@@ -262,7 +250,6 @@
         axios.get('/api/v1/LP/getCurrentUser/').then(response => {
         this.currentUser = response.data.username
         this.currentUserRole = response.data.role; 
-
       })
     },
     }
