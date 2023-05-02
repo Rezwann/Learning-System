@@ -146,10 +146,6 @@
 </div>
 </div></div>
 
-
-
-
-
       </div>
     </div>
   </div>
@@ -345,6 +341,18 @@ export default {
             this.setEHCPinterest = ''
             this.setEHCPaspiration = ''
             this.setEHCPview = ''
+
+            await axios.post('/api/v1/LP/getStudentEHCP/',{name:this.selectedStudent}).then(response => {
+            this.allSelectedStudentInformationEHCP = Object.values(response.data).map(ehcp => {
+        return {
+        student_views: ehcp.student_views,
+        student_interests: ehcp.student_interests,
+        student_aspirations: ehcp.student_aspirations,
+        teacher_comments: ehcp.teacher_comments
+        };
+        });
+      });
+
             } else { this.errorMessage = 'All three EHCP fields are required'; }              
         },
     async addCommentEHCP(){
@@ -361,8 +369,36 @@ export default {
         this.errorMessage = '';
         this.setEHCPSection = ''
         this.setEHCPComment = ''
+
+        await axios.post('/api/v1/LP/getStudentEHCP/',{name:this.selectedStudent}).then(response => {
+            this.allSelectedStudentInformationEHCP = Object.values(response.data).map(ehcp => {
+        return {
+        student_views: ehcp.student_views,
+        student_interests: ehcp.student_interests,
+        student_aspirations: ehcp.student_aspirations,
+        teacher_comments: ehcp.teacher_comments
+        };
+        });
+      });
+
+
         } else { this.errorMessage = 'Both fields are required'; }  },
         
+        async get_engagement_instances(){
+                  await axios.get('/api/v1/LP/getEngagementInstances/').then(response => {
+          this.EngagementInstances = response.data;
+          this.selectedStudentEngagementInstances = this.EngagementInstances
+            .filter(instance => instance.username === this.selectedStudent)
+            .map(instance => ({
+              id: instance.id,
+              username: instance.username,
+              chosen_type: instance.chosen_type,
+              time_chosen: instance.time_chosen
+            }))
+            .sort((a, b) => new Date(b.time_chosen) - new Date(a.time_chosen));
+        });
+        },
+
         async submitNewBoard(){
             if (this.addBoardForm.name && this.addBoardForm.short_description){
             await axios.post('api/v1/LP/addLearningBoardToStudent/',{boardinfo: this.addBoardForm, studentname:this.selectedStudent})
@@ -431,8 +467,6 @@ export default {
           .then(response => {
           })
           const studentName = this.selectedStudent
-
-          await this.resetSelectedStudent();
           await this.chooseSelectedStudent(studentName)
           await this.showEngagementVisualisation()
           await this.getStudentEHCP()
@@ -465,7 +499,7 @@ export default {
 
           })  
 
-          await axios.get('/api/v1/LP/getEngagementInstances/').then(response => {
+await axios.get('/api/v1/LP/getEngagementInstances/').then(response => {
   this.EngagementInstances = response.data;
   this.selectedStudentEngagementInstances = this.EngagementInstances
     .filter(instance => instance.username === this.selectedStudent)

@@ -19,6 +19,9 @@ from .serializers import EHCP_ViewSerializer, EHCP_InterestSerializer, EHCP_Aspi
 from .serializers import DebatingAreaSerializer, DebateSideSerializer, DebatingContributionSerializer, OpinionSerializer
 from django.shortcuts import get_object_or_404
 import math
+from better_profanity import profanity
+from textblob import TextBlob
+
 
 # Section 1: Subjects and Neuro background - API Views:
 
@@ -96,11 +99,12 @@ def add_channel_post(request):
     channel_passed = Channel.objects.get(id=request.data.get('num'))
     user = request.user    
     if (request.data.get('content') != ''):
-        new_post = Post.objects.create( channel = channel_passed, author = user, content = request.data.get('content'))    
+        profanity.load_censor_words()
+        content = request.data.get('content')        
+        censored_content = profanity.censor(content)
+        new_post = Post.objects.create(channel = channel_passed, author = user, content = censored_content)
         new_post.save()        
     return Response({'added:added'})
-
-
 
 # Section 3: Debating - API Views:
 
@@ -490,10 +494,38 @@ def add_learning_board_to_student(request):
         return Response({'error': 'User does not exist'}, status=status.HTTP_404_NOT_FOUND)    
     studentuser_workspace = studentuser.learningboardworkspace
     new_board = LearningBoard.objects.create(
-        name=name + " - " + teacher_name + " (Teacher)",
+        name=name + " - From Teacher: " + teacher_name,
         short_description=short_description,
         workspace=studentuser_workspace,
         board_type=request.user.role
     )
     serializer = LearningBoardSerializer(new_board)
     return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def remove_subject_area_members(request):
+    users_to_remove = request.data.get('usersToRemove')
+    print(users_to_remove)
+    SAI = request.data.get('SAI')    
+    subject_area = Subject.objects.get(id=SAI)
+    for user_dict in users_to_remove:
+        user_id = user_dict['id']
+        username = user_dict['username']
+        users = subject_area.users.filter(id=user_id, username=username)
+        for user in users:
+            subject_area.users.remove(user)    
+    return JsonResponse({'none': 'none'})
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def add_subject_area_members(request):
+    users_to_add = request.data.get('usersToAdd')
+    print(users_to_add)
+    SAI = request.data.get('SAI')    
+    subject_area = Subject.objects.get(id=SAI)        
+    for user_dict in users_to_add:
+        username = user_dict.get('username')
+        user = CustomUser.objects.get(username=username)
+        subject_area.users.add(user)        
+    return JsonResponse({'none': 'none'})

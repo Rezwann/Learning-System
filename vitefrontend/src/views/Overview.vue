@@ -5,7 +5,7 @@
 <div v-if="currentUserRole == 'Teacher'">
   <div class="card mt-3 p-3 mx-auto alert alert-warning" style="width:80vw;">
 <h6 class="card-subtitle text-muted text-center"> As you have {{currentUserRole}} role, you may create subject areas. 
-  These will be visible below with additional management options. You can search for a student in 'Manage Teaching' to add individual students to your created subject areas and for more specific learning management options.</h6>
+  These will be visible below with additional management options. You can search for a student in 'Manage Teaching' for more specific learning management options.</h6>
 </div>  
 <div class="card mt-3 p-3 alert alert-warning mx-auto" style="width:80vw;">
 <h4 class="text-center mb-4">Create a Subject Area</h4>
@@ -40,7 +40,7 @@
       </option>
     </select>
 </div>
-<div class="d-flex justify-content-center"><button class="btn btn-success">Create Subject</button></div>
+<div class="d-flex justify-content-center"><button class="btn btn-success">Create Subject Area</button></div>
 <span class="text-center error" v-if="errorMessage">{{ errorMessage }}</span>
 </div>
 </form>
@@ -94,17 +94,77 @@
 
 <div class="card alert alert-info">
 <div class="card-body">
-  <h5 class="card-title mb-3">Subject Area ({{subject.name}} {{subject.subject_code}}) Members:</h5>
+  <h5 class="card-title mb-3">Subject Area ({{subject.name}} {{subject.subject_code}}) - Existing Members:</h5>
   <div class="d-flex flex-wrap">
-    <div v-for="(user, index) in subject.users" :key="index" class="pill bg-primary text-white me-3 mb-2 p-2 rounded-pill">
-      <span class="username">{{ user.username }}</span>
-      <span class="role"> ({{ user.role }}{{ user.role === 'Student' ? ', Student ID: ' + user.id : '' }}) </span>
-      <span v-if="user.role == 'Teacher'"> &#x1F31F;</span>
-    </div>
-  </div>    
-</div>
+
+    <div :style="currentUserRole === 'Teacher' && user.role === 'Student' ? 'cursor: pointer;' : ''"
+     :class="user.role === 'Student' ? 'pill bg-primary text-white' : 'pill bg-light text-dark'"
+     @click="user.role === 'Student' ? selectMemberPillForRemove(user) : null"
+     v-for="(user, index) in subject.users" :key="index" class="me-3 mb-2 p-2 rounded-pill">
+
+  <span class="username">{{ user.username }}</span>
+  <span class="role">
+    ({{ user.role }}{{ user.role === 'Student' ? ', Student ID: ' + user.id : '' }})
+  </span>
+  <span v-if="user.role === 'Teacher'"> &#x1F31F;</span>
 </div>
 
+  </div>    
+  <div v-if="currentUserRole=='Teacher'">
+<ul class="list-group list-group-flush card m-3">
+    <h5 class="text-muted m-3">❌ Members To be removed:</h5>
+<span v-for="selectedUser in selectedRemoveUsers" :key="selectedUser.id">
+  <li class="list-group-item">👤 {{ selectedUser.username }} <button class="btn btn-sm btn-info mx-1 p-2 btn-close" @click="removeMemberPillForRemove(selectedUser.id)"></button></li>
+  </span>
+  <span v-if="selectedRemoveUsers.length <=0">
+            <h6 class="text-muted m-3">You have not selected any existing members to remove. Teacher users may not be removed once added.</h6>
+  </span>
+  <span v-if="selectedRemoveUsers.length > 0">
+            <h6 class="text-muted m-3">              
+              <button class="btn btn-sm btn-danger mx-1" @click="removeMembersFromSubjectArea(subject.id)">Remove Member(s) from {{subject.name}} {{subject.subject_code}} Subject Area</button>              
+              </h6>
+  </span>
+</ul></div>
+</div>
+
+</div>
+
+<div v-if="currentUserRole == 'Teacher'">
+<div class="card alert alert-info">
+<div class="card-body">
+  <h5 class="card-title mb-3">Subject Area ({{subject.name}} {{subject.subject_code}}) - Available Members to Add to Subject Area:</h5>
+
+  <div class="row">  
+  <div>
+    <div class="d-flex flex-wrap">
+    <div v-for="user in users" :key="user.id">     
+    <div style="cursor: pointer;" @click="selectMemberPillForAdd(user)" v-if="!subject.users.find(subjectUser => subjectUser.id === user.id)">
+      <div class="pill bg-dark text-white me-3 mb-2 p-2 rounded-pill">    
+    <span class="username">{{ user.username }}</span>
+    <span class="role"> ({{ user.role }}{{ user.role === 'Student' ? ', Student ID: ' + user.id : '' }}) </span>
+    <span v-if="user.role == 'Teacher'"> &#x1F31F;</span>
+  </div>  
+    </div></div>
+  </div>
+  </div>
+  
+</div>
+<ul class="list-group list-group-flush card m-3">
+    <h5 class="text-muted m-3">✅ Members To be added:</h5>
+<span v-for="selectedUser in selectedUsers" :key="selectedUser.id">
+  <li class="list-group-item">👤 {{ selectedUser.username }} <button class="btn btn-sm btn-info mx-1 p-2 btn-close" @click="removeMemberPillForAdd(selectedUser.id)"></button></li>
+  </span>
+  <span v-if="selectedUsers.length <=0">
+            <h6 class="text-muted m-3">You have not selected any from available members to add.</h6>
+  </span>
+  <span v-if="selectedUsers.length > 0">
+            <h6 class="text-muted m-3">              
+              <button class="btn btn-sm btn-success mx-1" @click="addMembersToSubjectArea(subject.id)">Add Member(s) to {{subject.name}} {{subject.subject_code}} Subject Area</button>              
+              </h6>
+  </span>
+</ul>
+</div>
+</div></div>
 
 <div class="d-flex justify-content-center">
 <button class="btn btn-dark mt-3" style="background-color: var(--dark-gray); width: 35vw;" data-bs-toggle="collapse" data-bs-target="#collapseExample" @click="toggleCommunicationArea">
@@ -144,7 +204,13 @@
     <h4>{{communicationArea.currentChannelName}}</h4>
     <div  class="scrollable-g mt-3" style="height: 40vh;">
       <div v-if="communicationArea.displayChannelClicked && communicationArea.currentChannelPosts.length === 0">
-        This channel has no content, feel free to add! </div><div v-else><div v-if="communicationArea.currentChannelPosts.length === 0">Browse one of the channels on the left hand side</div>
+        This channel has no content, feel free to add! </div><div v-else><div v-if="communicationArea.currentChannelPosts.length === 0">
+          
+          <ul class="list-group list-group-flush card m-3">
+  <li class="list-group-item">🔍 You can browse one of the channels on the left hand side.</li>
+  <li class="list-group-item">⚠️ This communication area filters offensive language.</li>
+</ul>
+        </div>
 </div>
     <div v-for="post in communicationArea.currentChannelPosts">
     <div class="alert alert-secondary mx-2">
@@ -163,11 +229,24 @@
   <div class="p-3 mt-2 rounded" style="background-color: var(--dark-purple);">
         <!-- Input field for posting messages -->
         <form @submit.prevent="addChannelPost()">
-      <div class="form-group">
-        <input v-model="communicationArea.channelPost" type="text" class="form-control" placeholder="Type a message...">
-        <button type="submit" class="text-white btn mt-2" style="background-color: var(--dark-blue)">Send</button>
-      </div>
-    </form>            
+    <div class="form-group">
+      <input
+        v-model="communicationArea.channelPost"
+        type="text"
+        class="form-control"
+        placeholder="Type a message..."
+        :disabled="!communicationArea.displayChannelClicked"
+      />
+      <button
+        type="submit"
+        class="text-white btn mt-2"
+        style="background-color: var(--dark-blue)"
+        :disabled="!communicationArea.displayChannelClicked"
+      >
+        Send
+      </button>
+    </div>
+  </form> 
   </div>
 </div>  
 </div>
@@ -238,6 +317,7 @@
 import axios from 'axios'
 import moment from 'moment'
 
+
 export default {
   name: 'Overview',
   data() {
@@ -246,6 +326,8 @@ export default {
       currentUser:'',
       currentUserRole:'',
       users: [],
+      selectedUsers: [],
+      selectedRemoveUsers: [],
       subjectAreas: [],
       subjects: [],
       filteredSubjects: [],
@@ -277,7 +359,7 @@ export default {
     this.users = response.data
   })
 
-    await axios.get('/api/v1/LP').then(response => { // get_subjects
+    await axios.get('/api/v1/LP').then(response => {
       this.subjects = response.data
       this.filteredSubjects = this.subjects
     })
@@ -318,6 +400,42 @@ export default {
     });
   },
   methods: {  
+    async removeMembersFromSubjectArea(subject_area_id){
+      await axios.post('api/v1/LP/removeMembersFromSubjectArea/', {SAI: subject_area_id, usersToRemove: this.selectedRemoveUsers})
+          .then(response => {
+          })
+          this.selectedRemoveUsers = []
+          await axios.get('/api/v1/LP').then(response => {
+           this.subjects = response.data
+           this.filteredSubjects = this.subjects
+           })
+    },
+    async addMembersToSubjectArea(subject_area_id) {
+      await axios.post('api/v1/LP/addMembersToSubjectArea/', {SAI: subject_area_id, usersToAdd: this.selectedUsers})
+          .then(response => {
+          })
+          this.selectedUsers = []
+          await axios.get('/api/v1/LP').then(response => {
+           this.subjects = response.data
+           this.filteredSubjects = this.subjects
+           })
+    },
+    async removeMemberPillForRemove(id) {
+      this.selectedRemoveUsers = this.selectedRemoveUsers.filter(selectedUser => selectedUser.id !== id);
+    },
+    async selectMemberPillForRemove(user) {
+      if (!this.selectedRemoveUsers.find(selectedUser => selectedUser.id === user.id)) {
+        this.selectedRemoveUsers.push({ id: user.id, username: user.username });
+      }
+    },
+    async removeMemberPillForAdd(id) {
+      this.selectedUsers = this.selectedUsers.filter(selectedUser => selectedUser.id !== id);
+    },
+    async selectMemberPillForAdd(user) {
+      if (!this.selectedUsers.find(selectedUser => selectedUser.id === user.id)) {
+        this.selectedUsers.push({ id: user.id, username: user.username });
+      }
+    },
     async createSubjectForOverview(){
      if (this.createSubject.subjectchoice
      && this.createSubject.categorychoice && this.createSubject.yearchoice){
@@ -391,7 +509,7 @@ filterSubjects(category) {
   } else {
     this.filteredSubjects = this.subjects.filter(subject => subject.category_name === category)
   }
-}
+},
 }
 }
 </script>

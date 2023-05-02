@@ -42,9 +42,12 @@ urlpatterns = [
     path('updateStudentNeuroBackground/', views.update_student_neuro_background, name="updateStudentNeuroBackground"),
     path('addLearningBoardToStudent/', views.add_learning_board_to_student, name="addLearningBoardToStudent"),    
     path('setEHCP/',views.setEHCP, name="setEHCP"),
-
+    
     path('getStudentEHCP/',views.get_student_EHCP, name="getStudentEHCP"),
     path('addCommentEHCP/',views.add_comment_EHCP, name="addCommentEHCP"),
     path('getGeneralSubjectInformation/', views.get_subject_general_info, name="getGeneralSubjectInformation"),
-    path('createSubject/', views.create_subject, name="createSubject")   
+    path('createSubject/', views.create_subject, name="createSubject"),
+
+    path('removeMembersFromSubjectArea/', views.remove_subject_area_members),
+    path('addMembersToSubjectArea/', views.add_subject_area_members)
 ]
