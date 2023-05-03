@@ -28,7 +28,7 @@
       <h6>Learning Activity Vocabulary Sheet Group (CDs considered): {{selectedStudentVocabularyGroup}}</h6>
       <h6>Average CDs (Communication Channel Access): {{selectedStudentAverageCD}}</h6>
       <h6 class="text-muted">Communication Channel Access (specific support system):</h6>
-      <li class="text-muted">Average CDs: 25 🦈,</li><li class="text-muted">Average CDs: 50 🦈🐅</li>
+      <li class="text-muted">Average CDs: 25 🦈</li><li class="text-muted">Average CDs: 50 🦈🐅</li>
       <li class="text-muted">Average CDs: 75 🦈🐅🦒</li><li class="text-muted">Average CDs above: 🦈🐅🦒🐧</li>        
     </div>
   </div>

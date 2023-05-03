@@ -240,7 +240,8 @@ def get_current_user(request):
         username = request.user.username
         role = request.user.role
         dct = request.user.debate_contribution_target
-        return Response({'username': username, 'role': role, 'dct': dct})
+        acd = request.user.averageCD
+        return Response({'username': username, 'role': role, 'dct': dct, 'acd':acd})
     else:
         return Response({'detail': 'Authentication credentials were not provided.'}, status=status.HTTP_401_UNAUTHORIZED)
 
@@ -528,4 +529,15 @@ def add_subject_area_members(request):
         username = user_dict.get('username')
         user = CustomUser.objects.get(username=username)
         subject_area.users.add(user)        
+    return JsonResponse({'none': 'none'})
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def update_debate_question(request):
+    DebatingAreaID = request.data.get('area_id')    
+    EditedQuestion = request.data.get('edited_question')    
+    print(EditedQuestion)
+    debating_area = DebatingArea.objects.get(id=DebatingAreaID)
+    debating_area.debate_question = EditedQuestion
+    debating_area.save()
     return JsonResponse({'none': 'none'})

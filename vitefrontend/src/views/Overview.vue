@@ -184,18 +184,47 @@
       <div v-for="Area in communicationArea.communicationAreas">         
         <div v-if="Area.related_subject_id == subject.id">
   <h6 class="text-white font-weight-bold">{{Area.name}}</h6>
+
   <a class="nav-link text-white font-weight-bold rounded mt-2" style="background-color: var(--dark-gray);">Channels</a>  
   <div v-for="channel in communicationArea.communicationChannels">
-  <div v-if="channel.communication_area_id == Area.id">
+    <div v-if="channel.communication_area_id == Area.id && (currentUserRole == 'Teacher')">      
     <nav class="nav flex-column mt-2 hover">
-            <a @click="displayChannel(channel)" class="btn nav-link ms-4 my-1 text-white rounded" style="background-color: var(--light-gray);">{{ channel.name }}</a>
-      </nav>        
-  </div>    
+      <a @click="displayChannel(channel)" class="btn nav-link ms-4 my-1 text-white rounded" style="background-color: var(--light-gray);">{{ channel.name }}</a>
+      </nav>    
+      </div>
+      <div v-if="channel.communication_area_id == Area.id && (currentUserRole == 'Student')">      
+        <div v-if="channel.name.includes('Main Channel')">
+          <nav class="nav flex-column mt-2 hover">
+      <a @click="displayChannel(channel)" class="btn nav-link ms-4 my-1 text-white rounded" style="background-color: var(--light-gray);">{{ channel.name }}</a>
+      </nav>             
+        </div>
+
+        <div v-if="averageCD <=25 && channel.name.includes('🦈')">
+  <nav class="nav flex-column mt-2 hover">
+      <a @click="displayChannel(channel)" class="btn nav-link ms-4 my-1 text-white rounded" style="background-color: var(--light-gray);">{{ channel.name }}</a>
+      </nav>     
+</div>
+<div v-if="(averageCD >25) && (averageCD <= 50) && (channel.name.includes('🦈') || (channel.name.includes('🐅')))">
+  <nav class="nav flex-column mt-2 hover">
+      <a @click="displayChannel(channel)" class="btn nav-link ms-4 my-1 text-white rounded" style="background-color: var(--light-gray);">{{ channel.name }}</a>
+      </nav>     
+</div>
+<div v-if="(averageCD >50) && (averageCD <= 75) && (channel.name.includes('🦈') || (channel.name.includes('🐅')) || (channel.name.includes('🦒')))">
+  <nav class="nav flex-column mt-2 hover">
+      <a @click="displayChannel(channel)" class="btn nav-link ms-4 my-1 text-white rounded" style="background-color: var(--light-gray);">{{ channel.name }}</a>
+      </nav>     
+</div>
+<div v-if="(averageCD >75) && (channel.name.includes('🦈') || (channel.name.includes('🐅')) || (channel.name.includes('🦒')) || (channel.name.includes('🐧')))">
+  <nav class="nav flex-column mt-2 hover">
+      <a @click="displayChannel(channel)" class="btn nav-link ms-4 my-1 text-white rounded" style="background-color: var(--light-gray);">{{ channel.name }}</a>
+      </nav>     
+</div>
+    </div>
   </div>
 </div>
 </div>
     </nav>
-  </nav>
+  </nav>  
 </div>
 
 <!-- communication area main content -->
@@ -207,9 +236,11 @@
         This channel has no content, feel free to add! </div><div v-else><div v-if="communicationArea.currentChannelPosts.length === 0">
           
           <ul class="list-group list-group-flush card m-3">
-  <li class="list-group-item">🔍 You can browse one of the channels on the left hand side.</li>
-  <li class="list-group-item">⚠️ This communication area filters offensive language.</li>
+  <li class="list-group-item h5 text-muted m-2">🔍 You can browse one of the channels on the left hand side.</li>
+  <li class="list-group-item h5 text-muted m-2">⚠️ This communication area filters offensive language.</li>    
+  <li v-if="currentUserRole == 'Teacher'" class="list-group-item h5 text-muted m-2">👨🏻‍🎓 Your students (in {{subject.name}} {{subject.subject_code}}) will have access to specific channels (see Manage Teaching).</li>
 </ul>
+
         </div>
 </div>
     <div v-for="post in communicationArea.currentChannelPosts">
@@ -262,10 +293,28 @@
 <div class="alert alert-success collapse" id="debateCollapse">
 <div class="row">
     <div v-for="area in debatingAreas" :key="area.id">
-
       <div v-if="area.related_subject === subject.id">
-        <h1 class="text-center mb-4"><strong>Debate question: </strong>{{ area.debate_question }}</h1>
-    <div class="card mt-3 p-3 mx-auto" style="width:60vw;">
+        <div v-if="!editingQuestion">
+        <h1 class="text-center mb-4"><strong>Debate Question: </strong>{{ area.debate_question }}
+        <span v-if="currentUserRole == 'Teacher'"><button class="text-center mt-3 badge justify-content-center alert alert-warning" @click="startEditingDebateQuestion(area.id)">Edit Debate Question</button>
+</span></h1>
+        </div>
+        <div v-else>
+        <form @submit.prevent="updateDebateQuestion(area.id)">
+          <div class="form-group">
+            <label>Debate question:</label>
+            <input type="text" class="form-control" v-model="editedQuestion">
+          </div>
+          <div class="d-flex btn-group justify-content-center">
+            <button type="submit" class="justify-content-center btn btn-success mt-3">Update {{subject.name }} ({{subject.subject_code}}) Debate Question</button>
+            <button type="button" class="justify-content-center btn btn-light mt-3" @click="cancelEditingDebateQuestion()">Cancel Editing</button>
+          </div>
+        </form>
+        <span class="text-center error" v-if="errorMessage">{{ errorMessage }}</span>
+
+      </div>
+
+        <div class="card mt-3 p-3 mx-auto" style="width:60vw;">
       <div v-if="currentUserRole == 'Teacher'">
         <h5 class="text-center mb-4 text-muted">Pesonal Target Contribution: Students will see a target based on their CD values (see 'Manage Teaching')</h5>
       <div class="card alert alert-warning text-center">Here will be a progress bar showing how far away students are for each subject.</div>        
@@ -317,7 +366,6 @@
 import axios from 'axios'
 import moment from 'moment'
 
-
 export default {
   name: 'Overview',
   data() {
@@ -325,6 +373,7 @@ export default {
       errorMessage:'',
       currentUser:'',
       currentUserRole:'',
+      averageCD:0,
       users: [],
       selectedUsers: [],
       selectedRemoveUsers: [],
@@ -351,7 +400,9 @@ export default {
       subjectChoices:[],
       yearChoices:[],
       debatingAreas:[],
-      debateTarget:0
+      debateTarget:0,
+      editingQuestion: false,
+      editedQuestion: ''
     }
   },
   async mounted() {
@@ -376,8 +427,6 @@ export default {
     await axios.get('/api/v1/LP/getDebatingAreas/').then(response => {
       const { debating_areas, debate_sides, opinions } = response.data;
       this.debatingAreas = debating_areas;
-
-
       });
       
   },
@@ -391,6 +440,7 @@ export default {
       this.currentUser = response.data.username
       this.currentUserRole = response.data.role
       this.debateTarget = response.data.dct
+      this.averageCD = response.data.acd
     });
 
     axios.get('/api/v1/LP/getGeneralSubjectInformation/').then(response => {
@@ -400,6 +450,37 @@ export default {
     });
   },
   methods: {  
+    async updateDebateQuestion(area_id) {
+      if (this.editedQuestion){
+        await axios.post('api/v1/LP/updateDebateQuestion/', {area_id: area_id, edited_question: this.editedQuestion})
+            .then(response => {
+
+              console.log(area_id)
+              console.log(this.edited_question)
+              this.cancelEditingDebateQuestion()
+            }).catch(error =>{
+                if(error.response){
+                    for (const property in error.response.data){
+                        this.errors.push(`${property}: ${error.response.data[property]}`)}}})
+            this.errorMessage = '';
+
+      await axios.get('/api/v1/LP/getDebatingAreas/').then(response => {
+        const { debating_areas, debate_sides, opinions } = response.data;
+        this.debatingAreas = debating_areas;
+        });
+
+      } else {this.errorMessage = 'You must enter a valid debate question'; }
+    },
+
+    async cancelEditingDebateQuestion() {
+      this.editingQuestion = false
+    },
+    async startEditingDebateQuestion(area_id){
+      const debatingArea = this.debatingAreas.find(area => area.id === area_id)
+      this.editingQuestion = true
+      this.editedQuestion = debatingArea.debate_question
+    },
+
     async removeMembersFromSubjectArea(subject_area_id){
       await axios.post('api/v1/LP/removeMembersFromSubjectArea/', {SAI: subject_area_id, usersToRemove: this.selectedRemoveUsers})
           .then(response => {

@@ -49,5 +49,6 @@ urlpatterns = [
     path('createSubject/', views.create_subject, name="createSubject"),
 
     path('removeMembersFromSubjectArea/', views.remove_subject_area_members),
-    path('addMembersToSubjectArea/', views.add_subject_area_members)
+    path('addMembersToSubjectArea/', views.add_subject_area_members),    
+    path('updateDebateQuestion/', views.update_debate_question)
 ]
