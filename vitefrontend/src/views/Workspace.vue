@@ -63,7 +63,7 @@
                   <p class="card-text">{{card.short_description}}</p>
                   <div v-if="card.file_attachment">
                     <h6 class="card-title">Card File:</h6>
-  <a :href="'http://127.0.0.1:8000' + card.file_attachment" target="_blank">Download {{card.file_attachment.replace('/media/card_attachments/', '')}}</a>
+  <a :href="'http://127.0.0.1:8000' + card.file_attachment" target="_blank">{{card.file_attachment.replace('/media/card_attachments/', '')}}</a>
 </div>
                     <div class="card-body">
                       <div v-for="list in LearningBoardsCardsLists">
@@ -159,6 +159,7 @@
     },
     methods: {         
       CardFileAttachment(event) {
+        event.preventDefault();
         this.newCard.file_attachment = event.target.files[0];
       },
         timeElapsed(created_at) {
