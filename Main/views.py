@@ -219,6 +219,7 @@ def add_learning_board_card(request):
     learningboard_id = request.data.get('num')
     new_card_name = request.data.get('name')
     new_card_desc = request.data.get('description')
+    file = request.FILES.get('file_attachment')
     try:
         learningboard = LearningBoard.objects.get(id=learningboard_id)
         new_card = LearningBoardCard.objects.create(
@@ -226,7 +227,11 @@ def add_learning_board_card(request):
             short_description=new_card_desc,
             learning_board=learningboard
         )
-        new_card.save()
+
+        if file:
+            new_card.file_attachment = file
+            new_card.save()
+
         serializer = LearningBoardCardSerializer(new_card)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     except LearningBoard.DoesNotExist:
@@ -540,4 +545,29 @@ def update_debate_question(request):
     debating_area = DebatingArea.objects.get(id=DebatingAreaID)
     debating_area.debate_question = EditedQuestion
     debating_area.save()
+    return JsonResponse({'none': 'none'})
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_debate_contributions(request):
+    contributions = DebatingContribution.objects.all()        
+    serializer = DebatingContributionSerializer(contributions, many=True)
+    return Response(serializer.data)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def add_debate_opinion(request):
+    sideID = request.data.get('sideID')
+    opinion_text = request.data.get('text')    
+    DS = DebateSide.objects.get(id=sideID)
+    NewOpinion = Opinion.objects.create(debate_side=DS, text=opinion_text, author=request.user)
+    NewOpinion.save()
+    return JsonResponse({'none': 'none'})
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def delete_debate_opinion(request):
+    opinion_ID = request.data.get('opinion_id')
+    O = Opinion.objects.get(id=opinion_ID)
+    O.delete()
     return JsonResponse({'none': 'none'})

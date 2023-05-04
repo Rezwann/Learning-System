@@ -5,6 +5,8 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.core.exceptions import ValidationError
 from django.core.exceptions import ObjectDoesNotExist
+from django.db.models import F
+
 
 class CustomUser(AbstractUser):
     user_information = models.TextField('User Information', max_length=300, default='', blank=True)
@@ -234,10 +236,10 @@ class DebatingArea(models.Model):
             self.name = f"{self.related_subject.name} - {self.related_subject.subject_code} Debating Area"
         if not self.debate_question:
             self.debate_question = f"Is the subject {self.related_subject.name} reaching enough people in the world? 🌍"
-        super().save(*args, **kwargs)        
-        DebateSide.objects.create(debating_area=self, side_name='Side - Yes')
-        DebateSide.objects.create(debating_area=self, side_name='Side - Nope')
-        DebateSide.objects.create(debating_area=self, side_name='Side - Unsure')        
+        super().save(*args, **kwargs)                
+        DebateSide.objects.create(debating_area=self, side_name=f'{self.related_subject.subject_code} Side - Yes')
+        DebateSide.objects.create(debating_area=self, side_name=f'{self.related_subject.subject_code} Side - Nope')
+        DebateSide.objects.create(debating_area=self, side_name=f'{self.related_subject.subject_code} Side - Unsure')        
     def __str__(self):
         return f"{self.related_subject}, {self.name}, Debating Area"
 
@@ -251,24 +253,36 @@ class DebateSide(models.Model):
 class DebatingContribution(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     debating_area = models.ForeignKey(DebatingArea, on_delete=models.CASCADE)
-    amount_contributed = models.FloatField(default=0)
+    amount_contributed = models.IntegerField(default=0)
 
 class Opinion(models.Model):
     debate_side = models.ForeignKey(DebateSide, on_delete=models.CASCADE, related_name='opinions')
-    text = models.TextField()
+    text = models.CharField(max_length=255, default='No text was given.', blank=True)
     author = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
+
     def save(self, *args, **kwargs):
+        if not self.pk:  # Only increment on creation
+            debating_contribution, created = DebatingContribution.objects.get_or_create(
+                user=self.author,
+                debating_area=self.debate_side.debating_area
+            )
+            debating_contribution.amount_contributed = F('amount_contributed') + 1
+            debating_contribution.save()
         super().save(*args, **kwargs)
-        contribution, created = DebatingContribution.objects.get_or_create(
+        
+    def delete(self, *args, **kwargs):
+        debating_contribution = DebatingContribution.objects.get(
             user=self.author,
             debating_area=self.debate_side.debating_area
         )
-        contribution.amount_contributed += 1
-        contribution.save()
-
+        debating_contribution.amount_contributed = F('amount_contributed') - 1
+        debating_contribution.save()
+        super().delete(*args, **kwargs)
+        
     def __str__(self):
         return f"{self.debate_side}, opinion - {self.text}"
+
 
 # Overview - Communication Area
 
@@ -309,6 +323,7 @@ class LearningBoardWorkspace(models.Model):
     def __str__(self):
         return self.name    
 board_role = (('Student', 'Student'), ('Teacher', 'Teacher'),)    
+
 class LearningBoard(models.Model):                
     name = models.CharField(max_length=300,  default='Learning Board Name')
     short_description = models.TextField('Learning Board Description', max_length=300, default='Learning Board Description', blank=True)
@@ -318,13 +333,17 @@ class LearningBoard(models.Model):
     board_type = models.CharField(max_length=40, choices=board_role, default='Student')
     def __str__(self):
         return self.name
+    
 class LearningBoardCard(models.Model):
     learning_board = models.ForeignKey(LearningBoard, on_delete=models.CASCADE)
     name = models.CharField(max_length=300, default='Learning Board Card Name')
     short_description = models.TextField('Card Description', max_length=300, default='Learning Board Card Description', blank=True)
     lists = models.ManyToManyField('LearningBoardCardList', related_name='lists', blank=True)
+    file_attachment = models.FileField(upload_to='card_attachments/', null=True, blank=True)
+
     def __str__(self):
-        return self.name    
+        return self.name  
+      
 class LearningBoardCardList(models.Model):
     learning_board_card = models.ForeignKey(LearningBoardCard, on_delete=models.CASCADE, blank=True)
     name = models.CharField(max_length=50, default = 'Card List Name')

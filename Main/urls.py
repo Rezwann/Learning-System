@@ -50,5 +50,10 @@ urlpatterns = [
 
     path('removeMembersFromSubjectArea/', views.remove_subject_area_members),
     path('addMembersToSubjectArea/', views.add_subject_area_members),    
-    path('updateDebateQuestion/', views.update_debate_question)
+    path('updateDebateQuestion/', views.update_debate_question),
+        
+# Debating Area - More
+    path('getDebateContributions/', views.get_debate_contributions),
+    path('addDebateOpinion/', views.add_debate_opinion),
+    path('deleteOpinion/', views.delete_debate_opinion)
 ]

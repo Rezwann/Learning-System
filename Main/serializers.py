@@ -127,9 +127,15 @@ class DebatingAreaSerializer(serializers.ModelSerializer):
         fields = ('id', 'related_subject', 'name', 'debate_question', 'sides')
                         
 class DebatingContributionSerializer(serializers.ModelSerializer):
+    username = serializers.SerializerMethodField()
+
     class Meta:
         model = DebatingContribution
         fields = '__all__'
+
+    def get_username(self, obj):
+        return obj.user.username
+
                 
 class CommunicationAreaSerializer(serializers.ModelSerializer):
     class Meta:
@@ -163,14 +169,16 @@ class LearningBoardSerializer(serializers.ModelSerializer):
         
 class LearningBoardCardSerializer(serializers.ModelSerializer):
     learning_board_id = serializers.SerializerMethodField()
+    file_attachment = serializers.FileField(required=False)
 
     class Meta:
         model = LearningBoardCard
         fields = ('id', 'learning_board_id','name', 'short_description', 
-                  'lists',)
+                  'lists', 'file_attachment',)
     
     def get_learning_board_id(self, obj):
         return obj.learning_board.id
+    
     
 class LearningBoardCardListSerializer(serializers.ModelSerializer):                
     learning_board_card_id = serializers.SerializerMethodField()

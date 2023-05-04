@@ -321,13 +321,26 @@
       </div>
 <div v-if="currentUserRole == 'Student'">
 <h4 class="text-center mb-4 text-muted">Your Personal Assigned Target (amount to contribute to debate): {{debateTarget}} </h4>
-<div class="progress">
-<div class="progress-bar bg-success" role="progressbar" aria-label="Success example" style="width: 65%" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100"></div>
+
+<div v-if="debateContributions.filter(contribution => contribution.debating_area === area.id).length === 0">
+  <h4 class="text-center mb-4 text-muted mt-2">You are yet to contribute to {{subject.name }} ({{subject.subject_code}}).</h4>
 </div>
+<div v-else>
+  <div v-for="contribution in debateContributions">
+    <div v-if="contribution.debating_area == area.id">        
+      <h4 class="text-center mb-4 text-muted mt-2">Your Total Contributions to {{subject.name }} ({{subject.subject_code}}) Debating Area: {{contribution.amount_contributed}} </h4>
+      <div class="progress">
+        <div class="progress-bar bg-success" role="progressbar" aria-label="Success example" :style="{ width: getProgressWidth(contribution) }" aria-valuemin="0" aria-valuemax="100"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
 </div>
     </div>
         <div class="d-flex justify-content-center">
         <div class="card mt-3 p-3" style="width: 60vw;">
+
 <div v-for="side in area.sides" :key="side.id">
   <div class="card mt-3 p-3">
     <h5>Debate {{ side.side_name }}</h5>
@@ -335,17 +348,23 @@
 <div class="card mt-2 p-2 alert alert-info">
     <ul>
       <li v-for="opinion in side.opinions" :key="opinion.id">
-        {{ opinion.text }} -           {{ opinion.author }} - {{timeElapsed(opinion.created_at)}}
-      </li>
+  <div class="d-flex align-items-center">
+    <span class="m-2 mb-3 me-2">{{ opinion.text }} - {{ opinion.author }} - {{timeElapsed(opinion.created_at)}}</span>
+    <div v-if="currentUserRole == 'Teacher'">
+      <button class="btn btn-sm btn-danger mx-1" @click="deleteOpinion(opinion.id)">Delete Opinion</button>
+    </div>           
+  </div>
+</li>
       <li v-if="side.opinions.length === 0">No opinion has been added to this side yet!</li>
-    </ul></div>
+    </ul></div>    
 
-    <form @submit.prevent="">
+    <form @submit.prevent="AddDebateOpinion(side.id)">
   <div class="form-group text-center">
-    <input type="text" class="form-control" placeholder="Type your opinion...">
-    <button type="submit" class="btn btn-success mt-2" disabled>Contribute to debate side</button>
+    <input type="text" class="form-control" :id="'opinion-' + side.id" placeholder="Type your opinion..." :ref="'opinionInput-' + side.id">
+    <button type="submit" class="btn btn-success mt-2" :name="'opinion-' + side.id">Contribute to this debate side</button>
   </div>
 </form>
+
   </div>
 </div>
 </div>
@@ -401,8 +420,9 @@ export default {
       yearChoices:[],
       debatingAreas:[],
       debateTarget:0,
+      debateContributions:[],
       editingQuestion: false,
-      editedQuestion: ''
+      editedQuestion: '',
     }
   },
   async mounted() {
@@ -428,7 +448,12 @@ export default {
       const { debating_areas, debate_sides, opinions } = response.data;
       this.debatingAreas = debating_areas;
       });
-      
+
+    await axios.get('/api/v1/LP/getDebateContributions/').then(response => {
+      this.debateContributions = response.data
+      this.debateContributions = this.debateContributions.filter(contribution => contribution.username === this.currentUser)      
+      });
+    
   },
   created(){
     axios.get('api/v1/LP/subjectCategories/').then(response => {
@@ -450,13 +475,50 @@ export default {
     });
   },
   methods: {  
+    async deleteOpinion(opinion_id){
+      await axios.post('api/v1/LP/deleteOpinion/', {opinion_id: opinion_id})
+          .then(response => {})                
+
+      await axios.get('/api/v1/LP/getDebatingAreas/').then(response => {
+      const { debating_areas, debate_sides, opinions } = response.data;
+      this.debatingAreas = debating_areas;
+      });
+
+      await axios.get('/api/v1/LP/getDebateContributions/').then(response => {
+      this.debateContributions = response.data
+      this.debateContributions = this.debateContributions.filter(contribution => contribution.username === this.currentUser)      
+      });
+
+
+    },
+    getProgressWidth(contribution) {
+    return (contribution.amount_contributed / this.debateTarget) * 100 + '%';
+  },
+     async AddDebateOpinion(side_id){
+      let opinionText = this.$refs['opinionInput-' + side_id][0].value
+      if(opinionText){
+      await axios.post('api/v1/LP/addDebateOpinion/', {sideID: side_id, text: opinionText})
+      .then(response => {})
+
+    await axios.get('/api/v1/LP/getDebatingAreas/').then(response => {
+      const { debating_areas, debate_sides, opinions } = response.data;
+      this.debatingAreas = debating_areas;
+      });
+
+      await axios.get('/api/v1/LP/getDebateContributions/').then(response => {
+      this.debateContributions = response.data
+      this.debateContributions = this.debateContributions.filter(contribution => contribution.username === this.currentUser)      
+      });
+
+      let inputRef = 'opinionInput-' + side_id;
+      this.$refs[inputRef][0].value = '';
+
+      }
+    },
     async updateDebateQuestion(area_id) {
       if (this.editedQuestion){
         await axios.post('api/v1/LP/updateDebateQuestion/', {area_id: area_id, edited_question: this.editedQuestion})
             .then(response => {
-
-              console.log(area_id)
-              console.log(this.edited_question)
               this.cancelEditingDebateQuestion()
             }).catch(error =>{
                 if(error.response){
@@ -539,6 +601,17 @@ export default {
            this.subjects = response.data
            this.filteredSubjects = this.subjects
            })
+
+          await axios.get('/api/v1/LP/getDebatingAreas/').then(response => {
+            const { debating_areas, debate_sides, opinions } = response.data;
+            this.debatingAreas = debating_areas;
+            });
+
+            await axios.get('/api/v1/LP/getDebateContributions/').then(response => {
+      this.debateContributions = response.data
+      this.debateContributions = this.debateContributions.filter(contribution => contribution.username === this.currentUser)      
+      });
+
 
         alert("Subject has been created")
     },

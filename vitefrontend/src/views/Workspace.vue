@@ -61,6 +61,10 @@
         </div>        
                     <h6 class="card-title">{{card.name}}</h6>
                   <p class="card-text">{{card.short_description}}</p>
+                  <div v-if="card.file_attachment">
+                    <h6 class="card-title">Card File:</h6>
+  <a :href="'http://127.0.0.1:8000' + card.file_attachment" target="_blank">Download {{card.file_attachment.replace('/media/card_attachments/', '')}}</a>
+</div>
                     <div class="card-body">
                       <div v-for="list in LearningBoardsCardsLists">
                         <template v-if="list.learning_board_card_id == card.id">                            
@@ -100,6 +104,12 @@
     <label class="">Short Description</label>
     <input type="text" name="description" class="form-control" v-model="newCard.description" placeholder="Description">
   </div>
+
+  <div class="">
+    <label class="">File Attachment</label>
+    <input type="file" name="file_attachment" class="form-control" v-on:change="CardFileAttachment">
+  </div>
+
   <div class="mt-3">
     <button class="btn btn-success" @click="currentBoardForm = board.id">Add Card</button>
   </div>
@@ -128,7 +138,9 @@
         newCard: {
         board_id: null,
         name: '',
-        description: ''
+        description: '',
+        file_attachment: null
+
       },
         addBoardForm: {
             name:'',
@@ -145,7 +157,10 @@
         currentUserRole: '',
       }
     },
-    methods: {        
+    methods: {         
+      CardFileAttachment(event) {
+        this.newCard.file_attachment = event.target.files[0];
+      },
         timeElapsed(created_at) {
             const currentDate = moment()
             const createdAt = moment(created_at)
@@ -181,16 +196,23 @@
             this.LearningBoardsCards = response.data })
         },
         async addCard(id) { 
+      if (this.newCard.name && this.newCard.description){
+        let formData = new FormData();
+        formData.append('num', id);
+        formData.append('name', this.newCard.name);
+        formData.append('description', this.newCard.description);
+        if (this.newCard.file_attachment) {
+          formData.append('file_attachment', this.newCard.file_attachment);
+        }
 
-          if (this.newCard.name && this.newCard.description){
-          await axios.post('api/v1/LP/addLearningBoardCard/', {num:id, name:this.newCard.name, description:this.newCard.description})
-          .then(response => {})
-          this.newCard = { name: '', description: '' };
-          this.currentBoardForm = null;          
-          await axios.get('api/v1/LP/getLearningBoardsCards/').then(response => {
-            this.LearningBoardsCards = response.data })
-            } else { this.errorCardMessage = 'Both fields are required'; }
-        },
+        await axios.post('api/v1/LP/addLearningBoardCard/', formData)
+        .then(response => {})
+        this.newCard = { name: '', description: '', file_attachment: null };
+        this.currentBoardForm = null;
+        await axios.get('api/v1/LP/getLearningBoardsCards/').then(response => {
+          this.LearningBoardsCards = response.data })
+      } else { this.errorCardMessage = 'Both Name/Short description are required'; }
+    },
     },
     async mounted() {
       await axios.get('api/v1/LP/getLearningWorkspace/').then(response => {
