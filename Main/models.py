@@ -237,9 +237,12 @@ class DebatingArea(models.Model):
         if not self.debate_question:
             self.debate_question = f"Is the subject {self.related_subject.name} reaching enough people in the world? 🌍"
         super().save(*args, **kwargs)                
-        DebateSide.objects.create(debating_area=self, side_name=f'{self.related_subject.subject_code} Side - Yes')
-        DebateSide.objects.create(debating_area=self, side_name=f'{self.related_subject.subject_code} Side - Nope')
-        DebateSide.objects.create(debating_area=self, side_name=f'{self.related_subject.subject_code} Side - Unsure')        
+        
+        if not self.pk:
+            DebateSide.objects.create(debating_area=self, side_name=f'{self.related_subject.subject_code} Side - Yes')
+            DebateSide.objects.create(debating_area=self, side_name=f'{self.related_subject.subject_code} Side - Nope')
+            DebateSide.objects.create(debating_area=self, side_name=f'{self.related_subject.subject_code} Side - Unsure')        
+
     def __str__(self):
         return f"{self.related_subject}, {self.name}, Debating Area"
 

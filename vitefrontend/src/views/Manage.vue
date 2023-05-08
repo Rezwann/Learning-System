@@ -381,8 +381,9 @@ export default {
         });
       });
 
-
-        } else { this.errorMessage = 'Both fields are required'; }  },
+        } else { this.errorMessage = 'Both fields are required'; }  
+      
+      },
         
         async get_engagement_instances(){
                   await axios.get('/api/v1/LP/getEngagementInstances/').then(response => {
@@ -425,6 +426,7 @@ export default {
             const elapsed = moment.duration(currentDate.diff(createdAt)).humanize()
                     return `${date} (${elapsed} ago)`
         },
+
     async showEngagementVisualisation(){
           this.optionsEngagement = {
         chart: { type: 'area',
@@ -467,9 +469,9 @@ export default {
           .then(response => {
           })
           const studentName = this.selectedStudent
+          await this.resetSelectedStudent()
           await this.chooseSelectedStudent(studentName)
           await this.showEngagementVisualisation()
-          await this.getStudentEHCP()
     },
     
     async resetSelectedStudent() {
@@ -478,11 +480,11 @@ export default {
     async chooseSelectedStudent(name){
       this.selectedStudent = name
     },
-    async GenerateNeuroInsight(option = 'default') {       
-      if (option = 'default'){
+    async GenerateNeuroInsight() {       
       await axios.post('/api/v1/LP/getUserNeurobackground/', {studentname:this.selectedStudent})
           .then(response => {
             this.selectedStudentNeuroBackground = response.data
+            this.selectedID = this.selectedStudentNeuroBackground.id
             this.selectedVM = this.selectedStudentNeuroBackground.verbal_memory_level
             this.selectedNVM = this.selectedStudentNeuroBackground.non_verbal_memory_level
             this.selectedVP = this.selectedStudentNeuroBackground.visual_perception_level
@@ -496,21 +498,20 @@ export default {
             this.selectedStudentCurrentEngagementType = this.selectedStudentNeuroBackground.desired_engagement_type 
             this.selectedStudentHasEHCP = this.selectedStudentNeuroBackground.hasEHCP 
             this.selectedStudentAverageCD = this.selectedStudentNeuroBackground.averageCD
-
           })  
 
-await axios.get('/api/v1/LP/getEngagementInstances/').then(response => {
-  this.EngagementInstances = response.data;
-  this.selectedStudentEngagementInstances = this.EngagementInstances
-    .filter(instance => instance.username === this.selectedStudent)
-    .map(instance => ({
-      id: instance.id,
-      username: instance.username,
-      chosen_type: instance.chosen_type,
-      time_chosen: instance.time_chosen
-    }))
-    .sort((a, b) => new Date(b.time_chosen) - new Date(a.time_chosen));
-});
+        await axios.get('/api/v1/LP/getEngagementInstances/').then(response => {
+          this.EngagementInstances = response.data;
+          this.selectedStudentEngagementInstances = this.EngagementInstances
+            .filter(instance => instance.username === this.selectedStudent)
+            .map(instance => ({
+              id: instance.id,
+              username: instance.username,
+              chosen_type: instance.chosen_type,
+              time_chosen: instance.time_chosen
+            }))
+            .sort((a, b) => new Date(b.time_chosen) - new Date(a.time_chosen));
+        });
 
           await axios.post('/api/v1/LP/getStudentEHCP/',{name:this.selectedStudent}).then(response => {
             this.allSelectedStudentInformationEHCP = Object.values(response.data).map(ehcp => {
@@ -523,51 +524,6 @@ await axios.get('/api/v1/LP/getEngagementInstances/').then(response => {
         });
       });
 
-        }        
-        else {
-          await axios.post('/api/v1/LP/getUserNeurobackground/', {studentname:option})
-          .then(response => {
-            this.selectedStudentNeuroBackground = response.data
-            this.selectedID = this.this.selectedStudentNeuroBackground.id
-            this.selectedVM = this.selectedStudentNeuroBackground.verbal_memory_level
-            this.selectedNVM = this.selectedStudentNeuroBackground.non_verbal_memory_level
-            this.selectedVP = this.selectedStudentNeuroBackground.visual_perception_level
-            this.selectedVIPS = this.selectedStudentNeuroBackground.visual_information_processing_speed_level
-            this.selectedN = this.selectedStudentNeuroBackground.numeracy_level
-            this.selectedL = this.selectedStudentNeuroBackground.literacy_level
-            this.selectedEF = this.selectedStudentNeuroBackground.executive_function_level
-            this.selectedVR = this.selectedStudentNeuroBackground.verbal_reasoning_level            
-            this.selectedStudentDebateTarget = this.selectedStudentNeuroBackground.debate_contribution_target
-            this.selectedStudentCurrentEngagementType = this.selectedStudentNeuroBackground.desired_engagement_type
-            this.selectedStudentAverageCD = this.selectedStudentNeuroBackground.averageCD
-            this.selectedStudentVocabularyGroup = this.selectedStudentNeuroBackground.vocabulary_sheet_group            
-
-          })
-
-          await axios.get('/api/v1/LP/getEngagementInstances/').then(response => {
-            this.EngagementInstances = response.data;
-            this.selectedStudentEngagementInstances = this.EngagementInstances
-            .filter(instance => instance.username === this.selectedStudent)
-            .map(instance => ({
-            id: instance.id,
-            username: instance.username,
-            chosen_type: instance.chosen_type,
-            time_chosen: instance.time_chosen
-            }));
-          });
-
-          await axios.post('/api/v1/LP/getStudentEHCP/',{name:option}).then(response => {
-            this.allSelectedStudentInformationEHCP = Object.values(response.data).map(ehcp => {
-        return {
-        student_views: ehcp.student_views,
-        student_interests: ehcp.student_interests,
-        student_aspirations: ehcp.student_aspirations,
-        teacher_comments: ehcp.teacher_comments
-        };
-        });
-      });
-
-        }
       this.options = {
         chart: {
     type: 'bar',
@@ -594,8 +550,16 @@ await axios.get('/api/v1/LP/getEngagementInstances/').then(response => {
   },
       };
       this.series = [
-        { name: 'Level', data: [this.selectedVM, this.selectedNVM, this.selectedVP, this.selectedVIPS,
-          this.selectedN, this.selectedL, this.selectedEF, this.selectedVR]}
+        { name: 'Level', data: [
+          this.selectedVM,
+          this.selectedNVM,
+          this.selectedVP,
+          this.selectedVIPS,          
+          this.selectedN, 
+          this.selectedL, 
+          this.selectedEF, 
+          this.selectedVR
+        ]}
       ];
         },    
         }

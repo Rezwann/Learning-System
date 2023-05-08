@@ -20,8 +20,6 @@ from .serializers import DebatingAreaSerializer, DebateSideSerializer, DebatingC
 from django.shortcuts import get_object_or_404
 import math
 from better_profanity import profanity
-from textblob import TextBlob
-
 
 # Section 1: Subjects and Neuro background - API Views:
 
@@ -55,15 +53,10 @@ def get_custom_users(request):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def get_user_neurobackground(request):
-    try:
         username = request.data.get('studentname')
         user = CustomUser.objects.get(username=username)
         serializer = CustomUserSerializer(user)
         return Response(serializer.data)
-    except CustomUser.DoesNotExist:
-        return Response({'error': 'User does not exist.'}, status=500)
-    except Exception as e:
-        return Response({'error': str(e)})
 
 # Section 2: Communication Area - API Views:
 
@@ -541,7 +534,6 @@ def add_subject_area_members(request):
 def update_debate_question(request):
     DebatingAreaID = request.data.get('area_id')    
     EditedQuestion = request.data.get('edited_question')    
-    print(EditedQuestion)
     debating_area = DebatingArea.objects.get(id=DebatingAreaID)
     debating_area.debate_question = EditedQuestion
     debating_area.save()
